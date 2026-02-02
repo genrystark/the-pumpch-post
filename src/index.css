@@ -346,8 +346,9 @@
   box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #dfdfdf !important;
   font-family: var(--font-mono) !important;
   padding: 0 !important;
-  min-width: 280px;
-  max-width: 380px;
+  min-width: 360px;
+  max-width: 520px;
+  width: max-content;
   border-radius: 0 !important;
 }
 
@@ -395,6 +396,12 @@
   color: #000 !important;
   font-size: 12px !important;
   font-family: var(--font-mono) !important;
+  white-space: nowrap;
+}
+
+.toaster-win95 .win95-toast-extras {
+  padding-top: 6px;
+  border-top: 1px solid #808080;
 }
 
 .toaster-win95 [data-sonner-toast] a {

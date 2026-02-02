@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { Rocket, Loader2, ExternalLink, AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast, toastSuccess, toastError } from '@/components/ui/sonner';
 import { createPumpFunToken, TokenMetadata, DeployTokenResult } from '@/lib/pumpfun';
 import { checkMinimumBalance, getWalletBalance } from '@/lib/solana';
 import { saveDeployedToken } from '@/hooks/useDeployedTokens';
@@ -37,9 +37,9 @@ const DeployTokenButton = ({
   const handleDeploy = async () => {
     if (!isReady || !publicKey) {
       if (!connected) {
-        toast.error('Connect your Phantom wallet first');
+        toastError('Connect your Phantom wallet first');
       } else {
-        toast.error('Fill in token name and ticker first');
+        toastError('Fill in token name and ticker first');
       }
       return;
     }
@@ -49,7 +49,7 @@ const DeployTokenButton = ({
     const requiredBalance = devBuyAmountSol + 0.02; // Extra for fees
     
     if (!checkMinimumBalance(balance) || balance < requiredBalance) {
-      toast.error(`Insufficient balance. Need at least ${requiredBalance.toFixed(3)} SOL`);
+      toastError(`Insufficient balance. Need at least ${requiredBalance.toFixed(3)} SOL`);
       return;
     }
 
@@ -95,25 +95,16 @@ const DeployTokenButton = ({
           console.error('Failed to save token to DB:', saveError);
         }
 
-        toast.success(
-          <div className="flex flex-col gap-1">
-            <span>🎉 Token declawed successfully!</span>
-            <a 
-              href={result.pumpUrl} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-xs underline flex items-center gap-1"
-            >
-              View on pump.fun <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
+        toastSuccess(
+          <span className="whitespace-nowrap">🎉 Token declawed successfully!</span>,
+          { mint: result.mintAddress ?? undefined }
         );
       } else {
-        toast.error(`Declaw failed: ${result.error}`);
+        toastError(`Declaw failed: ${result.error}`);
       }
     } catch (error) {
       console.error('Deploy error:', error);
-      toast.error(`Declaw failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toastError(`Declaw failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsDeploying(false);
     }

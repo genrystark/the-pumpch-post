@@ -6,7 +6,6 @@ import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { motion } from "framer-motion";
 import declawLogo from "@/assets/declaw-logo.png";
 import { shortenAddress } from "@/lib/solana";
-
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { publicKey, connected, disconnect, connecting } = useWallet();

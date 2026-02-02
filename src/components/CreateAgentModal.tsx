@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Bot, X, Upload, ImageIcon, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCreateAgent } from "@/hooks/useAgents";
-import { toast } from "sonner";
+import { toastSuccess, toastError } from "@/components/ui/sonner";
 
 interface CreateAgentModalProps {
   isOpen: boolean;
@@ -30,11 +30,11 @@ const CreateAgentModal = ({ isOpen, onClose, onSaved, onCreated }: CreateAgentMo
   const handleSave = async () => {
     const trimmedName = name.trim();
     if (!trimmedName) {
-      toast.error("Name is required");
+      toastError("Name is required");
       return;
     }
     if (!systemPrompt.trim()) {
-      toast.error("System prompt is required");
+      toastError("System prompt is required");
       return;
     }
     try {
@@ -44,7 +44,7 @@ const CreateAgentModal = ({ isOpen, onClose, onSaved, onCreated }: CreateAgentMo
         avatar: avatar ?? undefined,
         systemPrompt: systemPrompt.trim(),
       });
-      toast.success("Agent created");
+      toastSuccess("Agent created");
       setName("");
       setDescription("");
       setAvatar(null);
@@ -54,7 +54,7 @@ const CreateAgentModal = ({ isOpen, onClose, onSaved, onCreated }: CreateAgentMo
       onCreated?.(agent.id);
     } catch (e) {
       console.error("Failed to save agent:", e);
-      toast.error("Failed to save agent");
+      toastError("Failed to save agent");
     }
   };
 

@@ -57,12 +57,17 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
           className="fixed inset-0 z-[9999] flex items-center justify-center"
           style={{ background: "linear-gradient(135deg, #000080 0%, #000040 100%)" }}
         >
-          {/* Full-screen background image (new underwater pixel art) */}
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
-            style={{ backgroundImage: "url(/loading-bg.png)" }}
+          {/* Full-screen background video */}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover opacity-50"
             aria-hidden
-          />
+          >
+            <source src="/loading-bg.mp4" type="video/mp4" />
+          </video>
           {/* Scanlines overlay */}
           <div 
             className="absolute inset-0 pointer-events-none opacity-20"
