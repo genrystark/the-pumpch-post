@@ -82,18 +82,18 @@ const LaunchedTokens = () => {
           </div>
           
           {/* Stats */}
-          <div className="bg-[#1a1a1a] p-3 flex justify-center gap-4 border-b border-[#3a3a3a]">
-            <div className="win95-groupbox px-4 py-2">
-              <span className="win95-groupbox-title text-[9px]">Active</span>
-              <div className="text-lg font-bold text-orange text-center">12</div>
+          <div className="bg-[#1a1a1a] p-3 flex flex-wrap justify-center gap-3 border-b border-[#3a3a3a]">
+            <div className="win95-outset bg-[#c0c0c0] px-4 py-2 min-w-[100px]">
+              <div className="text-[9px] text-[#404040] text-center uppercase mb-1">Launched</div>
+              <div className="text-lg font-bold text-orange text-center">3</div>
             </div>
-            <div className="win95-groupbox px-4 py-2">
-              <span className="win95-groupbox-title text-[9px]">Graduated</span>
-              <div className="text-lg font-bold text-yellow-500 text-center">3</div>
+            <div className="win95-outset bg-[#c0c0c0] px-4 py-2 min-w-[100px]">
+              <div className="text-[9px] text-[#404040] text-center uppercase mb-1">Graduated</div>
+              <div className="text-lg font-bold text-yellow-600 text-center">1</div>
             </div>
-            <div className="win95-groupbox px-4 py-2">
-              <span className="win95-groupbox-title text-[9px]">SOL Raised</span>
-              <div className="text-lg font-bold text-green-500 text-center">145.2</div>
+            <div className="win95-outset bg-[#c0c0c0] px-4 py-2 min-w-[100px]">
+              <div className="text-[9px] text-[#404040] text-center uppercase mb-1">SOL Raised</div>
+              <div className="text-lg font-bold text-green-600 text-center">45.2</div>
             </div>
           </div>
           
