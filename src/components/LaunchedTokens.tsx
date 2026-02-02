@@ -1,42 +1,83 @@
-import { Folder, Plus, Search } from "lucide-react";
+import { Folder, Plus, Search, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useDeployedTokens, DeployedToken } from "@/hooks/useDeployedTokens";
 import hqmLogo from "@/assets/tokens/hqm.png";
 import juffLogo from "@/assets/tokens/juff.png";
 import helenLogo from "@/assets/tokens/helen.png";
 
+// Fallback tokens for showcase
+const fallbackTokens = [
+  { 
+    id: "fallback-1",
+    name: "highest quality meme", 
+    ticker: "HQM", 
+    progress: 67, 
+    price: "0.00000089", 
+    marketCap: "$89.5K", 
+    age: "1h ago",
+    mint_address: "Cp7pMBHYdYfCCosyqCFzg7hhxZQwtesbCpMjUgEVkgQf",
+    logo_url: hqmLogo,
+    pump_url: "https://pump.fun/Cp7pMBHYdYfCCosyqCFzg7hhxZQwtesbCpMjUgEVkgQf"
+  },
+  { 
+    id: "fallback-2",
+    name: "Juffrey Epstuin", 
+    ticker: "JUFF", 
+    progress: 45, 
+    price: "0.00000042", 
+    marketCap: "$42.5K", 
+    age: "2h ago",
+    mint_address: "DVuB8E4r4DbLPSYP2pob14xi6r7cYPVh6Cdx2Az4pump",
+    logo_url: juffLogo,
+    pump_url: "https://pump.fun/DVuB8E4r4DbLPSYP2pob14xi6r7cYPVh6Cdx2Az4pump"
+  },
+  { 
+    id: "fallback-3",
+    name: "Helen of Troy", 
+    ticker: "HELEN", 
+    progress: 23, 
+    price: "0.00000015", 
+    marketCap: "$15.3K", 
+    age: "5h ago",
+    mint_address: "B2N5xBkrDHaTPokHNgVx2UfZndbTtPF3B9iNRsNapump",
+    logo_url: helenLogo,
+    pump_url: "https://pump.fun/B2N5xBkrDHaTPokHNgVx2UfZndbTtPF3B9iNRsNapump"
+  },
+];
+
+const formatTimeAgo = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+  
+  if (diffMins < 1) return "just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  return `${diffDays}d ago`;
+};
+
 const LaunchedTokens = () => {
-  const mockTokens = [
-    { 
-      name: "highest quality meme", 
-      ticker: "HQM", 
-      progress: 67, 
-      price: "0.00000089", 
-      marketCap: "$89.5K", 
-      age: "1h ago",
-      ca: "Cp7pMBHYdYfCCosyqCFzg7hhxZQwtesbCpMjUgEVkgQf",
-      logo: hqmLogo
-    },
-    { 
-      name: "Juffrey Epstuin", 
-      ticker: "JUFF", 
-      progress: 45, 
-      price: "0.00000042", 
-      marketCap: "$42.5K", 
-      age: "2h ago",
-      ca: "DVuB8E4r4DbLPSYP2pob14xi6r7cYPVh6Cdx2Az4pump",
-      logo: juffLogo
-    },
-    { 
-      name: "Helen of Troy", 
-      ticker: "HELEN", 
-      progress: 23, 
-      price: "0.00000015", 
-      marketCap: "$15.3K", 
-      age: "5h ago",
-      ca: "B2N5xBkrDHaTPokHNgVx2UfZndbTtPF3B9iNRsNapump",
-      logo: helenLogo
-    },
+  const { data: dbTokens, isLoading } = useDeployedTokens();
+  
+  // Combine DB tokens with fallback tokens
+  const allTokens = [
+    ...(dbTokens || []).map((t: DeployedToken) => ({
+      id: t.id,
+      name: t.name,
+      ticker: t.ticker,
+      progress: Math.floor(Math.random() * 30) + 10, // Random progress for demo
+      price: "0.00000001",
+      marketCap: "-",
+      age: formatTimeAgo(t.created_at),
+      mint_address: t.mint_address,
+      logo_url: t.logo_url || "https://pump.fun/img/pump-logo.png",
+      pump_url: t.pump_url,
+    })),
+    ...fallbackTokens,
   ];
 
   return (
@@ -95,7 +136,7 @@ const LaunchedTokens = () => {
           {/* Stats */}
           <div className="bg-[#1a1a1a] p-3 flex flex-wrap justify-center gap-2 sm:gap-4 border-b border-[#3a3a3a]">
             {[
-              { label: "Declawed", value: mockTokens.length, color: "text-orange" },
+              { label: "Declawed", value: allTokens.length, color: "text-orange" },
               { label: "Graduated", value: 0, color: "text-yellow-500" },
               { label: "SOL Raised", value: 0, color: "text-green-500" },
             ].map((stat, i) => (
@@ -117,64 +158,71 @@ const LaunchedTokens = () => {
           {/* Token List */}
           <div className="bg-[#1a1a1a] p-2">
             <div className="win95-listview overflow-hidden">
-              {/* Mobile view */}
-              <div className="sm:hidden space-y-2 p-2">
-                {mockTokens.map((token, index) => (
-                  <motion.a 
-                    key={token.ticker} 
-                    href={`https://solscan.io/token/${token.ca}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="win95-outset p-3 cursor-pointer block"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    whileHover={{ scale: 1.02, y: -2 }}
-                  >
-                    <div className="flex items-start gap-3 mb-2">
-                      <motion.img 
-                        src={token.logo} 
-                        alt={token.name} 
-                        className="w-10 h-10 object-cover flex-shrink-0"
-                        whileHover={{ rotate: 10 }}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2 mb-1">
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold text-sm text-black">{token.ticker}</span>
-                            <span className="text-[10px] px-1 bg-orange text-white">LINEAR</span>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-orange text-sm font-bold">{token.price}</div>
-                            <div className="text-[#808080] text-[10px]">SOL</div>
+              {isLoading ? (
+                <div className="flex items-center justify-center p-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-orange" />
+                  <span className="ml-2 text-black">Loading tokens...</span>
+                </div>
+              ) : (
+                <>
+                  {/* Mobile view */}
+                  <div className="sm:hidden space-y-2 p-2">
+                    {allTokens.map((token, index) => (
+                      <motion.a 
+                        key={token.id} 
+                        href={token.pump_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="win95-outset p-3 cursor-pointer block"
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.1 }}
+                        whileHover={{ scale: 1.02, y: -2 }}
+                      >
+                        <div className="flex items-start gap-3 mb-2">
+                          <motion.img 
+                            src={token.logo_url} 
+                            alt={token.name} 
+                            className="w-10 h-10 object-cover flex-shrink-0"
+                            whileHover={{ rotate: 10 }}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-2 mb-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-bold text-sm text-black">{token.ticker}</span>
+                                <span className="text-[10px] px-1 bg-orange text-white">LINEAR</span>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-orange text-sm font-bold">{token.price}</div>
+                                <div className="text-[#808080] text-[10px]">SOL</div>
+                              </div>
+                            </div>
+                            <span className="text-[#808080] text-xs block truncate">{token.name}</span>
                           </div>
                         </div>
-                        <span className="text-[#808080] text-xs block truncate">{token.name}</span>
-                      </div>
-                    </div>
-                    <div className="mb-2">
-                      <div className="win95-progress h-3">
-                        <motion.div 
-                          className="win95-progress-bar-orange" 
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${token.progress}%` }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 1, delay: 0.2 }}
-                        />
-                      </div>
-                      <div className="text-[10px] text-[#808080] mt-1">{token.progress}% to graduation</div>
-                    </div>
-                    <div className="flex items-center justify-between text-[10px] text-[#808080]">
-                      <span>MC: {token.marketCap}</span>
-                      <span>{token.age}</span>
-                    </div>
-                    <div className="text-[8px] text-[#808080] mt-1 truncate">
-                      CA: {token.ca}
-                    </div>
-                  </motion.a>
-                ))}
-              </div>
+                        <div className="mb-2">
+                          <div className="win95-progress h-3">
+                            <motion.div 
+                              className="win95-progress-bar-orange" 
+                              initial={{ width: 0 }}
+                              whileInView={{ width: `${token.progress}%` }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 1, delay: 0.2 }}
+                            />
+                          </div>
+                          <div className="text-[10px] text-[#808080] mt-1">{token.progress}% to graduation</div>
+                        </div>
+                        <div className="flex items-center justify-between text-[10px] text-[#808080]">
+                          <span>MC: {token.marketCap}</span>
+                          <span>{token.age}</span>
+                        </div>
+                        <div className="text-[8px] text-[#808080] mt-1 truncate">
+                          CA: {token.mint_address}
+                        </div>
+                      </motion.a>
+                    ))}
+                  </div>
               
               {/* Desktop view */}
               <table className="hidden sm:table w-full text-xs">
@@ -190,11 +238,11 @@ const LaunchedTokens = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {mockTokens.map((token, index) => (
+                  {allTokens.map((token, index) => (
                     <motion.tr 
-                      key={token.ticker} 
+                      key={token.id} 
                       className="win95-listview-row-orange cursor-pointer border-b border-[#c0c0c0]"
-                      onClick={() => window.open(`https://solscan.io/token/${token.ca}`, '_blank')}
+                      onClick={() => window.open(token.pump_url, '_blank')}
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
@@ -204,7 +252,7 @@ const LaunchedTokens = () => {
                       <td className="p-2">
                         <div className="flex items-center gap-2">
                           <motion.img 
-                            src={token.logo} 
+                            src={token.logo_url} 
                             alt={token.name} 
                             className="w-8 h-8 object-cover flex-shrink-0"
                             whileHover={{ scale: 1.2, rotate: 5 }}
@@ -238,7 +286,7 @@ const LaunchedTokens = () => {
                       <td className="p-2 text-center">
                         <div className="flex items-center justify-center gap-1">
                           <motion.a 
-                            href={`https://solscan.io/token/${token.ca}`}
+                            href={token.pump_url}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
@@ -254,12 +302,14 @@ const LaunchedTokens = () => {
                   ))}
                 </tbody>
               </table>
+              </>
+              )}
             </div>
           </div>
           
           <div className="win95-statusbar flex justify-between items-center">
             <div className="win95-statusbar-inset flex-1 text-[10px]">
-              {mockTokens.length} token(s) | Solana Network
+              {allTokens.length} token(s) | Solana Network
             </div>
             <div className="win95-statusbar-inset text-[10px]">
               Solana Mainnet

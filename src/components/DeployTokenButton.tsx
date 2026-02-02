@@ -4,6 +4,7 @@ import { Rocket, Loader2, ExternalLink, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { createPumpFunToken, TokenMetadata, DeployTokenResult } from '@/lib/pumpfun';
 import { checkMinimumBalance, getWalletBalance } from '@/lib/solana';
+import { saveDeployedToken } from '@/hooks/useDeployedTokens';
 
 interface DeployTokenButtonProps {
   tokenData: {
@@ -72,6 +73,23 @@ const DeployTokenButton = ({
       onDeployComplete?.(result);
 
       if (result.success) {
+        // Save to database
+        try {
+          await saveDeployedToken({
+            name: metadata.name,
+            ticker: metadata.symbol,
+            description: metadata.description,
+            logoUrl: metadata.imageUrl,
+            mintAddress: result.mintAddress!,
+            pumpUrl: result.pumpUrl!,
+            creatorWallet: publicKey.toBase58(),
+            devBuyAmountSol,
+            transactionSignature: result.signature,
+          });
+        } catch (saveError) {
+          console.error('Failed to save token to DB:', saveError);
+        }
+
         toast.success(
           <div className="flex flex-col gap-1">
             <span>🎉 Token declawed successfully!</span>
