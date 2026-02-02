@@ -28,7 +28,7 @@ const HowItWorks = () => {
     <section id="how-it-works" className="py-10 md:py-14 bg-paper">
       <div className="container">
         {/* Section header */}
-        <div className="text-center mb-3">
+        <div className="text-center mb-3 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
           <span className="label-editorial">The Process</span>
           <h2 className="masthead text-2xl md:text-3xl text-ink mt-1 mb-2">
             HOW IT WORKS
@@ -44,7 +44,11 @@ const HowItWorks = () => {
         {/* Steps grid */}
         <div className="grid md:grid-cols-3 gap-4">
           {steps.map((step, index) => (
-            <div key={step.title} className="border border-border bg-paper p-4 relative">
+            <div 
+              key={step.title} 
+              className="border border-border bg-paper p-4 relative opacity-0 animate-fade-in-up hover:border-accent hover:shadow-md transition-all duration-300 cursor-default"
+              style={{ animationDelay: `${0.2 + index * 0.1}s` }}
+            >
               {/* Step number */}
               <div className="absolute -top-3 -left-3 w-6 h-6 bg-accent text-accent-foreground flex items-center justify-center font-headline text-sm">
                 {index + 1}

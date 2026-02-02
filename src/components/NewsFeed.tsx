@@ -116,13 +116,17 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
           </div>
         ) : (
           <div className="divide-y divide-border">
-            {news.map((item) => (
-              <div key={item.id} className="p-3 hover:bg-muted/50 transition-colors">
+            {news.map((item, index) => (
+              <div 
+                key={item.id} 
+                className="p-3 hover:bg-muted/50 transition-all duration-200 opacity-0 animate-fade-in-up"
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
                 <a 
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block"
+                  className="block hover:text-accent transition-colors"
                 >
                   <p className="font-body text-sm text-ink leading-snug mb-1 line-clamp-2">
                     {item.title}
@@ -139,7 +143,7 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="mt-2 w-full h-7 text-xs font-mono uppercase tracking-wider text-accent hover:text-accent-foreground hover:bg-accent"
+                  className="mt-2 w-full h-7 text-xs font-mono uppercase tracking-wider text-accent hover:text-accent-foreground hover:bg-accent hover:scale-[1.02] transition-all duration-200"
                   onClick={() => onLaunchIdea(item.title)}
                 >
                   <Rocket className="w-3 h-3 mr-1" />
