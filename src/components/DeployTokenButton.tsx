@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { createPumpFunToken, TokenMetadata, DeployTokenResult } from '@/lib/pumpfun';
 import { checkMinimumBalance, getWalletBalance } from '@/lib/solana';
 import { saveDeployedToken } from '@/hooks/useDeployedTokens';
+import { getSelectedAgentId } from '@/hooks/useAgents';
 
 interface DeployTokenButtonProps {
   tokenData: {
@@ -75,8 +76,9 @@ const DeployTokenButton = ({
       onDeployComplete?.(result);
 
       if (result.success) {
-        // Save to database
+        // Save to database with agent_id
         try {
+          const agentId = getSelectedAgentId();
           await saveDeployedToken({
             name: metadata.name,
             ticker: metadata.symbol,
@@ -87,6 +89,7 @@ const DeployTokenButton = ({
             creatorWallet: publicKey.toBase58(),
             devBuyAmountSol,
             transactionSignature: result.signature,
+            agentId,
           });
         } catch (saveError) {
           console.error('Failed to save token to DB:', saveError);

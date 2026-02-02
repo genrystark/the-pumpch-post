@@ -1,76 +1,106 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Bot, ArrowRight, Check, Trash2 } from "lucide-react";
+import { Bot, ArrowRight, Check, Trash2, Loader2, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import declawLogo from "@/assets/declaw-logo.png";
 import {
-  getAllAgents,
-  getSelectedAgentId,
-  setSelectedAgentId,
-  deleteCustomAgent,
+  useAgents,
+  useDeleteAgent,
+  useSelectedAgent,
+  DEFAULT_AGENT_ID,
   type Agent,
-} from "@/lib/agents";
+} from "@/hooks/useAgents";
+import CreateAgentModal from "./CreateAgentModal";
+import { toast } from "sonner";
 
 interface AgentExplorerProps {
-  refreshKey?: number;
+  onAgentChange?: (agentId: string) => void;
 }
 
-const AgentExplorer = ({ refreshKey = 0 }: AgentExplorerProps) => {
-  const [agents, setAgents] = useState<Agent[]>([]);
-  const [selectedId, setSelectedId] = useState<string>(getSelectedAgentId());
-
-  useEffect(() => {
-    setAgents(getAllAgents());
-    setSelectedId(getSelectedAgentId());
-  }, [refreshKey]);
+const AgentExplorer = ({ onAgentChange }: AgentExplorerProps) => {
+  const { data: agents = [], isLoading } = useAgents();
+  const { selectedId, setSelectedId } = useSelectedAgent();
+  const deleteAgent = useDeleteAgent();
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
   const handleSelect = (id: string) => {
-    setSelectedAgentId(id);
     setSelectedId(id);
+    onAgentChange?.(id);
   };
 
-  const handleDelete = (e: React.MouseEvent, id: string) => {
+  const handleDelete = async (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (!confirm("Delete this agent?")) return;
-    if (deleteCustomAgent(id)) {
-      setAgents(getAllAgents());
-      setSelectedId(getSelectedAgentId());
+    
+    try {
+      await deleteAgent.mutateAsync(id);
+      toast.success("Agent deleted");
+      if (selectedId === id) {
+        setSelectedId(DEFAULT_AGENT_ID);
+        onAgentChange?.(DEFAULT_AGENT_ID);
+      }
+    } catch (error) {
+      toast.error("Failed to delete agent");
     }
+  };
+
+  const handleAgentCreated = (agentId: string) => {
+    setSelectedId(agentId);
+    onAgentChange?.(agentId);
   };
 
   return (
     <section id="agent-explorer" className="py-4 lg:py-0">
+      <CreateAgentModal
+        isOpen={createModalOpen}
+        onClose={() => setCreateModalOpen(false)}
+        onCreated={handleAgentCreated}
+      />
+
       <motion.div
         className="win95-window"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="win95-titlebar">
-            <div className="flex items-center gap-2">
-              <Bot className="w-4 h-4" />
-              <span className="text-xs sm:text-sm">Agent Explorer</span>
-            </div>
-            <div className="flex gap-1">
-              <button className="win95-control-btn text-[8px]">_</button>
-              <button className="win95-control-btn text-[8px]">□</button>
-              <button className="win95-control-btn text-[8px]">×</button>
-            </div>
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="win95-titlebar">
+          <div className="flex items-center gap-2">
+            <Bot className="w-4 h-4" />
+            <span className="text-xs sm:text-sm">Agent Explorer</span>
           </div>
-
-          <div className="bg-[#1a1a1a] p-3 border-b border-[#3a3a3a]">
-            <p className="font-mono text-[11px] text-[#c0c0c0]">
-              Choose which agent to use in chat. Default: declaw.
-            </p>
+          <div className="flex gap-1">
+            <button className="win95-control-btn text-[8px]">_</button>
+            <button className="win95-control-btn text-[8px]">□</button>
+            <button className="win95-control-btn text-[8px]">×</button>
           </div>
+        </div>
 
-          <div className="bg-[#1a1a1a] p-2">
+        <div className="bg-[#1a1a1a] p-3 border-b border-[#3a3a3a] flex items-center justify-between">
+          <p className="font-mono text-[11px] text-[#c0c0c0]">
+            Choose which agent to use. Tokens filter by agent.
+          </p>
+          <button
+            onClick={() => setCreateModalOpen(true)}
+            className="win95-button-primary flex items-center gap-1 px-2 py-1 text-[10px]"
+          >
+            <Plus className="w-3 h-3" />
+            Create
+          </button>
+        </div>
+
+        <div className="bg-[#1a1a1a] p-2">
+          {isLoading ? (
+            <div className="flex items-center justify-center p-6">
+              <Loader2 className="w-5 h-5 animate-spin text-orange" />
+              <span className="ml-2 text-[#808080] text-sm">Loading agents...</span>
+            </div>
+          ) : (
             <div className="grid gap-2 grid-cols-1">
               {agents.map((agent, index) => {
                 const isSelected = selectedId === agent.id;
-                const isDefault = agent.id === "declaw";
+                const isDefault = agent.id === DEFAULT_AGENT_ID;
                 return (
                   <motion.div
                     key={agent.id}
@@ -128,6 +158,7 @@ const AgentExplorer = ({ refreshKey = 0 }: AgentExplorerProps) => {
                       {!isDefault && (
                         <button
                           onClick={(e) => handleDelete(e, agent.id)}
+                          disabled={deleteAgent.isPending}
                           className="win95-button p-1 text-red-500 hover:bg-red-500/20"
                           title="Delete agent"
                         >
@@ -139,26 +170,27 @@ const AgentExplorer = ({ refreshKey = 0 }: AgentExplorerProps) => {
                 );
               })}
             </div>
-            {agents.length === 0 && (
-              <div className="p-6 text-center font-mono text-sm text-[#808080]">
-                No agents yet. Create your agent above.
-              </div>
-            )}
-          </div>
+          )}
+          {!isLoading && agents.length === 0 && (
+            <div className="p-6 text-center font-mono text-sm text-[#808080]">
+              No agents yet. Create your agent above.
+            </div>
+          )}
+        </div>
 
-          <div className="bg-[#1a1a1a] p-2 border-t border-[#3a3a3a]">
-            <Link to="/chat">
-              <motion.button
-                className="win95-button-primary w-full sm:w-auto flex items-center justify-center gap-2 text-xs px-3 py-2"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <ArrowRight className="w-4 h-4" />
-                Open chat with {selectedId === "declaw" ? "declaw" : agents.find((a) => a.id === selectedId)?.name ?? "agent"}
-              </motion.button>
-            </Link>
-          </div>
-        </motion.div>
+        <div className="bg-[#1a1a1a] p-2 border-t border-[#3a3a3a]">
+          <Link to="/chat">
+            <motion.button
+              className="win95-button-primary w-full sm:w-auto flex items-center justify-center gap-2 text-xs px-3 py-2"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <ArrowRight className="w-4 h-4" />
+              Open chat with {agents.find((a) => a.id === selectedId)?.name ?? "agent"}
+            </motion.button>
+          </Link>
+        </div>
+      </motion.div>
     </section>
   );
 };
