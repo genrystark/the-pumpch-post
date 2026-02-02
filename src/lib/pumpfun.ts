@@ -51,15 +51,41 @@ export async function createPumpFunToken(
 
     console.log('🚀 Creating token with mint:', mintAddress);
 
-    // Step 1: Prepare metadata URI
-    // Note: PumpPortal accepts direct image URLs or IPFS URIs
-    // If you have base64 images, upload them to IPFS first or use a service like Pinata
+    // Step 1: Upload metadata to IPFS if we have a base64 image
     let metadataUri = metadata.imageUrl;
     
     if (metadata.imageUrl && metadata.imageUrl.startsWith('data:')) {
-      console.warn('⚠️ Base64 images should be uploaded to IPFS first');
-      // You can use services like Pinata, NFT.Storage, or your own IPFS node
-      // For now, we'll use the data URL directly (may not work with all services)
+      console.log('📤 Uploading image to IPFS...');
+      
+      const uploadResponse = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-metadata`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            name: metadata.name,
+            symbol: metadata.symbol,
+            description: metadata.description,
+            imageBase64: metadata.imageUrl,
+          }),
+        }
+      );
+
+      if (!uploadResponse.ok) {
+        const error = await uploadResponse.json();
+        console.error('❌ IPFS upload failed:', error);
+        return { 
+          success: false, 
+          error: error.error || 'Failed to upload image to IPFS' 
+        };
+      }
+
+      const uploadData = await uploadResponse.json();
+      metadataUri = uploadData.metadataUri;
+      console.log('✅ Metadata uploaded:', metadataUri);
     }
 
     // Step 2: Get transaction from PumpPortal API via Edge Function proxy
