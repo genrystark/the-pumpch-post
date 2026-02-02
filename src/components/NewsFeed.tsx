@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Newspaper, Rocket, RefreshCw } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface NewsItem {
   id: string;
@@ -18,29 +19,17 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchNews = async () => {
+  const fetchNews = useCallback(async () => {
     setLoading(true);
     try {
-      // Using CryptoPanic API for crypto news (free tier)
-      const response = await fetch(
-        "https://cryptopanic.com/api/v1/posts/?auth_token=free&public=true&kind=news&filter=hot&currencies=SOL"
-      );
+      const { data, error } = await supabase.functions.invoke('crypto-news');
       
-      if (response.ok) {
-        const data = await response.json();
-        const formattedNews = data.results?.slice(0, 8).map((item: any) => ({
-          id: item.id?.toString() || Math.random().toString(),
-          title: item.title,
-          source: item.source?.title || "Crypto News",
-          publishedAt: new Date(item.published_at).toLocaleTimeString("en-US", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          url: item.url,
-        })) || [];
-        setNews(formattedNews);
+      if (error) {
+        console.error('Error fetching news:', error);
+        setNews(getMockNews());
+      } else if (data?.news) {
+        setNews(data.news);
       } else {
-        // Fallback to mock data if API fails
         setNews(getMockNews());
       }
     } catch (error) {
@@ -48,7 +37,7 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
       setNews(getMockNews());
     }
     setLoading(false);
-  };
+  }, []);
 
   const getMockNews = (): NewsItem[] => [
     {
@@ -90,10 +79,10 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
 
   useEffect(() => {
     fetchNews();
-    // Refresh news every 2 minutes
-    const interval = setInterval(fetchNews, 120000);
+    // Refresh news every 60 seconds
+    const interval = setInterval(fetchNews, 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchNews]);
 
   return (
     <div className="h-full flex flex-col bg-paper border-l border-border">
