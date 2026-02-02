@@ -1,14 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Send, ArrowLeft, TrendingUp, Rocket, Search, Image, FileImage, Sliders } from "lucide-react";
+import { Send, ArrowLeft, Rocket, Search, Image, FileImage, Sliders } from "lucide-react";
 import NewsFeed from "@/components/NewsFeed";
 import WalletManager, { WalletInfo } from "@/components/WalletManager";
 import TokenPreview, { TokenData } from "@/components/TokenPreview";
 import LaunchModeSelector, { LaunchMode } from "@/components/LaunchModeSelector";
 import TwitterConnect from "@/components/TwitterConnect";
-import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface Message {
   id: string;
@@ -100,9 +98,34 @@ const Chat = () => {
     setTokenData((prev) => ({ ...prev, launchMode: mode }));
   };
 
+  // Extract token data from AI response
+  const extractTokenData = useCallback((text: string) => {
+    const tokenMatch = text.match(/```token\s*\n?([\s\S]*?)\n?```/);
+    if (tokenMatch) {
+      try {
+        const tokenJson = JSON.parse(tokenMatch[1]);
+        if (tokenJson.name || tokenJson.ticker || tokenJson.description) {
+          setTokenData(prev => ({
+            ...prev,
+            name: tokenJson.name || prev.name,
+            ticker: tokenJson.ticker || prev.ticker,
+            description: tokenJson.description || prev.description,
+          }));
+        }
+      } catch (e) {
+        console.error("Failed to parse token data:", e);
+      }
+    }
+  }, []);
+
+  // Clean message content (remove token JSON blocks from display)
+  const cleanMessageContent = (content: string) => {
+    return content.replace(/```token\s*\n?[\s\S]*?\n?```/g, '').trim();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isTyping) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -111,60 +134,106 @@ const Chat = () => {
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
-    const userInput = input.trim().toLowerCase();
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
     setInput("");
     setIsTyping(true);
 
-    // Check for launch idea requests
-    const isLaunchIdea = userInput.includes("launch idea") || userInput.includes("token launch") || userInput.includes("suggest a token");
+    // Prepare messages for API (only role and content)
+    const apiMessages = newMessages.map(m => ({ role: m.role, content: m.content }));
 
-    setTimeout(() => {
-      let response: Message;
+    try {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/pumpster-chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ messages: apiMessages }),
+      });
 
-      if (isLaunchIdea) {
-        response = {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: "I can help you launch a token! First, let's set up your wallets. Would you like to:\n\n1. **Create a new Solana wallet** - I'll generate a fresh wallet for you\n2. **Import an existing wallet** - Use your private key\n\nPlease add your wallets using the panel on the left. You'll need at least one Dev wallet to proceed with the launch.",
-          timestamp: new Date(),
-          type: "wallet_prompt",
-        };
-      } else if (userInput.includes("logo") || userInput.includes("generate image")) {
-        response = {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: "I can generate a logo for your token! Just describe what you want:\n\n**Example prompts:**\n- \"A cute green frog wearing sunglasses\"\n- \"Abstract geometric pattern in blue and gold\"\n- \"A rocket ship with flames\"\n\nDescribe your ideal logo and I'll create it for you.",
-          timestamp: new Date(),
-          type: "logo_prompt",
-        };
-      } else if (userInput.includes("banner")) {
-        response = {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: "I can generate a banner for your token! Describe the banner you want:\n\n**Example prompts:**\n- \"Epic landscape with mountains at sunset\"\n- \"Cyber city with neon lights\"\n- \"Abstract wave patterns in vibrant colors\"\n\nDescribe your ideal banner and I'll create it.",
-          timestamp: new Date(),
-          type: "banner_prompt",
-        };
-      } else {
-        const responses = [
-          "Interesting inquiry. Let me scan the current narrative landscape for you. Based on my analysis of X activity and Pump.fun launches in the past 24 hours, there's notable momentum building around AI-themed tokens.",
-          "I've analyzed this token's lifecycle. It appears to be in the mid-stage with declining volume. Historical patterns suggest caution—similar launches have seen 60% drawdowns at this phase.",
-          "For a launch today, I'd recommend focusing on the current meta. Gaming and AI narratives are showing strength. I can help you develop a concept and timing strategy.",
-          "That's a complex pattern. Looking at historical data from similar tokens, the pump is likely driven by coordinated social activity. Monitor the holder distribution closely.",
-        ];
-
-        response = {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: responses[Math.floor(Math.random() * responses.length)],
-          timestamp: new Date(),
-        };
+      if (!response.ok) {
+        if (response.status === 429) {
+          toast.error("Rate limit exceeded. Please try again later.");
+          setIsTyping(false);
+          return;
+        }
+        if (response.status === 402) {
+          toast.error("AI credits exhausted. Please add funds.");
+          setIsTyping(false);
+          return;
+        }
+        throw new Error("Failed to get response");
       }
 
-      setMessages((prev) => [...prev, response]);
-      setIsTyping(false);
-    }, 1500);
+      if (!response.body) throw new Error("No response body");
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let textBuffer = "";
+      let assistantContent = "";
+      let streamDone = false;
+
+      // Create assistant message placeholder
+      const assistantId = (Date.now() + 1).toString();
+      setMessages(prev => [...prev, {
+        id: assistantId,
+        role: "assistant",
+        content: "",
+        timestamp: new Date(),
+      }]);
+
+      while (!streamDone) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") {
+            streamDone = true;
+            break;
+          }
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) {
+              assistantContent += content;
+              setMessages(prev => prev.map(m => 
+                m.id === assistantId ? { ...m, content: assistantContent } : m
+              ));
+            }
+          } catch {
+            textBuffer = line + "\n" + textBuffer;
+            break;
+          }
+        }
+      }
+
+      // Extract token data from the complete response
+      extractTokenData(assistantContent);
+
+    } catch (error) {
+      console.error("Chat error:", error);
+      toast.error("Failed to get response from pumpster.claw");
+      setMessages(prev => [...prev, {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: "Connection error. The trading floor is busy. Try again in a moment.",
+        timestamp: new Date(),
+      }]);
+    }
+
+    setIsTyping(false);
   };
 
   const handleLaunchIdea = (newsTitle: string) => {
@@ -363,7 +432,7 @@ const Chat = () => {
                   </div>
                   {/* Message content */}
                   <div className="font-mono text-sm leading-relaxed whitespace-pre-line">
-                    {message.content}
+                    {cleanMessageContent(message.content)}
                   </div>
                 </div>
               </div>
