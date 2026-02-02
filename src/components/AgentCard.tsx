@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, MessageSquare } from "lucide-react";
-import pumpchLogo from "@/assets/pumpch-logo.png";
+import { motion } from "framer-motion";
+import declawLogo from "@/assets/declaw-logo.png";
 
 const AgentCard = () => {
   return (
@@ -18,17 +19,23 @@ const AgentCard = () => {
       </div>
       
       <div className="bg-[#1a1a1a] p-6 flex flex-col items-center justify-center h-full min-h-[300px]">
-        <img 
-          src={pumpchLogo} 
+        <motion.img 
+          src={declawLogo} 
           alt="declaw AI Agent" 
           className="w-32 h-32 md:w-40 md:h-40 object-contain mb-6"
+          whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
+          transition={{ duration: 0.3 }}
         />
         
         <Link to="/chat" className="w-full">
-          <button className="win95-button-primary w-full flex items-center justify-center gap-2 text-sm hover-elevate active-elevate-2">
+          <motion.button 
+            className="win95-button-primary w-full flex items-center justify-center gap-2 text-sm"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             Talk to declaw
             <ArrowRight className="w-4 h-4" />
-          </button>
+          </motion.button>
         </Link>
       </div>
     </div>

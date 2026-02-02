@@ -1,4 +1,6 @@
 import { Sparkles, Wallet, Image, BarChart3, Zap, Shield } from "lucide-react";
+import { motion } from "framer-motion";
+import { StaggerContainer, StaggerItem } from "./AnimatedSection";
 
 const Features = () => {
   const features = [
@@ -24,8 +26,8 @@ const Features = () => {
     },
     {
       icon: Zap,
-      title: "Fast Launches",
-      description: "Deploy tokens in seconds via Pump.fun",
+      title: "Fast Declaws",
+      description: "Declaw tokens in seconds via Pump.fun",
     },
     {
       icon: Shield,
@@ -37,7 +39,13 @@ const Features = () => {
   return (
     <section id="features" className="py-8">
       <div className="container">
-        <div className="win95-window">
+        <motion.div 
+          className="win95-window"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="win95-titlebar-green">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4" />
@@ -56,32 +64,35 @@ const Features = () => {
                 Agent Capabilities
               </span>
               <h2 className="font-mono text-xl md:text-2xl text-white mt-1">
-                WHAT <span className="text-green-400">PUMPSTER</span> CAN DO
+                WHAT <span className="text-green-400">DECLAW</span> CAN DO
               </h2>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {features.map((feature) => (
-                <div 
-                  key={feature.title} 
-                  className="win95-outset p-3 bg-[#c0c0c0] hover-elevate cursor-default"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-[#1a1a1a] flex items-center justify-center flex-shrink-0">
-                      <feature.icon className="w-4 h-4 text-green-400" />
-                    </div>
-                    <div>
-                      <h3 className="font-mono text-xs font-bold text-black mb-1">
-                        {feature.title}
-                      </h3>
-                      <p className="font-mono text-[10px] text-[#404040]">
-                        {feature.description}
-                      </p>
+                <StaggerItem key={feature.title}>
+                  <div className="win95-outset p-3 bg-[#c0c0c0] h-full">
+                    <div className="flex items-start gap-3">
+                      <motion.div 
+                        className="w-8 h-8 bg-[#1a1a1a] flex items-center justify-center flex-shrink-0"
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <feature.icon className="w-4 h-4 text-green-400" />
+                      </motion.div>
+                      <div>
+                        <h3 className="font-mono text-xs font-bold text-black mb-1">
+                          {feature.title}
+                        </h3>
+                        <p className="font-mono text-[10px] text-[#404040]">
+                          {feature.description}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerContainer>
           </div>
           
           <div className="win95-statusbar">
@@ -89,7 +100,7 @@ const Features = () => {
               6 features installed
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

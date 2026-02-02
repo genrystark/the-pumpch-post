@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import AgentCard from "@/components/AgentCard";
@@ -9,15 +9,41 @@ import ChatCTA from "@/components/ChatCTA";
 import Footer from "@/components/Footer";
 import LaunchedTokens from "@/components/LaunchedTokens";
 import ReadmeModal from "@/components/ReadmeModal";
-import { Plus, FileText, MessageSquare } from "lucide-react";
+import LoadingScreen from "@/components/LoadingScreen";
+import DraggableWindow from "@/components/DraggableWindow";
+import { motion } from "framer-motion";
+import { Plus, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
-import pumpchLogo from "@/assets/pumpch-logo.png";
+import declawLogo from "@/assets/declaw-logo.png";
 
 const Index = () => {
   const [readmeOpen, setReadmeOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Check if we've already shown loading screen in this session
+  useEffect(() => {
+    const hasLoaded = sessionStorage.getItem("declaw-loaded");
+    if (hasLoaded) {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+    sessionStorage.setItem("declaw-loaded", "true");
+  };
+
+  if (isLoading) {
+    return <LoadingScreen onComplete={handleLoadingComplete} />;
+  }
 
   return (
-    <div className="min-h-screen bg-background text-foreground scanlines">
+    <motion.div 
+      className="min-h-screen bg-background text-foreground scanlines"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <Header />
       
       <ReadmeModal isOpen={readmeOpen} onClose={() => setReadmeOpen(false)} />
@@ -28,41 +54,59 @@ const Index = () => {
           {/* Desktop shortcuts */}
           <div className="hidden sm:flex gap-4 mb-4 flex-wrap">
             <Link to="/chat">
-              <div className="win95-icon">
+              <motion.div 
+                className="win95-icon"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <div className="w-10 h-10 bg-orange flex items-center justify-center mb-1">
                   <Plus className="w-6 h-6 text-white" />
                 </div>
                 <span className="win95-icon-label text-[10px]">New Declaw</span>
-              </div>
+              </motion.div>
             </Link>
-            <button onClick={() => setReadmeOpen(true)}>
+            <motion.button 
+              onClick={() => setReadmeOpen(true)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
               <div className="win95-icon">
                 <div className="w-10 h-10 bg-[#000080] flex items-center justify-center mb-1">
                   <FileText className="w-6 h-6 text-white" />
                 </div>
                 <span className="win95-icon-label text-[10px]">README.txt</span>
               </div>
-            </button>
+            </motion.button>
             <Link to="/chat">
-              <div className="win95-icon">
-                <img src={pumpchLogo} alt="declaw" className="w-10 h-10 mb-1 object-contain" />
+              <motion.div 
+                className="win95-icon"
+                whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <img src={declawLogo} alt="declaw" className="w-10 h-10 mb-1 object-contain" />
                 <span className="win95-icon-label text-[10px]">declaw</span>
-              </div>
+              </motion.div>
             </Link>
           </div>
 
           {/* Hero Section */}
           <div className="grid lg:grid-cols-3 gap-4 mb-4">
             <div className="lg:col-span-2">
-              <HeroSection />
+              <DraggableWindow>
+                <HeroSection />
+              </DraggableWindow>
             </div>
             <div className="lg:col-span-1">
-              <AgentCard />
+              <DraggableWindow>
+                <AgentCard />
+              </DraggableWindow>
             </div>
           </div>
 
           {/* Token Explorer */}
-          <LaunchedTokens />
+          <DraggableWindow>
+            <LaunchedTokens />
+          </DraggableWindow>
           
           {/* Info Sections */}
           <WhatIsDeclaw />
@@ -73,7 +117,7 @@ const Index = () => {
       </div>
       
       <Footer />
-    </div>
+    </motion.div>
   );
 };
 

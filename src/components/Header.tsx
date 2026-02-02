@@ -3,7 +3,8 @@ import { Minus, Square, X, Menu, MessageSquare, Wallet } from "lucide-react";
 import { useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
-import pumpchLogo from "@/assets/pumpch-logo.png";
+import { motion } from "framer-motion";
+import declawLogo from "@/assets/declaw-logo.png";
 import { shortenAddress } from "@/lib/solana";
 
 const Header = () => {
@@ -24,11 +25,12 @@ const Header = () => {
       {/* Title Bar */}
       <div className="win95-titlebar">
         <div className="flex items-center gap-2">
-          <img 
-            src={pumpchLogo} 
+          <motion.img 
+            src={declawLogo} 
             alt="declaw" 
-            className="w-4 h-4" 
-            style={{ imageRendering: 'pixelated' }}
+            className="w-5 h-5" 
+            whileHover={{ rotate: 20, scale: 1.2 }}
+            transition={{ type: "spring", stiffness: 300 }}
           />
           <Link to="/">
             <span className="cursor-pointer text-white font-bold text-xs sm:text-sm">
@@ -61,19 +63,38 @@ const Header = () => {
         <div className={`${mobileMenuOpen ? 'flex' : 'hidden'} sm:flex flex-col sm:flex-row items-start sm:items-center`}>
           <nav className="flex flex-col sm:flex-row items-start sm:items-center">
             <a href="#launched-tokens" onClick={(e) => { e.preventDefault(); document.getElementById('launched-tokens')?.scrollIntoView({ behavior: 'smooth' }); }}>
-              <span className="win95-menu-item text-[11px]">Declaws</span>
+              <motion.span 
+                className="win95-menu-item text-[11px]"
+                whileHover={{ backgroundColor: "#000080", color: "#fff" }}
+              >
+                Declaws
+              </motion.span>
             </a>
             <a href="#how-it-works" onClick={(e) => { e.preventDefault(); document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }); }}>
-              <span className="win95-menu-item text-[11px]">How It Works</span>
+              <motion.span 
+                className="win95-menu-item text-[11px]"
+                whileHover={{ backgroundColor: "#000080", color: "#fff" }}
+              >
+                How It Works
+              </motion.span>
             </a>
             <a href="#features" onClick={(e) => { e.preventDefault(); document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); }}>
-              <span className="win95-menu-item text-[11px]">Features</span>
+              <motion.span 
+                className="win95-menu-item text-[11px]"
+                whileHover={{ backgroundColor: "#000080", color: "#fff" }}
+              >
+                Features
+              </motion.span>
             </a>
             <Link to="/chat">
-              <span className="win95-menu-item win95-menu-item-active flex items-center gap-1 text-[11px]">
+              <motion.span 
+                className="win95-menu-item win95-menu-item-active flex items-center gap-1 text-[11px]"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <MessageSquare className="w-3 h-3" />
                 declaw
-              </span>
+              </motion.span>
             </Link>
             <a 
               href="https://x.com" 
@@ -89,25 +110,31 @@ const Header = () => {
           </nav>
         </div>
         <div className={`${mobileMenuOpen ? 'flex' : 'hidden'} sm:flex items-center gap-2 mt-2 sm:mt-0 pb-2 sm:pb-0`}>
-          <button 
+          <motion.button 
             onClick={handleWalletClick}
             disabled={connecting}
             className={`font-mono text-xs font-bold flex items-center gap-1 ${
               connected ? 'win95-button' : 'win95-button-primary'
             }`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <Wallet className="w-3 h-3" />
             {connecting ? (
               'CONNECTING...'
             ) : connected && publicKey ? (
               <>
-                <span className="w-2 h-2 bg-[#00ff00] rounded-full" />
+                <motion.span 
+                  className="w-2 h-2 bg-[#00ff00] rounded-full"
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                />
                 {shortenAddress(publicKey.toString())}
               </>
             ) : (
               '[CONNECT PHANTOM]'
             )}
-          </button>
+          </motion.button>
         </div>
       </div>
     </header>

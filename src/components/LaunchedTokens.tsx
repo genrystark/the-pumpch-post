@@ -1,5 +1,6 @@
 import { Folder, Plus, Search } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import hqmLogo from "@/assets/tokens/hqm.png";
 import juffLogo from "@/assets/tokens/juff.png";
 import helenLogo from "@/assets/tokens/helen.png";
@@ -41,7 +42,13 @@ const LaunchedTokens = () => {
   return (
     <section id="launched-tokens" className="py-8">
       <div className="container">
-        <div className="win95-window">
+        <motion.div 
+          className="win95-window"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="win95-titlebar">
             <div className="flex items-center gap-2">
               <Folder className="w-4 h-4" />
@@ -72,10 +79,14 @@ const LaunchedTokens = () => {
                   <option>Graduated</option>
                 </select>
                 <Link to="/chat">
-                  <button className="win95-button-primary text-xs flex items-center gap-1">
+                  <motion.button 
+                    className="win95-button-primary text-xs flex items-center gap-1"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
                     <Plus className="w-3 h-3" />
                     New Declaw
-                  </button>
+                  </motion.button>
                 </Link>
               </div>
             </div>
@@ -83,18 +94,24 @@ const LaunchedTokens = () => {
           
           {/* Stats */}
           <div className="bg-[#1a1a1a] p-3 flex flex-wrap justify-center gap-2 sm:gap-4 border-b border-[#3a3a3a]">
-            <div className="win95-groupbox px-3 sm:px-4 py-2 min-w-[80px]">
-              <span className="win95-groupbox-title text-[8px] sm:text-[9px] whitespace-nowrap">Declawed</span>
-              <div className="text-lg font-bold text-orange text-center">{mockTokens.length}</div>
-            </div>
-            <div className="win95-groupbox px-3 sm:px-4 py-2 min-w-[80px]">
-              <span className="win95-groupbox-title text-[8px] sm:text-[9px] whitespace-nowrap">Graduated</span>
-              <div className="text-lg font-bold text-yellow-500 text-center">0</div>
-            </div>
-            <div className="win95-groupbox px-3 sm:px-4 py-2 min-w-[80px]">
-              <span className="win95-groupbox-title text-[8px] sm:text-[9px] whitespace-nowrap">SOL Raised</span>
-              <div className="text-lg font-bold text-green-500 text-center">0</div>
-            </div>
+            {[
+              { label: "Declawed", value: mockTokens.length, color: "text-orange" },
+              { label: "Graduated", value: 0, color: "text-yellow-500" },
+              { label: "SOL Raised", value: 0, color: "text-green-500" },
+            ].map((stat, i) => (
+              <motion.div 
+                key={stat.label}
+                className="win95-groupbox px-3 sm:px-4 py-2 min-w-[80px]"
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <span className="win95-groupbox-title text-[8px] sm:text-[9px] whitespace-nowrap">{stat.label}</span>
+                <div className={`text-lg font-bold ${stat.color} text-center`}>{stat.value}</div>
+              </motion.div>
+            ))}
           </div>
           
           {/* Token List */}
@@ -102,19 +119,25 @@ const LaunchedTokens = () => {
             <div className="win95-listview overflow-hidden">
               {/* Mobile view */}
               <div className="sm:hidden space-y-2 p-2">
-                {mockTokens.map((token) => (
-                  <a 
+                {mockTokens.map((token, index) => (
+                  <motion.a 
                     key={token.ticker} 
                     href={`https://solscan.io/token/${token.ca}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="win95-outset p-3 cursor-pointer hover-elevate block"
+                    className="win95-outset p-3 cursor-pointer block"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ scale: 1.02, y: -2 }}
                   >
                     <div className="flex items-start gap-3 mb-2">
-                      <img 
+                      <motion.img 
                         src={token.logo} 
                         alt={token.name} 
                         className="w-10 h-10 object-cover flex-shrink-0"
+                        whileHover={{ rotate: 10 }}
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2 mb-1">
@@ -132,7 +155,13 @@ const LaunchedTokens = () => {
                     </div>
                     <div className="mb-2">
                       <div className="win95-progress h-3">
-                        <div className="win95-progress-bar-orange" style={{ width: `${token.progress}%` }} />
+                        <motion.div 
+                          className="win95-progress-bar-orange" 
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${token.progress}%` }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 1, delay: 0.2 }}
+                        />
                       </div>
                       <div className="text-[10px] text-[#808080] mt-1">{token.progress}% to graduation</div>
                     </div>
@@ -143,7 +172,7 @@ const LaunchedTokens = () => {
                     <div className="text-[8px] text-[#808080] mt-1 truncate">
                       CA: {token.ca}
                     </div>
-                  </a>
+                  </motion.a>
                 ))}
               </div>
               
@@ -161,18 +190,24 @@ const LaunchedTokens = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {mockTokens.map((token) => (
-                    <tr 
+                  {mockTokens.map((token, index) => (
+                    <motion.tr 
                       key={token.ticker} 
                       className="win95-listview-row-orange cursor-pointer border-b border-[#c0c0c0]"
                       onClick={() => window.open(`https://solscan.io/token/${token.ca}`, '_blank')}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      whileHover={{ backgroundColor: "rgba(255, 107, 74, 0.1)" }}
                     >
                       <td className="p-2">
                         <div className="flex items-center gap-2">
-                          <img 
+                          <motion.img 
                             src={token.logo} 
                             alt={token.name} 
                             className="w-8 h-8 object-cover flex-shrink-0"
+                            whileHover={{ scale: 1.2, rotate: 5 }}
                           />
                           <div className="flex flex-col">
                             <span className="font-bold text-black">{token.ticker}</span>
@@ -186,7 +221,13 @@ const LaunchedTokens = () => {
                       <td className="p-2">
                         <div className="w-24">
                           <div className="win95-progress h-3">
-                            <div className="win95-progress-bar-orange" style={{ width: `${token.progress}%` }} />
+                            <motion.div 
+                              className="win95-progress-bar-orange" 
+                              initial={{ width: 0 }}
+                              whileInView={{ width: `${token.progress}%` }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 1, delay: 0.3 + index * 0.1 }}
+                            />
                           </div>
                           <div className="text-[9px] text-[#808080]">{token.progress}%</div>
                         </div>
@@ -196,18 +237,20 @@ const LaunchedTokens = () => {
                       <td className="p-2 text-right text-[#808080]">{token.age}</td>
                       <td className="p-2 text-center">
                         <div className="flex items-center justify-center gap-1">
-                          <a 
+                          <motion.a 
                             href={`https://solscan.io/token/${token.ca}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
                             className="win95-button-primary text-[10px] px-2 py-1"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
                           >
                             VIEW
-                          </a>
+                          </motion.a>
                         </div>
                       </td>
-                    </tr>
+                    </motion.tr>
                   ))}
                 </tbody>
               </table>
@@ -222,7 +265,7 @@ const LaunchedTokens = () => {
               Solana Mainnet
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
