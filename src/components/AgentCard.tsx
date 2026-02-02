@@ -21,20 +21,8 @@ const AgentCard = () => {
         <img 
           src={pumpchLogo} 
           alt="Pumpster AI Agent" 
-          className="w-32 h-32 md:w-40 md:h-40 object-contain mb-4"
+          className="w-32 h-32 md:w-40 md:h-40 object-contain mb-6"
         />
-        
-        <p className="font-mono text-sm text-white italic text-center mb-4">
-          "The Agent That Reads the Pump"
-        </p>
-        
-        <div className="win95-groupbox px-4 py-2 mb-4">
-          <span className="win95-groupbox-title">Status</span>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-green-400 text-xs font-mono">ONLINE</span>
-          </div>
-        </div>
         
         <Link to="/chat" className="w-full">
           <button className="win95-button-primary w-full flex items-center justify-center gap-2 text-sm hover-elevate active-elevate-2">
