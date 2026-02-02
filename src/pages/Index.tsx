@@ -6,10 +6,12 @@ import Features from "@/components/Features";
 import ChatCTA from "@/components/ChatCTA";
 import Footer from "@/components/Footer";
 import NewsFeed from "@/components/NewsFeed";
+import LaunchedTokens from "@/components/LaunchedTokens";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import pumpchLogo from "@/assets/pumpch-logo.png";
 
 const Index = () => {
   const [, setSelectedNews] = useState("");
@@ -33,9 +35,24 @@ const Index = () => {
                 <HeroSection />
               </div>
               
-              {/* Right: News Feed */}
+              {/* Right: Agent + News Feed */}
               <div className="lg:col-span-1 opacity-0 animate-fade-in-right" style={{ animationDelay: "0.3s" }}>
-                <div className="border border-border bg-paper h-[500px] overflow-hidden">
+                {/* Agent Mascot */}
+                <div className="border border-border p-4 bg-paper mb-4 hover:border-accent hover:shadow-md transition-all duration-300">
+                  <div className="text-center">
+                    <img 
+                      src={pumpchLogo} 
+                      alt="Pumpch AI Agent" 
+                      className="w-40 h-40 mx-auto object-contain mb-3"
+                    />
+                    <p className="font-headline text-sm text-ink italic">
+                      "The Agent That Reads the Pump"
+                    </p>
+                  </div>
+                </div>
+                
+                {/* News Feed */}
+                <div className="border border-border bg-paper h-[350px] overflow-hidden">
                   <NewsFeed onLaunchIdea={handleLaunchIdea} />
                 </div>
                 <div className="mt-3 text-center">
@@ -51,6 +68,7 @@ const Index = () => {
           </div>
         </section>
 
+        <LaunchedTokens />
         <WhatIsPumpch />
         <HowItWorks />
         <Features />

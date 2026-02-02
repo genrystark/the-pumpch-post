@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import pumpchLogo from "@/assets/pumpch-logo.png";
 
 const HeroSection = () => {
   return (
@@ -51,21 +50,6 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Mascot illustration */}
-      <div className="mt-8 flex justify-center lg:justify-start opacity-0 animate-scale-in" style={{ animationDelay: "0.6s" }}>
-        <div className="border border-border p-3 bg-paper max-w-[140px] hover:border-accent hover:shadow-md transition-all duration-300">
-          <div className="text-center">
-            <img 
-              src={pumpchLogo} 
-              alt="Pumpch AI Agent" 
-              className="w-24 h-24 mx-auto object-contain mb-2"
-            />
-            <p className="font-headline text-xs text-ink italic">
-              "The Agent That Reads the Pump"
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
