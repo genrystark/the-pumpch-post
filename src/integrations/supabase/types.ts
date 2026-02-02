@@ -14,7 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      deployed_tokens: {
+        Row: {
+          created_at: string
+          creator_wallet: string
+          description: string | null
+          dev_buy_amount_sol: number | null
+          id: string
+          logo_url: string | null
+          mint_address: string
+          name: string
+          pump_url: string
+          ticker: string
+          transaction_signature: string | null
+        }
+        Insert: {
+          created_at?: string
+          creator_wallet: string
+          description?: string | null
+          dev_buy_amount_sol?: number | null
+          id?: string
+          logo_url?: string | null
+          mint_address: string
+          name: string
+          pump_url: string
+          ticker: string
+          transaction_signature?: string | null
+        }
+        Update: {
+          created_at?: string
+          creator_wallet?: string
+          description?: string | null
+          dev_buy_amount_sol?: number | null
+          id?: string
+          logo_url?: string | null
+          mint_address?: string
+          name?: string
+          pump_url?: string
+          ticker?: string
+          transaction_signature?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
