@@ -26,7 +26,7 @@ const Index = () => {
     <div className="min-h-screen bg-paper">
       <Header />
       <main>
-        {/* Hero with News Feed */}
+        {/* Hero with Agent */}
         <section className="py-12 md:py-16 bg-paper">
           <div className="container">
             <div className="grid lg:grid-cols-3 gap-6">
@@ -35,28 +35,52 @@ const Index = () => {
                 <HeroSection />
               </div>
               
-              {/* Right: Agent + News Feed */}
+              {/* Right: Agent Mascot */}
               <div className="lg:col-span-1 opacity-0 animate-fade-in-right" style={{ animationDelay: "0.3s" }}>
-                {/* Agent Mascot */}
-                <div className="border border-border p-4 bg-paper mb-4 hover:border-accent hover:shadow-md transition-all duration-300">
-                  <div className="text-center">
-                    <img 
-                      src={pumpchLogo} 
-                      alt="Pumpch AI Agent" 
-                      className="w-40 h-40 mx-auto object-contain mb-3"
-                    />
-                    <p className="font-headline text-sm text-ink italic">
-                      "The Agent That Reads the Pump"
-                    </p>
+                <div className="border border-border p-6 bg-paper h-full flex flex-col items-center justify-center hover:border-accent hover:shadow-md transition-all duration-300">
+                  <img 
+                    src={pumpchLogo} 
+                    alt="Pumpch AI Agent" 
+                    className="w-56 h-56 object-contain mb-4"
+                  />
+                  <p className="font-headline text-lg text-ink italic text-center">
+                    "The Agent That Reads the Pump"
+                  </p>
+                  <div className="mt-4">
+                    <Button asChild variant="editorial" size="lg" className="group">
+                      <Link to="/chat">
+                        Talk to Agent
+                        <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </Link>
+                    </Button>
                   </div>
                 </div>
-                
-                {/* News Feed */}
-                <div className="border border-border bg-paper h-[350px] overflow-hidden">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* News Feed Section */}
+        <section className="py-12 bg-paper-aged border-y border-border">
+          <div className="container">
+            <div className="grid lg:grid-cols-3 gap-6">
+              {/* Left: News Feed */}
+              <div className="lg:col-span-2 opacity-0 animate-fade-in-left" style={{ animationDelay: "0.2s" }}>
+                <div className="border border-border bg-paper h-[400px] overflow-hidden">
                   <NewsFeed onLaunchIdea={handleLaunchIdea} />
                 </div>
-                <div className="mt-3 text-center">
-                  <Button asChild variant="editorial" size="sm" className="group">
+              </div>
+              
+              {/* Right: CTA */}
+              <div className="lg:col-span-1 flex flex-col justify-center opacity-0 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+                <div className="border border-border p-6 bg-paper">
+                  <h3 className="font-headline text-xl text-ink mb-3">
+                    Spot Opportunities First
+                  </h3>
+                  <p className="font-body text-ink-light mb-4">
+                    Real-time crypto news analyzed by our AI agent. Click "Launch Idea" to generate token concepts based on trending narratives.
+                  </p>
+                  <Button asChild variant="editorial" size="sm" className="group w-full">
                     <Link to="/chat">
                       Open Full Chat
                       <ArrowRight className="ml-2 w-3 h-3 group-hover:translate-x-1 transition-transform" />
