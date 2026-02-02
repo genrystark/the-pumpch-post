@@ -2,11 +2,13 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Send, ArrowLeft, Rocket, Search, Image, FileImage, Sliders } from "lucide-react";
 import NewsFeed from "@/components/NewsFeed";
-import WalletManager, { WalletInfo } from "@/components/WalletManager";
 import TokenPreview, { TokenData } from "@/components/TokenPreview";
 import LaunchModeSelector, { LaunchMode } from "@/components/LaunchModeSelector";
 import TwitterConnect from "@/components/TwitterConnect";
+import PhantomWalletButton from "@/components/PhantomWalletButton";
+import DeployTokenButton from "@/components/DeployTokenButton";
 import { toast } from "sonner";
+import { DeployTokenResult } from "@/lib/pumpfun";
 
 interface Message {
   id: string;
@@ -32,9 +34,6 @@ const Chat = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Wallet state
-  const [wallets, setWallets] = useState<WalletInfo[]>([]);
-
   // Token state
   const [tokenData, setTokenData] = useState<TokenData>({
     name: "",
@@ -44,6 +43,9 @@ const Chat = () => {
     banner: null,
     launchMode: "dev",
   });
+
+  // Dev buy amount
+  const [devBuyAmount, setDevBuyAmount] = useState(0.1);
 
   // Twitter state
   const [twitterConnected, setTwitterConnected] = useState(false);
@@ -85,14 +87,6 @@ const Chat = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  const handleWalletAdd = (wallet: WalletInfo) => {
-    setWallets((prev) => [...prev, wallet]);
-  };
-
-  const handleWalletRemove = (id: string) => {
-    setWallets((prev) => prev.filter((w) => w.id !== id));
-  };
 
   const handleLaunchModeChange = (mode: LaunchMode) => {
     setTokenData((prev) => ({ ...prev, launchMode: mode }));
@@ -241,6 +235,18 @@ const Chat = () => {
     setInput(prompt);
   };
 
+  const handleDeployComplete = (result: DeployTokenResult) => {
+    if (result.success) {
+      // Add success message to chat
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        role: "assistant",
+        content: `🎉 Token declawed successfully!\n\n**Mint Address:** ${result.mintAddress}\n**Pump.fun URL:** ${result.pumpUrl}\n**Signature:** ${result.signature?.slice(0, 20)}...`,
+        timestamp: new Date(),
+      }]);
+    }
+  };
+
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString("en-US", {
       hour: "2-digit",
@@ -301,9 +307,41 @@ const Chat = () => {
               </div>
             </div>
 
+            {/* Phantom Wallet */}
+            <div className="p-2">
+              <PhantomWalletButton />
+            </div>
+
             {/* Token Preview */}
             <div className="p-2">
-              <TokenPreview tokenData={tokenData} wallets={wallets} />
+              <TokenPreview tokenData={tokenData} wallets={[]} />
+            </div>
+
+            {/* Dev Buy Amount */}
+            <div className="p-2">
+              <div className="win95-groupbox p-2">
+                <span className="win95-groupbox-title">Dev Buy Amount</span>
+                <div className="flex items-center gap-2 mt-2">
+                  <input
+                    type="number"
+                    value={devBuyAmount}
+                    onChange={(e) => setDevBuyAmount(Number(e.target.value))}
+                    min="0"
+                    step="0.1"
+                    className="win95-inset flex-1 px-2 py-1 font-mono text-xs bg-white text-black"
+                  />
+                  <span className="font-mono text-xs text-black">SOL</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Deploy Button */}
+            <div className="p-2">
+              <DeployTokenButton 
+                tokenData={tokenData}
+                devBuyAmountSol={devBuyAmount}
+                onDeployComplete={handleDeployComplete}
+              />
             </div>
 
             {/* Launch Mode Selector */}
@@ -356,15 +394,6 @@ const Chat = () => {
                   setTwitterConnected(false);
                   setTwitterUsername(null);
                 }}
-              />
-            </div>
-
-            {/* Wallet Manager */}
-            <div className="p-2 flex-1">
-              <WalletManager
-                wallets={wallets}
-                onAddWallet={handleWalletAdd}
-                onRemoveWallet={handleWalletRemove}
               />
             </div>
           </div>

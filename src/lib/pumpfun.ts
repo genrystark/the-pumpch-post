@@ -1,0 +1,179 @@
+import { Connection, Keypair, VersionedTransaction } from '@solana/web3.js';
+import { WalletContextState } from '@solana/wallet-adapter-react';
+
+export interface TokenMetadata {
+  name: string;
+  symbol: string;
+  description: string;
+  imageUrl: string;
+  twitter?: string;
+  telegram?: string;
+  website?: string;
+}
+
+export interface DeployTokenParams {
+  metadata: TokenMetadata;
+  devBuyAmountSol: number;
+  imageFile?: File;
+}
+
+export interface DeployTokenResult {
+  success: boolean;
+  mintAddress?: string;
+  pumpUrl?: string;
+  signature?: string;
+  error?: string;
+}
+
+/**
+ * Create a new token on pump.fun via PumpPortal API
+ * 
+ * @param connection - Solana connection
+ * @param wallet - Wallet adapter state
+ * @param params - Token deployment parameters
+ * @returns Deployment result with mint address and pump.fun URL
+ */
+export async function createPumpFunToken(
+  connection: Connection,
+  wallet: WalletContextState,
+  params: DeployTokenParams
+): Promise<DeployTokenResult> {
+  try {
+    if (!wallet.publicKey || !wallet.signTransaction) {
+      return { success: false, error: 'Wallet not connected' };
+    }
+
+    const { metadata, devBuyAmountSol } = params;
+
+    // Generate a new keypair for the mint
+    const mintKeypair = Keypair.generate();
+    const mintAddress = mintKeypair.publicKey.toString();
+
+    console.log('🚀 Creating token with mint:', mintAddress);
+
+    // Step 1: Prepare metadata URI
+    // Note: PumpPortal accepts direct image URLs or IPFS URIs
+    // If you have base64 images, upload them to IPFS first or use a service like Pinata
+    let metadataUri = metadata.imageUrl;
+    
+    if (metadata.imageUrl && metadata.imageUrl.startsWith('data:')) {
+      console.warn('⚠️ Base64 images should be uploaded to IPFS first');
+      // You can use services like Pinata, NFT.Storage, or your own IPFS node
+      // For now, we'll use the data URL directly (may not work with all services)
+    }
+
+    // Step 2: Get transaction from PumpPortal API
+    console.log('📝 Requesting transaction from PumpPortal...');
+    
+    const devBuyAmount = Number(devBuyAmountSol) || 0;
+    console.log('💰 Dev buy amount:', devBuyAmount, 'SOL');
+
+    // PumpPortal API endpoint
+    // Note: You may need to use a proxy server to avoid CORS issues
+    const pumpPortalUrl = 'https://pumpportal.fun/api/trade-local';
+    
+    const response = await fetch(pumpPortalUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        publicKey: wallet.publicKey.toString(),
+        action: 'create',
+        tokenMetadata: {
+          name: metadata.name,
+          symbol: metadata.symbol,
+          uri: metadataUri,
+        },
+        mint: mintAddress,
+        denominatedInSol: 'true',
+        amount: devBuyAmount,
+        slippage: 10,
+        priorityFee: 0.0005,
+        pool: 'pump',
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('❌ PumpPortal API error:', errorData);
+      return { 
+        success: false, 
+        mintAddress,
+        pumpUrl: `https://pump.fun/${mintAddress}`,
+        error: errorData.error || `HTTP ${response.status}: ${response.statusText}` 
+      };
+    }
+
+    const tradeData = await response.json();
+
+    if (!tradeData?.transaction) {
+      console.error('❌ No transaction returned:', tradeData);
+      return { 
+        success: false, 
+        mintAddress,
+        pumpUrl: `https://pump.fun/${mintAddress}`,
+        error: tradeData?.error || 'No transaction returned from PumpPortal' 
+      };
+    }
+
+    // Step 3: Decode and sign the transaction
+    console.log('✍️ Signing transaction...');
+    
+    const transactionBytes = Uint8Array.from(atob(tradeData.transaction), c => c.charCodeAt(0));
+    const transaction = VersionedTransaction.deserialize(transactionBytes);
+
+    // Sign with the mint keypair first
+    transaction.sign([mintKeypair]);
+
+    // Then sign with the user's wallet
+    const signedTransaction = await wallet.signTransaction(transaction);
+
+    // Step 4: Send the transaction
+    console.log('📡 Sending transaction to Solana...');
+    
+    const signature = await connection.sendRawTransaction(signedTransaction.serialize(), {
+      skipPreflight: false,
+      preflightCommitment: 'confirmed',
+    });
+
+    console.log('📨 Transaction sent:', signature);
+
+    // Wait for confirmation
+    console.log('⏳ Waiting for confirmation...');
+    const confirmation = await connection.confirmTransaction(signature, 'confirmed');
+    
+    if (confirmation.value.err) {
+      console.error('❌ Transaction failed:', confirmation.value.err);
+      return { 
+        success: false, 
+        mintAddress,
+        pumpUrl: `https://pump.fun/${mintAddress}`,
+        signature,
+        error: 'Transaction failed to confirm' 
+      };
+    }
+
+    console.log('🎉 Token created successfully on pump.fun!');
+    
+    return {
+      success: true,
+      mintAddress,
+      pumpUrl: `https://pump.fun/${mintAddress}`,
+      signature,
+    };
+
+  } catch (error) {
+    console.error('❌ Error creating pump.fun token:', error);
+    
+    // Generate a mint address even on failure
+    const fallbackMint = Keypair.generate().publicKey.toString();
+    
+    return {
+      success: false,
+      mintAddress: fallbackMint,
+      pumpUrl: `https://pump.fun/${fallbackMint}`,
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+    };
+  }
+}

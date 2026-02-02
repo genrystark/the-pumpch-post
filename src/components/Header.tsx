@@ -1,10 +1,23 @@
 import { Link } from "react-router-dom";
-import { Minus, Square, X, Menu, MessageSquare } from "lucide-react";
+import { Minus, Square, X, Menu, MessageSquare, Wallet } from "lucide-react";
 import { useState } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import pumpchLogo from "@/assets/pumpch-logo.png";
+import { shortenAddress } from "@/lib/solana";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { publicKey, connected, disconnect, connecting } = useWallet();
+  const { setVisible } = useWalletModal();
+
+  const handleWalletClick = () => {
+    if (connected) {
+      disconnect();
+    } else {
+      setVisible(true);
+    }
+  };
 
   return (
     <header className="win95-window">
@@ -76,8 +89,24 @@ const Header = () => {
           </nav>
         </div>
         <div className={`${mobileMenuOpen ? 'flex' : 'hidden'} sm:flex items-center gap-2 mt-2 sm:mt-0 pb-2 sm:pb-0`}>
-          <button className="win95-button-primary font-mono text-xs font-bold">
-            [CONNECT PHANTOM]
+          <button 
+            onClick={handleWalletClick}
+            disabled={connecting}
+            className={`font-mono text-xs font-bold flex items-center gap-1 ${
+              connected ? 'win95-button' : 'win95-button-primary'
+            }`}
+          >
+            <Wallet className="w-3 h-3" />
+            {connecting ? (
+              'CONNECTING...'
+            ) : connected && publicKey ? (
+              <>
+                <span className="w-2 h-2 bg-[#00ff00] rounded-full" />
+                {shortenAddress(publicKey.toString())}
+              </>
+            ) : (
+              '[CONNECT PHANTOM]'
+            )}
           </button>
         </div>
       </div>
