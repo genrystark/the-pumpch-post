@@ -53,39 +53,47 @@ async function fetchCryptoNews(): Promise<NewsItem[]> {
     console.error('Bitcoin Magazine fetch failed:', e);
   }
 
-  // Shuffle and limit
-  const shuffled = news.sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, 10);
+  // Sort by newest first (based on publishedAt time) and limit
+  news.sort((a, b) => {
+    // Parse time strings to compare
+    const timeA = a.publishedAt;
+    const timeB = b.publishedAt;
+    return timeB.localeCompare(timeA);
+  });
+  
+  return news.slice(0, 15);
 }
 
 function parseRSS(xml: string, source: string): NewsItem[] {
   const items: NewsItem[] = [];
   const itemRegex = /<item>([\s\S]*?)<\/item>/g;
   const titleRegex = /<title><!\[CDATA\[(.*?)\]\]>|<title>(.*?)<\/title>/;
-  const linkRegex = /<link>(.*?)<\/link>|<link><!\[CDATA\[(.*?)\]\]>/;
+  const linkRegex = /<link>(.*?)<\/link>|<link><!\[CDATA\[(.*?)\]\]>|<link\s+href="([^"]+)"/;
   const pubDateRegex = /<pubDate>(.*?)<\/pubDate>/;
 
   let match;
-  while ((match = itemRegex.exec(xml)) !== null) {
+  let index = 0;
+  while ((match = itemRegex.exec(xml)) !== null && index < 10) {
     const itemContent = match[1];
     
     const titleMatch = titleRegex.exec(itemContent);
     const title = titleMatch ? (titleMatch[1] || titleMatch[2]) : '';
     
     const linkMatch = linkRegex.exec(itemContent);
-    const link = linkMatch ? (linkMatch[1] || linkMatch[2]) : '';
+    const link = linkMatch ? (linkMatch[1] || linkMatch[2] || linkMatch[3]) : '';
     
     const pubDateMatch = pubDateRegex.exec(itemContent);
     const pubDate = pubDateMatch ? pubDateMatch[1] : new Date().toISOString();
 
-    if (title && link) {
+    if (title && link && link !== '#') {
       items.push({
-        id: Math.random().toString(36).substr(2, 9),
-        title: title.trim(),
+        id: `${source}-${index}-${Date.now()}`,
+        title: title.trim().replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'"),
         source,
         publishedAt: formatDate(pubDate),
         url: link.trim(),
       });
+      index++;
     }
   }
 

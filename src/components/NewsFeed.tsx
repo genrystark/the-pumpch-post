@@ -79,8 +79,8 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
 
   useEffect(() => {
     fetchNews();
-    // Refresh news every 60 seconds
-    const interval = setInterval(fetchNews, 60000);
+    // Refresh news every 30 seconds for more real-time feel
+    const interval = setInterval(fetchNews, 30000);
     return () => clearInterval(interval);
   }, [fetchNews]);
 

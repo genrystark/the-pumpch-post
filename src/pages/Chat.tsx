@@ -1,30 +1,22 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, ArrowLeft, TrendingUp, Rocket, Search } from "lucide-react";
+import { Send, ArrowLeft, TrendingUp, Rocket, Search, Image, FileImage, Sliders } from "lucide-react";
 import NewsFeed from "@/components/NewsFeed";
+import WalletManager, { WalletInfo } from "@/components/WalletManager";
+import TokenPreview, { TokenData } from "@/components/TokenPreview";
+import LaunchModeSelector, { LaunchMode } from "@/components/LaunchModeSelector";
+import TwitterConnect from "@/components/TwitterConnect";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
   timestamp: Date;
+  type?: "text" | "wallet_prompt" | "logo_prompt" | "banner_prompt";
 }
-
-const sidebarData = {
-  narratives: [
-    "AI agents trending on X",
-    "Cat coins revival wave",
-    "Gaming tokens early buzz",
-  ],
-  activeLaunches: [
-    { name: "$PUMP", status: "Early" },
-    { name: "$MEME", status: "Mid" },
-    { name: "$DEGEN", status: "Late" },
-  ],
-  recentTokens: ["$CAT", "$DOG", "$FROG", "$APE"],
-};
 
 const initialMessages: Message[] = [
   {
@@ -36,10 +28,57 @@ const initialMessages: Message[] = [
 ];
 
 const Chat = () => {
+  const [searchParams] = useSearchParams();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Wallet state
+  const [wallets, setWallets] = useState<WalletInfo[]>([]);
+
+  // Token state
+  const [tokenData, setTokenData] = useState<TokenData>({
+    name: "",
+    ticker: "",
+    description: "",
+    logo: null,
+    banner: null,
+    launchMode: "dev",
+  });
+
+  // Twitter state
+  const [twitterConnected, setTwitterConnected] = useState(false);
+  const [twitterUsername, setTwitterUsername] = useState<string | null>(null);
+
+  // Stats (real data placeholders - would come from API)
+  const [stats, setStats] = useState({
+    analyzed: 0,
+    activeLaunches: 0,
+  });
+
+  // Load real stats
+  useEffect(() => {
+    // Simulate loading real stats
+    const loadStats = async () => {
+      // In real app, fetch from API
+      setStats({
+        analyzed: Math.floor(Math.random() * 50) + 100,
+        activeLaunches: Math.floor(Math.random() * 10) + 5,
+      });
+    };
+    loadStats();
+    const interval = setInterval(loadStats, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Handle URL prompt parameter
+  useEffect(() => {
+    const promptParam = searchParams.get("prompt");
+    if (promptParam) {
+      setInput(promptParam);
+    }
+  }, [searchParams]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -48,6 +87,18 @@ const Chat = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const handleWalletAdd = (wallet: WalletInfo) => {
+    setWallets((prev) => [...prev, wallet]);
+  };
+
+  const handleWalletRemove = (id: string) => {
+    setWallets((prev) => prev.filter((w) => w.id !== id));
+  };
+
+  const handleLaunchModeChange = (mode: LaunchMode) => {
+    setTokenData((prev) => ({ ...prev, launchMode: mode }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,26 +112,57 @@ const Chat = () => {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const userInput = input.trim().toLowerCase();
     setInput("");
     setIsTyping(true);
 
-    // Simulate AI response
+    // Check for launch idea requests
+    const isLaunchIdea = userInput.includes("launch idea") || userInput.includes("token launch") || userInput.includes("suggest a token");
+
     setTimeout(() => {
-      const responses = [
-        "Interesting inquiry. Let me scan the current narrative landscape for you. Based on my analysis of X activity and Pump.fun launches in the past 24 hours, there's notable momentum building around AI-themed tokens.",
-        "I've analyzed this token's lifecycle. It appears to be in the mid-stage with declining volume. Historical patterns suggest caution—similar launches have seen 60% drawdowns at this phase.",
-        "For a launch today, I'd recommend focusing on the current meta. Gaming and AI narratives are showing strength. I can help you develop a concept and timing strategy.",
-        "That's a complex pattern. Looking at historical data from similar tokens, the pump is likely driven by coordinated social activity. Monitor the holder distribution closely.",
-      ];
+      let response: Message;
 
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: responses[Math.floor(Math.random() * responses.length)],
-        timestamp: new Date(),
-      };
+      if (isLaunchIdea) {
+        response = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: "I can help you launch a token! First, let's set up your wallets. Would you like to:\n\n1. **Create a new Solana wallet** - I'll generate a fresh wallet for you\n2. **Import an existing wallet** - Use your private key\n\nPlease add your wallets using the panel on the left. You'll need at least one Dev wallet to proceed with the launch.",
+          timestamp: new Date(),
+          type: "wallet_prompt",
+        };
+      } else if (userInput.includes("logo") || userInput.includes("generate image")) {
+        response = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: "I can generate a logo for your token! Just describe what you want:\n\n**Example prompts:**\n- \"A cute green frog wearing sunglasses\"\n- \"Abstract geometric pattern in blue and gold\"\n- \"A rocket ship with flames\"\n\nDescribe your ideal logo and I'll create it for you.",
+          timestamp: new Date(),
+          type: "logo_prompt",
+        };
+      } else if (userInput.includes("banner")) {
+        response = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: "I can generate a banner for your token! Describe the banner you want:\n\n**Example prompts:**\n- \"Epic landscape with mountains at sunset\"\n- \"Cyber city with neon lights\"\n- \"Abstract wave patterns in vibrant colors\"\n\nDescribe your ideal banner and I'll create it.",
+          timestamp: new Date(),
+          type: "banner_prompt",
+        };
+      } else {
+        const responses = [
+          "Interesting inquiry. Let me scan the current narrative landscape for you. Based on my analysis of X activity and Pump.fun launches in the past 24 hours, there's notable momentum building around AI-themed tokens.",
+          "I've analyzed this token's lifecycle. It appears to be in the mid-stage with declining volume. Historical patterns suggest caution—similar launches have seen 60% drawdowns at this phase.",
+          "For a launch today, I'd recommend focusing on the current meta. Gaming and AI narratives are showing strength. I can help you develop a concept and timing strategy.",
+          "That's a complex pattern. Looking at historical data from similar tokens, the pump is likely driven by coordinated social activity. Monitor the holder distribution closely.",
+        ];
 
-      setMessages((prev) => [...prev, assistantMessage]);
+        response = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: responses[Math.floor(Math.random() * responses.length)],
+          timestamp: new Date(),
+        };
+      }
+
+      setMessages((prev) => [...prev, response]);
       setIsTyping(false);
     }, 1500);
   };
@@ -99,8 +181,8 @@ const Chat = () => {
 
   return (
     <div className="h-screen bg-paper flex overflow-hidden">
-      {/* Left Sidebar */}
-      <aside className="w-56 bg-paper border-r border-border hidden lg:flex flex-col shrink-0">
+      {/* Left Sidebar - Token Setup */}
+      <aside className="w-64 bg-paper border-r border-border hidden lg:flex flex-col shrink-0 overflow-y-auto">
         {/* Sidebar header */}
         <div className="p-3 border-b border-border">
           <Link to="/" className="flex items-center gap-2 text-ink hover:text-accent transition-colors">
@@ -113,65 +195,98 @@ const Chat = () => {
         <div className="p-3 border-b border-border">
           <h1 className="masthead text-xl text-accent">PUMPCH</h1>
           <p className="font-mono text-xs text-ink-faded uppercase tracking-wider">
-            Trading Desk
+            Launch Desk
           </p>
         </div>
 
-        {/* Today's Narratives */}
+        {/* Real Stats */}
         <div className="p-3 border-b border-border">
-          <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-3 h-3 text-accent" />
-            <h3 className="font-mono text-xs uppercase tracking-widest text-ink-faded">
-              Narratives
-            </h3>
+          <div className="grid grid-cols-2 gap-2">
+            <div className="border border-border p-2 text-center">
+              <div className="flex items-center justify-center gap-1 mb-1">
+                <Search className="w-3 h-3 text-accent" />
+              </div>
+              <p className="font-headline text-lg text-ink">{stats.analyzed}</p>
+              <p className="font-mono text-xs text-ink-faded">Analyzed</p>
+            </div>
+            <div className="border border-border p-2 text-center">
+              <div className="flex items-center justify-center gap-1 mb-1">
+                <Rocket className="w-3 h-3 text-accent" />
+              </div>
+              <p className="font-headline text-lg text-ink">{stats.activeLaunches}</p>
+              <p className="font-mono text-xs text-ink-faded">Active</p>
+            </div>
           </div>
-          <ul className="space-y-1">
-            {sidebarData.narratives.map((narrative, i) => (
-              <li key={i} className="font-body text-xs text-ink leading-snug">
-                • {narrative}
-              </li>
-            ))}
-          </ul>
         </div>
 
-        {/* Active Launches */}
+        {/* Token Preview */}
         <div className="p-3 border-b border-border">
-          <div className="flex items-center gap-2 mb-2">
-            <Rocket className="w-3 h-3 text-accent" />
-            <h3 className="font-mono text-xs uppercase tracking-widest text-ink-faded">
-              Active Launches
-            </h3>
-          </div>
-          <ul className="space-y-1">
-            {sidebarData.activeLaunches.map((launch, i) => (
-              <li key={i} className="flex justify-between items-center">
-                <span className="font-mono text-xs text-ink">{launch.name}</span>
-                <span className="font-mono text-xs text-ink-faded uppercase">
-                  {launch.status}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <TokenPreview tokenData={tokenData} wallets={wallets} />
         </div>
 
-        {/* Recently Analyzed */}
-        <div className="p-3">
+        {/* Launch Mode Selector */}
+        <div className="p-3 border-b border-border">
+          <LaunchModeSelector mode={tokenData.launchMode} onModeChange={handleLaunchModeChange} />
+        </div>
+
+        {/* Distribution Button */}
+        <div className="p-3 border-b border-border">
+          <Button variant="outline" className="w-full justify-start gap-2" disabled>
+            <Sliders className="w-4 h-4" />
+            <span className="font-mono text-xs">Distribution</span>
+            <span className="ml-auto font-mono text-xs text-ink-faded">Soon</span>
+          </Button>
+        </div>
+
+        {/* Generation Buttons */}
+        <div className="p-3 border-b border-border space-y-2">
           <div className="flex items-center gap-2 mb-2">
-            <Search className="w-3 h-3 text-accent" />
+            <Image className="w-3 h-3 text-accent" />
             <h3 className="font-mono text-xs uppercase tracking-widest text-ink-faded">
-              Analyzed
+              Generate
             </h3>
           </div>
-          <div className="flex flex-wrap gap-1">
-            {sidebarData.recentTokens.map((token, i) => (
-              <span
-                key={i}
-                className="inline-block border border-border px-1.5 py-0.5 font-mono text-xs text-ink"
-              >
-                {token}
-              </span>
-            ))}
-          </div>
+          <Button
+            variant="outline"
+            className="w-full justify-start gap-2 h-9"
+            onClick={() => setInput("Generate a logo for my token")}
+          >
+            <Image className="w-4 h-4" />
+            <span className="font-mono text-xs">Logo</span>
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full justify-start gap-2 h-9"
+            onClick={() => setInput("Generate a banner for my token")}
+          >
+            <FileImage className="w-4 h-4" />
+            <span className="font-mono text-xs">Banner</span>
+          </Button>
+        </div>
+
+        {/* Twitter Connect */}
+        <div className="p-3 border-b border-border">
+          <TwitterConnect
+            connected={twitterConnected}
+            username={twitterUsername}
+            onConnect={() => {
+              setTwitterConnected(true);
+              setTwitterUsername("pumpch_user");
+            }}
+            onDisconnect={() => {
+              setTwitterConnected(false);
+              setTwitterUsername(null);
+            }}
+          />
+        </div>
+
+        {/* Wallet Manager */}
+        <div className="p-3 flex-1">
+          <WalletManager
+            wallets={wallets}
+            onAddWallet={handleWalletAdd}
+            onRemoveWallet={handleWalletRemove}
+          />
         </div>
       </aside>
 
@@ -189,10 +304,21 @@ const Chat = () => {
             <div className="hidden lg:block">
               <h2 className="font-headline text-base text-ink">Agent Chat</h2>
               <p className="font-mono text-xs text-ink-faded uppercase tracking-wider">
-                Direct line to the trading floor
+                Direct line to the launch desk
               </p>
             </div>
-            <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-xs text-ink-faded">
+                  {stats.analyzed} analyzed
+                </span>
+                <span className="text-ink-faded">•</span>
+                <span className="font-mono text-xs text-accent">
+                  {stats.activeLaunches} active
+                </span>
+              </div>
+              <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+            </div>
           </div>
         </header>
 
@@ -201,7 +327,8 @@ const Chat = () => {
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+              className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} opacity-0 animate-fade-in-up`}
+              style={{ animationDelay: "0.1s" }}
             >
               <div
                 className={`max-w-xl ${
@@ -220,9 +347,9 @@ const Chat = () => {
                   </span>
                 </div>
                 {/* Message content */}
-                <p className="font-body text-sm leading-relaxed">
+                <div className="font-body text-sm leading-relaxed whitespace-pre-line">
                   {message.content}
-                </p>
+                </div>
               </div>
             </div>
           ))}
