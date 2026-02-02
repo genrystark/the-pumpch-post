@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, ArrowLeft, TrendingUp, Rocket, Search } from "lucide-react";
+import NewsFeed from "@/components/NewsFeed";
 
 interface Message {
   id: string;
@@ -84,6 +85,11 @@ const Chat = () => {
     }, 1500);
   };
 
+  const handleLaunchIdea = (newsTitle: string) => {
+    const prompt = `Based on this news: "${newsTitle}" - suggest a token launch idea for Pump.fun`;
+    setInput(prompt);
+  };
+
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString("en-US", {
       hour: "2-digit",
@@ -92,36 +98,36 @@ const Chat = () => {
   };
 
   return (
-    <div className="min-h-screen bg-paper flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-paper-aged border-r-2 border-ink hidden lg:flex flex-col">
+    <div className="h-screen bg-paper flex overflow-hidden">
+      {/* Left Sidebar */}
+      <aside className="w-56 bg-paper border-r border-border hidden lg:flex flex-col shrink-0">
         {/* Sidebar header */}
-        <div className="p-4 border-b-2 border-ink">
+        <div className="p-3 border-b border-border">
           <Link to="/" className="flex items-center gap-2 text-ink hover:text-accent transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            <span className="font-mono text-xs uppercase tracking-widest">Back to Front Page</span>
+            <ArrowLeft className="w-3 h-3" />
+            <span className="font-mono text-xs uppercase tracking-widest">Back</span>
           </Link>
         </div>
 
         {/* Masthead */}
-        <div className="p-4 border-b border-ink/30">
-          <h1 className="masthead text-2xl text-ink">PUMPCH</h1>
-          <p className="font-mono text-xs text-ink-faded uppercase tracking-wider mt-1">
+        <div className="p-3 border-b border-border">
+          <h1 className="masthead text-xl text-accent">PUMPCH</h1>
+          <p className="font-mono text-xs text-ink-faded uppercase tracking-wider">
             Trading Desk
           </p>
         </div>
 
         {/* Today's Narratives */}
-        <div className="p-4 border-b border-ink/30">
-          <div className="flex items-center gap-2 mb-3">
-            <TrendingUp className="w-4 h-4 text-accent" />
+        <div className="p-3 border-b border-border">
+          <div className="flex items-center gap-2 mb-2">
+            <TrendingUp className="w-3 h-3 text-accent" />
             <h3 className="font-mono text-xs uppercase tracking-widest text-ink-faded">
-              Today's Narratives
+              Narratives
             </h3>
           </div>
-          <ul className="space-y-2">
+          <ul className="space-y-1">
             {sidebarData.narratives.map((narrative, i) => (
-              <li key={i} className="font-body text-sm text-ink leading-relaxed">
+              <li key={i} className="font-body text-xs text-ink leading-snug">
                 • {narrative}
               </li>
             ))}
@@ -129,17 +135,17 @@ const Chat = () => {
         </div>
 
         {/* Active Launches */}
-        <div className="p-4 border-b border-ink/30">
-          <div className="flex items-center gap-2 mb-3">
-            <Rocket className="w-4 h-4 text-accent" />
+        <div className="p-3 border-b border-border">
+          <div className="flex items-center gap-2 mb-2">
+            <Rocket className="w-3 h-3 text-accent" />
             <h3 className="font-mono text-xs uppercase tracking-widest text-ink-faded">
               Active Launches
             </h3>
           </div>
-          <ul className="space-y-2">
+          <ul className="space-y-1">
             {sidebarData.activeLaunches.map((launch, i) => (
               <li key={i} className="flex justify-between items-center">
-                <span className="font-mono text-sm text-ink">{launch.name}</span>
+                <span className="font-mono text-xs text-ink">{launch.name}</span>
                 <span className="font-mono text-xs text-ink-faded uppercase">
                   {launch.status}
                 </span>
@@ -149,18 +155,18 @@ const Chat = () => {
         </div>
 
         {/* Recently Analyzed */}
-        <div className="p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Search className="w-4 h-4 text-accent" />
+        <div className="p-3">
+          <div className="flex items-center gap-2 mb-2">
+            <Search className="w-3 h-3 text-accent" />
             <h3 className="font-mono text-xs uppercase tracking-widest text-ink-faded">
-              Recently Analyzed
+              Analyzed
             </h3>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1">
             {sidebarData.recentTokens.map((token, i) => (
               <span
                 key={i}
-                className="inline-block border border-ink/30 px-2 py-1 font-mono text-xs text-ink"
+                className="inline-block border border-border px-1.5 py-0.5 font-mono text-xs text-ink"
               >
                 {token}
               </span>
@@ -170,53 +176,51 @@ const Chat = () => {
       </aside>
 
       {/* Main chat area */}
-      <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col min-w-0">
         {/* Chat header */}
-        <header className="p-4 border-b-2 border-ink bg-paper">
+        <header className="p-3 border-b border-border bg-paper shrink-0">
           <div className="flex items-center justify-between">
             <div className="lg:hidden">
               <Link to="/" className="flex items-center gap-2 text-ink hover:text-accent transition-colors">
                 <ArrowLeft className="w-4 h-4" />
-                <span className="masthead text-xl">PUMPCH</span>
+                <span className="masthead text-lg text-accent">PUMPCH</span>
               </Link>
             </div>
             <div className="hidden lg:block">
-              <h2 className="font-headline text-xl text-ink">Agent Chat</h2>
+              <h2 className="font-headline text-base text-ink">Agent Chat</h2>
               <p className="font-mono text-xs text-ink-faded uppercase tracking-wider">
                 Direct line to the trading floor
               </p>
             </div>
-            <div className="stamp bg-accent text-accent-foreground">
-              Live
-            </div>
+            <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
           </div>
         </header>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-6">
+        <div className="flex-1 overflow-y-auto p-3 space-y-4">
           {messages.map((message) => (
             <div
               key={message.id}
               className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-2xl ${
+                className={`max-w-xl ${
                   message.role === "user"
-                    ? "bg-ink text-paper"
-                    : "bg-paper-aged border-2 border-ink"
-                } p-4`}
+                    ? "bg-accent text-accent-foreground"
+                    : "bg-muted border border-border"
+                } p-3 rounded-sm`}
               >
                 {/* Message header */}
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="font-mono text-xs uppercase tracking-widest opacity-60">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-mono text-xs uppercase tracking-widest opacity-70">
                     {message.role === "user" ? "You" : "Pumpch"}
                   </span>
-                  <span className="font-mono text-xs opacity-40">
+                  <span className="font-mono text-xs opacity-50">
                     {formatTime(message.timestamp)}
                   </span>
                 </div>
                 {/* Message content */}
-                <p className="font-body leading-relaxed">
+                <p className="font-body text-sm leading-relaxed">
                   {message.content}
                 </p>
               </div>
@@ -226,7 +230,7 @@ const Chat = () => {
           {/* Typing indicator */}
           {isTyping && (
             <div className="flex justify-start">
-              <div className="bg-paper-aged border-2 border-ink p-4">
+              <div className="bg-muted border border-border p-3 rounded-sm">
                 <span className="font-mono text-xs uppercase tracking-widest text-ink-faded">
                   Pumpch is analyzing...
                 </span>
@@ -238,24 +242,29 @@ const Chat = () => {
         </div>
 
         {/* Input area */}
-        <div className="p-4 border-t-2 border-ink bg-paper-aged">
-          <form onSubmit={handleSubmit} className="flex gap-3">
+        <div className="p-3 border-t border-border bg-paper shrink-0">
+          <form onSubmit={handleSubmit} className="flex gap-2">
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask Pumpch anything..."
-              className="flex-1 bg-paper border-2 border-ink text-ink placeholder:text-ink-faded font-body h-12"
+              className="flex-1 bg-paper border border-border text-ink placeholder:text-ink-faded font-body h-10 text-sm"
             />
-            <Button type="submit" variant="editorial" size="lg" disabled={!input.trim() || isTyping}>
+            <Button type="submit" variant="editorial" size="default" disabled={!input.trim() || isTyping}>
               <Send className="w-4 h-4" />
-              <span className="hidden sm:inline">Send</span>
+              <span className="hidden sm:inline ml-1">Send</span>
             </Button>
           </form>
-          <p className="font-mono text-xs text-ink-faded mt-2 text-center">
+          <p className="font-mono text-xs text-ink-faded mt-1.5 text-center">
             Press Enter to send • Pumpch does not provide financial advice
           </p>
         </div>
       </main>
+
+      {/* Right News Panel */}
+      <aside className="w-72 hidden xl:block shrink-0">
+        <NewsFeed onLaunchIdea={handleLaunchIdea} />
+      </aside>
     </div>
   );
 };
