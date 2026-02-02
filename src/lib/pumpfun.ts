@@ -117,17 +117,22 @@ export async function createPumpFunToken(
         slippage: 10,
         priorityFee: 0.0005,
         pool: 'pump',
+        isMayhemMode: 'false',
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       console.error('❌ PumpPortal API error:', errorData);
-      return { 
-        success: false, 
+      const errorMessage =
+        typeof errorData?.error === 'string'
+          ? errorData.error
+          : errorData?.details?.error ?? `HTTP ${response.status}: ${response.statusText}`;
+      return {
+        success: false,
         mintAddress,
         pumpUrl: `https://pump.fun/${mintAddress}`,
-        error: errorData.error || `HTTP ${response.status}: ${response.statusText}` 
+        error: errorMessage,
       };
     }
 
