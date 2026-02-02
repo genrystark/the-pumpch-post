@@ -11,6 +11,8 @@ import DeployTokenButton from "@/components/DeployTokenButton";
 import GenerateImagesSection from "@/components/GenerateImagesSection";
 import { toast } from "sonner";
 import { DeployTokenResult } from "@/lib/pumpfun";
+import { getAgentById, getSelectedAgentId, getEffectiveSystemPrompt } from "@/lib/agents";
+import declawAgentLogo from "@/assets/declaw-logo.png";
 
 interface Message {
   id: string;
@@ -24,7 +26,7 @@ const initialMessages: Message[] = [
   {
     id: "1",
     role: "assistant",
-    content: "Good morning, trader. I'm declaw, your AI agent for the meme token economy. I track narratives, analyze tokens, and help you declaw. What brings you to the floor today?",
+    content: "Good morning, trader. I'm your AI agent for the meme token economy. I track narratives, analyze tokens, and help you declaw. What brings you to the floor today?",
     timestamp: new Date(),
   },
 ];
@@ -35,6 +37,11 @@ const Chat = () => {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const selectedAgentId = getSelectedAgentId();
+  const currentAgent = getAgentById(selectedAgentId) ?? { id: "declaw", name: "declaw", avatar: undefined };
+  const agentAvatar = currentAgent.avatar ?? declawAgentLogo;
+  const agentName = currentAgent.name ?? "declaw";
 
   // Token state
   const [tokenData, setTokenData] = useState<TokenData>({
@@ -150,13 +157,19 @@ const Chat = () => {
     const apiMessages = newMessages.map(m => ({ role: m.role, content: m.content }));
 
     try {
+      const systemPrompt = getEffectiveSystemPrompt();
+      const body: { messages: { role: string; content: string }[]; system_prompt?: string } = {
+        messages: apiMessages,
+      };
+      if (systemPrompt != null) body.system_prompt = systemPrompt;
+
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/pumpster-chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: apiMessages }),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
@@ -231,7 +244,7 @@ const Chat = () => {
 
     } catch (error) {
       console.error("Chat error:", error);
-      toast.error("Failed to get response from declaw");
+      toast.error(`Failed to get response from ${agentName}`);
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: "assistant",
@@ -275,7 +288,7 @@ const Chat = () => {
           <div className="win95-titlebar">
             <div className="flex items-center gap-2">
               <Rocket className="w-4 h-4" />
-              <span className="text-xs">Declaw Desk</span>
+              <span className="text-xs">{agentName} Desk</span>
             </div>
             <div className="flex gap-1">
               <button className="win95-control-btn text-[8px]">_</button>
@@ -295,9 +308,9 @@ const Chat = () => {
 
             {/* Masthead */}
             <div className="p-3 border-b-2 border-[#808080] bg-[#000080] text-white">
-              <h1 className="font-['VT323'] text-xl text-[#ff6b00]">declaw</h1>
+              <h1 className="font-['VT323'] text-xl text-[#ff6b00]">{agentName}</h1>
               <p className="font-mono text-[10px] text-[#c0c0c0]">
-                DECLAW DESK v1.0
+                {agentName.toUpperCase()} DESK v1.0
               </p>
             </div>
 
@@ -327,7 +340,11 @@ const Chat = () => {
 
             {/* Token Preview */}
             <div className="p-2">
-              <TokenPreview tokenData={tokenData} wallets={[]} />
+              <TokenPreview
+                tokenData={tokenData}
+                wallets={[]}
+                onLogoChange={(logo) => setTokenData((prev) => ({ ...prev, logo }))}
+              />
             </div>
 
             {/* Dev Buy Amount */}
@@ -378,18 +395,21 @@ const Chat = () => {
               onBannerGenerated={(url) => setTokenData(prev => ({ ...prev, banner: url }))}
             />
 
-            {/* Twitter Connect */}
+            {/* Twitter Connect — when connected, X is shown in Token Preview and added to metadata on deploy */}
             <div className="p-2">
               <TwitterConnect
                 connected={twitterConnected}
                 username={twitterUsername}
                 onConnect={() => {
+                  const username = "declaw_user";
                   setTwitterConnected(true);
-                  setTwitterUsername("declaw_user");
+                  setTwitterUsername(username);
+                  setTokenData((prev) => ({ ...prev, twitter: `https://x.com/${username}` }));
                 }}
                 onDisconnect={() => {
                   setTwitterConnected(false);
                   setTwitterUsername(null);
+                  setTokenData((prev) => ({ ...prev, twitter: null }));
                 }}
               />
             </div>
@@ -403,7 +423,7 @@ const Chat = () => {
           <div className="win95-titlebar-green">
             <div className="flex items-center gap-2">
               <Send className="w-4 h-4" />
-              <span className="text-xs">declaw - Agent Chat</span>
+              <span className="text-xs">{agentName} - Agent Chat</span>
             </div>
             <div className="flex gap-1">
               <button className="win95-control-btn text-[8px]">_</button>
@@ -417,11 +437,11 @@ const Chat = () => {
             <div className="lg:hidden">
               <Link to="/" className="flex items-center gap-2 text-[#000080] hover:underline">
                 <ArrowLeft className="w-4 h-4" />
-                <span className="font-['VT323'] text-lg text-[#ff6b00]">declaw</span>
+                <span className="font-['VT323'] text-lg text-[#ff6b00]">{agentName}</span>
               </Link>
             </div>
             <div className="hidden lg:block">
-              <h2 className="font-bold text-sm">Direct line to the declaw desk</h2>
+              <h2 className="font-bold text-sm">Direct line to the {agentName} desk</h2>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 text-xs font-mono">
@@ -443,8 +463,15 @@ const Chat = () => {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3, delay: index === messages.length - 1 ? 0 : 0 }}
-                  className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                  className={`flex items-start gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
+                  {message.role === "assistant" && (
+                    <img
+                      src={agentAvatar}
+                      alt={agentName}
+                      className="w-8 h-8 rounded-sm shrink-0 object-cover border border-[#3a3a3a]"
+                    />
+                  )}
                   <motion.div
                     className={`max-w-xl ${
                       message.role === "user"
@@ -456,7 +483,7 @@ const Chat = () => {
                     {/* Message header */}
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-mono text-xs uppercase opacity-70">
-                        {message.role === "user" ? "You" : "declaw"}
+                        {message.role === "user" ? "You" : agentName}
                       </span>
                       <span className="font-mono text-[10px] opacity-50">
                         {formatTime(message.timestamp)}
@@ -475,18 +502,23 @@ const Chat = () => {
             <AnimatePresence>
               {isTyping && (
                 <motion.div 
-                  className="flex justify-start"
+                  className="flex items-start gap-2 justify-start"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                 >
+                  <img
+                    src={agentAvatar}
+                    alt={agentName}
+                    className="w-8 h-8 rounded-sm shrink-0 object-cover border border-[#3a3a3a]"
+                  />
                   <div className="bg-[#2a2a2a] border border-[#3a3a3a] p-3">
                     <motion.span 
                       className="font-mono text-xs text-[#00ff00]"
                       animate={{ opacity: [1, 0.5, 1] }}
                       transition={{ repeat: Infinity, duration: 1.5 }}
                     >
-                      declaw is analyzing...
+                      {agentName} is analyzing...
                     </motion.span>
                   </div>
                 </motion.div>
@@ -502,7 +534,7 @@ const Chat = () => {
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask declaw anything..."
+                placeholder={`Ask ${agentName} anything...`}
                 className="win95-inset flex-1 px-2 py-1 font-mono text-sm bg-white"
               />
               <button 
@@ -515,7 +547,7 @@ const Chat = () => {
               </button>
             </form>
             <p className="font-mono text-[10px] text-[#808080] mt-1 text-center">
-              Press Enter to send • declaw does not provide financial advice
+              Press Enter to send • {agentName} does not provide financial advice
             </p>
           </div>
         </div>

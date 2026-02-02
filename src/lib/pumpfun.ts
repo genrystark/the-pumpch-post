@@ -70,6 +70,9 @@ export async function createPumpFunToken(
             symbol: metadata.symbol,
             description: metadata.description,
             imageBase64: metadata.imageUrl,
+            ...(metadata.twitter && { twitter: metadata.twitter }),
+            ...(metadata.telegram && { telegram: metadata.telegram }),
+            ...(metadata.website && { website: metadata.website }),
           }),
         }
       );
@@ -142,7 +145,7 @@ export async function createPumpFunToken(
       console.error('❌ No transaction returned. Response keys:', Object.keys(tradeData || {}), tradeData);
       const hasRaw = tradeData && typeof tradeData === 'object' && 'raw' in tradeData;
       const hint = hasRaw
-        ? ' Задеплой обновлённую Edge Function pumpfun-proxy в Supabase (Dashboard → Edge Functions).'
+        ? ' Deploy the updated pumpfun-proxy Edge Function in Supabase (Dashboard → Edge Functions).'
         : '';
       return {
         success: false,

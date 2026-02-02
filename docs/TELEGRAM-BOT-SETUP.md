@@ -1,30 +1,34 @@
-# Telegram-бот Declaw: настройка
+# Declaw Telegram bot: setup
 
-Бот принимает команды в Telegram и выдаёт ссылку на деплой токена в веб-приложении (подключи Phantom → Declaw).
+Бот принимает команды в Telegram и отдаёт ссылку на деплой токена в веб-приложении (подключить Phantom → Declaw).
 
-## 1. Секреты в Supabase
+## 1. Секреты Supabase
 
-В Supabase Dashboard → Project Settings → Edge Functions → Secrets добавь:
+В Supabase Dashboard → Project Settings → Edge Functions → Secrets добавьте:
 
-| Secret | Значение |
-|--------|----------|
-| `TELEGRAM_BOT_TOKEN` | Токен бота от [@BotFather](https://t.me/BotFather) |
-| `APP_BASE_URL` | URL приложения, например `https://your-app.vercel.app` или Lovable URL |
+| Secret | Value |
+|--------|--------|
+| `TELEGRAM_BOT_TOKEN` | Токен бота от [@BotFather](https://t.me/BotFather) (например: `8518102228:AAG...`) |
+| `APP_BASE_URL` | URL приложения, например `https://the-pumpch-post.vercel.app` или Lovable URL |
 
-## 2. Деплой Edge Function
+**Важно:** не храните токен бота в коде и не коммитьте его в репозиторий — только в Supabase Secrets (или в локальном `.env` для тестов).
+
+## 2. Deploy Edge Function
+
+**Важно:** Telegram при отправке обновлений на webhook **не передаёт** заголовок `Authorization`. Поэтому функцию нужно деплоить **без проверки JWT** (`--no-verify-jwt`), иначе все запросы от Telegram будут получать 401 и бот не ответит.
 
 ```bash
 cd /path/to/the-pumpch-post
 npx supabase login
-npx supabase functions deploy declaw-telegram-bot --project-ref ovvyknjmlvyuiqfprqam
+npx supabase functions deploy declaw-telegram-bot --project-ref ovvyknjmlvyuiqfprqam --no-verify-jwt
 ```
 
-После деплоя функция будет доступна по адресу:
+После деплоя функция доступна по адресу:
 `https://ovvyknjmlvyuiqfprqam.supabase.co/functions/v1/declaw-telegram-bot`
 
-## 3. Установка webhook в Telegram
+## 3. Set Telegram webhook
 
-Отправь запрос (подставь свой токен и URL проекта):
+Send a request (replace with your token and project URL):
 
 ```bash
 curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook" \
@@ -32,17 +36,25 @@ curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook" \
   -d '{"url": "https://ovvyknjmlvyuiqfprqam.supabase.co/functions/v1/declaw-telegram-bot"}'
 ```
 
-Или в браузере (замени `YOUR_BOT_TOKEN`):
+Or in the browser (replace `YOUR_BOT_TOKEN`):
 ```
 https://api.telegram.org/botYOUR_BOT_TOKEN/setWebhook?url=https://ovvyknjmlvyuiqfprqam.supabase.co/functions/v1/declaw-telegram-bot
 ```
 
-В ответ должно прийти `{"ok":true}`.
+Ответ должен быть `{"ok":true}`.
 
-## 4. Использование бота
+**Проверить webhook:** откройте в браузере (подставьте свой токен):
+```
+https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/getWebhookInfo
+```
+В ответе должно быть `"url": "https://ovvyknjmlvyuiqfprqam.supabase.co/functions/v1/declaw-telegram-bot"`. Если `url` пустой — webhook не установлен.
 
-- **/start** — приветствие и подсказки
-- **/create Название TICKER** — создать токен (пример: `/create Pumpch PUMP`)
-- **Название TICKER** — то же без команды (пример: `Pumpch PUMP`)
+## 4. Команды бота
 
-Бот пришлёт ссылку на приложение с подставленными name и ticker. Пользователь открывает ссылку, подключает Phantom и нажимает Declaw.
+- **/start** — меню: что умеет бот (деплой, создание токена).
+- **/deploy** — деплой проекта: бот попросит ввести данные (имя и тикер).
+- **/deploy Name TICKER** или **деплой Name TICKER** — деплой с данными (например: `/deploy Pumpch PUMP`).
+- **/create Name TICKER** — создать токен по имени и тикеру (например: `/create Pumpch PUMP`).
+- **Name TICKER** — то же без команды (например: `Pumpch PUMP`).
+
+Бот присылает ссылку на приложение с подставленными именем и тикером. Пользователь открывает ссылку, подключает Phantom и нажимает Declaw.

@@ -1,21 +1,17 @@
-import { useState, useEffect, useCallback } from "react";
-import { Newspaper, Rocket, RefreshCw } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Newspaper, Rocket } from "lucide-react";
+import { X_FEED_POSTS } from "@/data/x-feed-posts";
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 interface NewsItem {
   id: string;
   title: string;
   source: string;
   publishedAt: string;
+  publishedAtIso?: string;
   url: string;
-}
-
-interface XPost {
-  id: string;
-  text: string;
-  author: string;
-  url: string;
-  publishedAt: string;
 }
 
 interface NewsFeedProps {
@@ -24,52 +20,70 @@ interface NewsFeedProps {
 
 type Tab = "news" | "x";
 
+const MAX_NEWS_ITEMS = 120;
+
+const OLD_NEWS_HOURS = 24;
+
+function isOldNews(item: NewsItem): boolean {
+  const iso = item.publishedAtIso;
+  if (!iso) return false;
+  const published = new Date(iso).getTime();
+  const cutoff = Date.now() - OLD_NEWS_HOURS * 60 * 60 * 1000;
+  return published < cutoff;
+}
+
 const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
   const [activeTab, setActiveTab] = useState<Tab>("news");
   const [news, setNews] = useState<NewsItem[]>([]);
-  const [tweets, setTweets] = useState<XPost[]>([]);
   const [newsLoading, setNewsLoading] = useState(true);
-  const [xLoading, setXLoading] = useState(false);
+  const [lastFetchedAt, setLastFetchedAt] = useState<number | null>(null);
+  const initialLoadDone = useRef(false);
 
   const fetchNews = useCallback(async () => {
-    setNewsLoading(true);
+    if (!initialLoadDone.current) setNewsLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("crypto-news");
-      if (error) throw error;
-      if (data?.news?.length) {
-        setNews(data.news.filter((n: NewsItem) => n.url && n.url.startsWith("http")));
-      } else {
-        setNews([]);
-      }
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/crypto-news?_t=${Date.now()}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+        cache: "no-store",
+      });
+      if (!res.ok) throw new Error(res.statusText);
+      const data = await res.json();
+      const fresh = (data?.news ?? []).filter((n: NewsItem) => n.url && n.url.startsWith("http"));
+      setLastFetchedAt(Date.now());
+      setNews((prev) => {
+        const byUrl = new Map(prev.map((n) => [n.url, n]));
+        fresh.forEach((n: NewsItem) => byUrl.set(n.url, n));
+        const merged = Array.from(byUrl.values()).sort((a, b) => {
+          const tA = a.publishedAtIso ? new Date(a.publishedAtIso).getTime() : new Date(a.publishedAt).getTime();
+          const tB = b.publishedAtIso ? new Date(b.publishedAtIso).getTime() : new Date(b.publishedAt).getTime();
+          return tB - tA;
+        });
+        return merged.slice(0, MAX_NEWS_ITEMS);
+      });
     } catch (e) {
       console.error("Failed to fetch news:", e);
-      setNews([]);
     }
     setNewsLoading(false);
-  }, []);
-
-  const fetchXFeed = useCallback(async () => {
-    setXLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("x-feed");
-      if (error) throw error;
-      setTweets(data?.tweets ?? []);
-    } catch (e) {
-      console.error("Failed to fetch X feed:", e);
-      setTweets([]);
-    }
-    setXLoading(false);
+    initialLoadDone.current = true;
   }, []);
 
   useEffect(() => {
     fetchNews();
-    const t = setInterval(fetchNews, 45000);
+    const t = setInterval(fetchNews, 5000);
     return () => clearInterval(t);
   }, [fetchNews]);
 
+  const [now, setNow] = useState(Date.now());
   useEffect(() => {
-    if (activeTab === "x") fetchXFeed();
-  }, [activeTab, fetchXFeed]);
+    if (activeTab !== "news" || lastFetchedAt == null) return;
+    const tick = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(tick);
+  }, [activeTab, lastFetchedAt]);
 
   return (
     <div className="win95-window h-full flex flex-col">
@@ -102,14 +116,6 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
           </div>
         </div>
         <div className="flex gap-1 shrink-0">
-          <button
-            type="button"
-            onClick={activeTab === "news" ? fetchNews : fetchXFeed}
-            disabled={activeTab === "news" ? newsLoading : xLoading}
-            className="win95-control-btn text-[8px]"
-          >
-            <RefreshCw className={`w-3 h-3 ${(activeTab === "news" ? newsLoading : xLoading) ? "animate-spin" : ""}`} />
-          </button>
           <button type="button" className="win95-control-btn text-[8px]">_</button>
           <button type="button" className="win95-control-btn text-[8px]">×</button>
         </div>
@@ -134,7 +140,7 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
             <div className="p-1 space-y-1">
               {news.map((item) => (
                 <div
-                  key={item.id}
+                  key={item.url}
                   className="p-2 bg-[#2a2a2a] border border-[#3a3a3a] hover:bg-[#3a3a3a] transition-colors"
                 >
                   <a
@@ -145,6 +151,9 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
                   >
                     <p className="font-mono text-xs text-[#00ff00] leading-snug mb-1 line-clamp-2">
                       {item.title}
+                      {isOldNews(item) && (
+                        <span className="ml-1 text-[#808080]">(old)</span>
+                      )}
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-[10px] text-[#808080]">{item.source}</span>
@@ -164,59 +173,42 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
             </div>
           )
         ) : (
-          xLoading ? (
-            <div className="p-2 space-y-2">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="animate-pulse p-2 bg-[#2a2a2a]">
-                  <div className="h-3 bg-[#3a3a3a] w-full mb-2" />
-                  <div className="h-2 bg-[#3a3a3a] w-1/3" />
-                </div>
-              ))}
-            </div>
-          ) : tweets.length === 0 ? (
-            <div className="p-4 font-mono text-xs text-[#808080] text-center">
-              No posts right now. Try again later.
-            </div>
-          ) : (
-            <div className="p-1 space-y-1">
-              {tweets.map((post) => (
-                <div
-                  key={post.id}
-                  className="p-2 bg-[#2a2a2a] border border-[#3a3a3a] hover:bg-[#3a3a3a] transition-colors"
+          <div className="p-1 space-y-1">
+            {X_FEED_POSTS.map((post) => (
+              <div
+                key={post.id}
+                className="p-2 bg-[#2a2a2a] border border-[#3a3a3a] hover:bg-[#3a3a3a] transition-colors"
+              >
+                <a
+                  href={post.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
                 >
-                  <a
-                    href={post.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block"
-                  >
-                    <p className="font-mono text-xs text-[#00ff00] leading-snug mb-1 line-clamp-3">
-                      {post.text}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-[10px] text-[#808080]">{post.author}</span>
-                      <span className="font-mono text-[10px] text-[#808080]">{post.publishedAt}</span>
-                    </div>
-                  </a>
-                  <button
-                    type="button"
-                    className="win95-button-primary w-full mt-2 text-[10px] py-1 flex items-center justify-center gap-1"
-                    onClick={() => onLaunchIdea(post.text)}
-                  >
-                    <Rocket className="w-3 h-3" />
-                    Declaw
-                  </button>
-                </div>
-              ))}
-            </div>
-          )
+                  <p className="font-mono text-xs text-[#00ff00] leading-snug mb-1 line-clamp-2">
+                    {post.text}
+                  </p>
+                  <span className="font-mono text-[10px] text-[#808080]">{post.author}</span>
+                </a>
+                <button
+                  type="button"
+                  className="win95-button-primary w-full mt-2 text-[10px] py-1 flex items-center justify-center gap-1"
+                  onClick={() => onLaunchIdea(`${post.text} ${post.url}`)}
+                >
+                  <Rocket className="w-3 h-3" />
+                  Declaw
+                </button>
+              </div>
+            ))}
+          </div>
         )}
       </div>
 
       <div className="win95-statusbar text-[10px]">
         <div className="win95-statusbar-inset flex-1">
-          {activeTab === "news" ? `${news.length} items` : `${tweets.length} posts`} •{" "}
-          {activeTab === "news" ? "Auto-refresh 45s" : "X Feed"}
+          {activeTab === "news"
+            ? `${news.length} items • Newest first${lastFetchedAt != null ? ` • Updated ${Math.round((now - lastFetchedAt) / 1000)}s ago` : ""}`
+            : `${X_FEED_POSTS.length} posts • Curated X Feed`}
         </div>
       </div>
     </div>

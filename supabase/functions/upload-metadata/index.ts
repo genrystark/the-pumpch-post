@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { name, symbol, description, imageBase64 } = await req.json();
+    const { name, symbol, description, imageBase64, twitter, telegram, website } = await req.json();
 
     if (!name || !symbol) {
       return new Response(JSON.stringify({ error: "Name and symbol are required" }), {
@@ -55,7 +55,10 @@ serve(async (req) => {
       formData.append("symbol", symbol);
       formData.append("description", description || "");
       formData.append("showName", "true");
-      
+      if (twitter) formData.append("twitter", typeof twitter === "string" ? twitter : "");
+      if (telegram) formData.append("telegram", typeof telegram === "string" ? telegram : "");
+      if (website) formData.append("website", typeof website === "string" ? website : "");
+
       // Upload to pump.fun's IPFS endpoint
       const ipfsResponse = await fetch("https://pump.fun/api/ipfs", {
         method: "POST",

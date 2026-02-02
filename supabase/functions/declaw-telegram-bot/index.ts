@@ -55,24 +55,78 @@ serve(async (req) => {
   }
 
   try {
+    let update: TelegramUpdate;
+    try {
+      update = await req.json();
+    } catch {
+      console.error("declaw-telegram-bot: invalid JSON body");
+      return new Response("OK", { status: 200 });
+    }
     const token = getEnv("TELEGRAM_BOT_TOKEN");
-    const update: TelegramUpdate = await req.json();
     const message = update.message;
     if (!message?.text) return new Response("OK", { status: 200 });
 
     const chatId = message.chat.id;
     const text = message.text.trim();
 
-    // /start
+    // /start — меню: что умеет бот
     if (text === "/start") {
       await sendTelegram(token, "sendMessage", {
         chat_id: chatId,
-        text: `🐾 *declaw* — твой агент для мем-токенов на Solana.\n\n` +
-          `Чтобы задеплоить токен:\n` +
-          `• Напиши: \`/create Название TICKER\`\n` +
-          `• Или: \`Название TICKER\`\n\n` +
-          `Пример: \`/create Pumpch PUMP\` или \`Pumpch PUMP\`\n\n` +
-          `Я пришлю ссылку на десктоп — открой её, подключи Phantom и нажми Declaw.`,
+        text:
+          `🐾 *Declaw* — бот для деплоя мем-токенов на Solana.\n\n` +
+          `*Что умеет:*\n` +
+          `• /deploy — задеплоить проект (можно ввести данные)\n` +
+          `• /create Name TICKER — создать токен по имени и тикеру\n` +
+          `• Или просто: \`Name TICKER\` (например: Pumpch PUMP)\n\n` +
+          `*Как деплоить:*\n` +
+          `Напишите \`/deploy\` — бот подскажет. Или сразу: \`/deploy Pumpch PUMP\` или \`/create Pumpch PUMP\`.\n` +
+          `Откроете ссылку → подключите Phantom → нажмите Declaw.`,
+        parse_mode: "Markdown",
+      });
+      return new Response("OK", { status: 200 });
+    }
+
+    // /deploy или "деплой" — деплой с возможностью ввести данные
+    const isDeployCmd = text === "/deploy" || text === "деплой" || text.startsWith("/deploy ") || text.startsWith("деплой ");
+    const deployRaw = text.startsWith("/deploy ")
+      ? text.slice(8).trim()
+      : text.startsWith("деплой ")
+        ? text.slice(7).trim()
+        : (text === "/deploy" || text === "деплой") ? "" : null;
+
+    if (deployRaw !== null) {
+      if (!deployRaw) {
+        await sendTelegram(token, "sendMessage", {
+          chat_id: chatId,
+          text:
+            `📤 *Деплой токена*\n\n` +
+            `Введите *имя* и *тикер* (2–10 букв/цифр), например:\n` +
+            `\`Pumpch PUMP\`\n` +
+            `или\n` +
+            `\`/deploy Pumpch PUMP\`\n\n` +
+            `После этого пришлю ссылку — откройте, подключите Phantom и нажмите Declaw.`,
+          parse_mode: "Markdown",
+        });
+        return new Response("OK", { status: 200 });
+      }
+      const parts = deployRaw.split(/\s+/).filter(Boolean);
+      const last = parts[parts.length - 1] ?? "";
+      const isTicker = /^[A-Za-z0-9]{2,10}$/.test(last) && parts.length >= 2;
+      if (isTicker) {
+        const ticker = last;
+        const name = parts.slice(0, -1).join(" ").trim();
+        const link = buildDeclawLink(name, ticker);
+        await sendTelegram(token, "sendMessage", {
+          chat_id: chatId,
+          text: `✅ Токен *${name}* ($${ticker.toUpperCase()})\n\nОткройте ссылку, подключите Phantom и нажмите *Declaw*:\n${link}`,
+          parse_mode: "Markdown",
+        });
+        return new Response("OK", { status: 200 });
+      }
+      await sendTelegram(token, "sendMessage", {
+        chat_id: chatId,
+        text: "Укажите имя и тикер, например: `Pumpch PUMP` или `/deploy Pumpch PUMP`.",
         parse_mode: "Markdown",
       });
       return new Response("OK", { status: 200 });
@@ -90,7 +144,7 @@ serve(async (req) => {
       if (!name) {
         await sendTelegram(token, "sendMessage", {
           chat_id: chatId,
-          text: "Укажи название и тикер, например: `/create Pumpch PUMP` или `Pumpch PUMP`",
+          text: "Provide name and ticker, e.g. `/create Pumpch PUMP` or `Pumpch PUMP`",
           parse_mode: "Markdown",
         });
         return new Response("OK", { status: 200 });
@@ -98,8 +152,8 @@ serve(async (req) => {
       const link = buildDeclawLink(name, ticker);
       await sendTelegram(token, "sendMessage", {
         chat_id: chatId,
-        text: `✅ Токен *${name}* ($${ticker.toUpperCase()})\n\n` +
-          `Открой ссылку, подключи Phantom и нажми *Declaw*:\n${link}`,
+        text: `✅ Token *${name}* ($${ticker.toUpperCase()})\n\n` +
+          `Open the link, connect Phantom and hit *Declaw*:\n${link}`,
         parse_mode: "Markdown",
       });
       return new Response("OK", { status: 200 });
@@ -108,7 +162,7 @@ serve(async (req) => {
     // Unknown
     await sendTelegram(token, "sendMessage", {
       chat_id: chatId,
-      text: "Напиши `/create Название TICKER` или просто `Название TICKER`, например: `Pumpch PUMP`.",
+      text: "Используйте /start — меню команд. Деплой: `/deploy` или `/deploy Name TICKER`, либо `/create Name TICKER` / `Name TICKER` (например: Pumpch PUMP).",
       parse_mode: "Markdown",
     });
     return new Response("OK", { status: 200 });

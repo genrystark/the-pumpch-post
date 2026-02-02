@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=VT323&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=VT323&display=swap');
 
 /* 
   PUMPSTER DESIGN SYSTEM
@@ -328,4 +328,130 @@
   .font-pixel {
     font-family: var(--font-pixel);
   }
+}
+
+/* Sonner toasts - Windows 95 style */
+.toaster-win95 {
+  --normal-bg: #c0c0c0;
+  --success-bg: linear-gradient(90deg, #008000 0%, #006000 100%);
+  --error-bg: linear-gradient(90deg, #ff6b4a 0%, #c03000 100%);
+  --info-bg: linear-gradient(90deg, #000080 0%, #000060 100%);
+}
+
+.toaster-win95 [data-sonner-toast] {
+  background: #c0c0c0 !important;
+  color: #000 !important;
+  border: 2px solid !important;
+  border-color: #ffffff #808080 #808080 #ffffff !important;
+  box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #dfdfdf !important;
+  font-family: var(--font-mono) !important;
+  padding: 0 !important;
+  min-width: 280px;
+  max-width: 380px;
+  border-radius: 0 !important;
+}
+
+.toaster-win95 [data-sonner-toast]::before {
+  content: attr(data-type);
+  display: block;
+  text-transform: capitalize;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 6px 28px 6px 8px;
+  min-height: 20px;
+  color: #fff;
+  margin: 0;
+  border-bottom: 1px solid #808080;
+  font-family: var(--font-mono);
+}
+
+.toaster-win95 [data-sonner-toast][data-type="success"]::before {
+  background: linear-gradient(90deg, #008000 0%, #006000 100%);
+}
+
+.toaster-win95 [data-sonner-toast][data-type="error"]::before {
+  background: linear-gradient(90deg, #ff6b4a 0%, #c03000 100%);
+}
+
+.toaster-win95 [data-sonner-toast][data-type="info"]::before {
+  background: linear-gradient(90deg, #000080 0%, #000060 100%);
+}
+
+.toaster-win95 [data-sonner-toast][data-type="warning"]::before {
+  background: linear-gradient(90deg, #ffa500 0%, #c08000 100%);
+}
+
+.toaster-win95 [data-sonner-toast][data-type="default"],
+.toaster-win95 [data-sonner-toast][data-type="normal"] {
+  --before-bg: #000080;
+}
+.toaster-win95 [data-sonner-toast]:not([data-type="success"]):not([data-type="error"]):not([data-type="info"]):not([data-type="warning"])::before {
+  content: "Message";
+  background: linear-gradient(90deg, #000080 0%, #000060 100%);
+}
+
+.toaster-win95 [data-sonner-toast] [data-content] {
+  padding: 10px 12px 12px !important;
+  color: #000 !important;
+  font-size: 12px !important;
+  font-family: var(--font-mono) !important;
+}
+
+.toaster-win95 [data-sonner-toast] a {
+  color: #000080 !important;
+  text-decoration: underline;
+}
+.toaster-win95 [data-sonner-toast] a:hover {
+  color: #0000ff !important;
+}
+
+.toaster-win95 [data-sonner-toast] [data-button] {
+  background: #c0c0c0 !important;
+  color: #000 !important;
+  border: 2px solid !important;
+  border-color: #ffffff #808080 #808080 #ffffff !important;
+  box-shadow: inset -1px -1px 0 #404040 !important;
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  padding: 4px 10px !important;
+  margin: 4px 8px 8px !important;
+}
+.toaster-win95 [data-sonner-toast] [data-button]:hover {
+  background: #d0d0d0 !important;
+}
+.toaster-win95 [data-sonner-toast] [data-button]:active {
+  border-color: #808080 #ffffff #ffffff #808080 !important;
+  box-shadow: inset 1px 1px 0 #404040 !important;
+}
+
+.toaster-win95 [data-sonner-toast] [data-close-button] {
+  background: #c0c0c0 !important;
+  border: 1px solid !important;
+  border-color: #ffffff #808080 #808080 #ffffff !important;
+  color: #000 !important;
+  width: 18px !important;
+  height: 18px !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  top: 4px !important;
+  right: 4px !important;
+  border-radius: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.toaster-win95 [data-sonner-toast] [data-close-button]:hover {
+  background: #d0d0d0 !important;
+}
+.toaster-win95 [data-sonner-toast] [data-close-button]:active {
+  border-color: #808080 #ffffff #ffffff #808080 !important;
+  box-shadow: inset 1px 1px 0 #404040 !important;
+}
+
+.toaster-win95 [data-sonner-toast] [data-icon] {
+  margin-left: 8px;
+  margin-top: 8px;
 }

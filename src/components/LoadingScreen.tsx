@@ -28,13 +28,13 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
           clearInterval(interval);
           setTimeout(() => {
             setShowBoot(false);
-            setTimeout(onComplete, 500);
-          }, 1200);
+            setTimeout(onComplete, 165);
+          }, 400);
           return 100;
         }
         return prev + 1;
       });
-    }, 80);
+    }, 27);
 
     return () => clearInterval(interval);
   }, [onComplete]);
@@ -53,10 +53,16 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.17 }}
           className="fixed inset-0 z-[9999] flex items-center justify-center"
           style={{ background: "linear-gradient(135deg, #000080 0%, #000040 100%)" }}
         >
+          {/* Full-screen background image (new underwater pixel art) */}
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
+            style={{ backgroundImage: "url(/loading-bg.png)" }}
+            aria-hidden
+          />
           {/* Scanlines overlay */}
           <div 
             className="absolute inset-0 pointer-events-none opacity-20"
@@ -65,7 +71,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
             }}
           />
           
-          {/* CRT curve effect */}
+          {/* CRT curve effect (does not cover the window below) */}
           <div 
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -74,24 +80,26 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
             }}
           />
 
-          <div className="text-center px-8 max-w-2xl w-full">
+          {/* Window and title above all overlays, in original colors */}
+          <div className="relative z-10 text-center px-8 max-w-2xl w-full">
             {/* Title */}
             <motion.h1
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
+              transition={{ delay: 0.1, duration: 0.17 }}
               className="font-pixel text-4xl md:text-6xl text-white mb-2"
               style={{ textShadow: "2px 2px 0 #000, 4px 4px 0 rgba(0,0,0,0.3)" }}
             >
               declaw token
             </motion.h1>
 
-            {/* Windows-style window */}
+            {/* Windows-style window — solid, not overlapped by background */}
             <motion.div
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="win95-window mx-auto max-w-md mt-8"
+              transition={{ delay: 0.17, duration: 0.17 }}
+              className="win95-window mx-auto max-w-md mt-8 bg-[#c0c0c0] relative z-10"
+              style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}
             >
               <div className="win95-titlebar">
                 <span className="text-xs">System Startup</span>
@@ -108,7 +116,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
                       key={i}
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      transition={{ delay: 0.7 + i * 0.1, type: "spring" }}
+                      transition={{ delay: 0.24 + i * 0.035, type: "spring" }}
                       className="w-10 h-10 bg-white border-2 border-t-[#808080] border-l-[#808080] border-b-white border-r-white flex items-center justify-center text-xl"
                     >
                       {emoji}
@@ -121,7 +129,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
                   {status}
                   <motion.span
                     animate={{ opacity: [1, 0] }}
-                    transition={{ duration: 0.5, repeat: Infinity }}
+                    transition={{ duration: 0.25, repeat: Infinity }}
                   >
                     _
                   </motion.span>
@@ -136,7 +144,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
                     }}
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
-                    transition={{ duration: 0.1 }}
+                    transition={{ duration: 0.05 }}
                   />
                 </div>
 
@@ -150,7 +158,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
+              transition={{ delay: 0.34 }}
               className="font-mono text-[10px] text-[#808080] mt-6"
             >
               © 2026 declaw token • Built on OpenClaw • Powered by Solana

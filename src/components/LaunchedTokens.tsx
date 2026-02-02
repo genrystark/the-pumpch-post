@@ -1,7 +1,10 @@
+import { useMemo } from "react";
 import { Folder, Plus, Search, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useDeployedTokens, DeployedToken } from "@/hooks/useDeployedTokens";
+import { useDexScreenerTokens } from "@/hooks/useDexScreenerTokens";
+import { formatPrice, formatMarketCapShort, ageFromTimestamp } from "@/lib/dexscreener";
 import hqmLogo from "@/assets/tokens/hqm.png";
 import juffLogo from "@/assets/tokens/juff.png";
 import helenLogo from "@/assets/tokens/helen.png";
@@ -18,7 +21,8 @@ const fallbackTokens = [
     age: "1h ago",
     mint_address: "Cp7pMBHYdYfCCosyqCFzg7hhxZQwtesbCpMjUgEVkgQf",
     logo_url: hqmLogo,
-    pump_url: "https://pump.fun/Cp7pMBHYdYfCCosyqCFzg7hhxZQwtesbCpMjUgEVkgQf"
+    pump_url: "https://pump.fun/Cp7pMBHYdYfCCosyqCFzg7hhxZQwtesbCpMjUgEVkgQf",
+    agent_name: "declaw",
   },
   { 
     id: "fallback-2",
@@ -30,7 +34,8 @@ const fallbackTokens = [
     age: "2h ago",
     mint_address: "DVuB8E4r4DbLPSYP2pob14xi6r7cYPVh6Cdx2Az4pump",
     logo_url: juffLogo,
-    pump_url: "https://pump.fun/DVuB8E4r4DbLPSYP2pob14xi6r7cYPVh6Cdx2Az4pump"
+    pump_url: "https://pump.fun/DVuB8E4r4DbLPSYP2pob14xi6r7cYPVh6Cdx2Az4pump",
+    agent_name: "declaw",
   },
   { 
     id: "fallback-3",
@@ -42,7 +47,8 @@ const fallbackTokens = [
     age: "5h ago",
     mint_address: "B2N5xBkrDHaTPokHNgVx2UfZndbTtPF3B9iNRsNapump",
     logo_url: helenLogo,
-    pump_url: "https://pump.fun/B2N5xBkrDHaTPokHNgVx2UfZndbTtPF3B9iNRsNapump"
+    pump_url: "https://pump.fun/B2N5xBkrDHaTPokHNgVx2UfZndbTtPF3B9iNRsNapump",
+    agent_name: "declaw",
   },
 ];
 
@@ -62,23 +68,59 @@ const formatTimeAgo = (dateString: string) => {
 
 const LaunchedTokens = () => {
   const { data: dbTokens, isLoading } = useDeployedTokens();
-  
-  // Combine DB tokens with fallback tokens
-  const allTokens = [
-    ...(dbTokens || []).map((t: DeployedToken) => ({
-      id: t.id,
-      name: t.name,
-      ticker: t.ticker,
-      progress: Math.floor(Math.random() * 30) + 10, // Random progress for demo
-      price: "0.00000001",
-      marketCap: "-",
-      age: formatTimeAgo(t.created_at),
-      mint_address: t.mint_address,
-      logo_url: t.logo_url || "https://pump.fun/img/pump-logo.png",
-      pump_url: t.pump_url,
-    })),
-    ...fallbackTokens,
-  ];
+
+  // Raw list: DB tokens + fallback (for mint addresses and base fields)
+  const rawTokens = useMemo(
+    () => [
+      ...(dbTokens || []).map((t: DeployedToken) => ({
+        id: t.id,
+        name: t.name,
+        ticker: t.ticker,
+        mint_address: t.mint_address,
+        logo_url: t.logo_url || "https://pump.fun/img/pump-logo.png",
+        pump_url: t.pump_url,
+        agent_name: (t as DeployedToken & { agent_name?: string }).agent_name ?? "declaw",
+        created_at: t.created_at,
+      })),
+      ...fallbackTokens.map((f) => ({
+        id: f.id,
+        name: f.name,
+        ticker: f.ticker,
+        mint_address: f.mint_address,
+        logo_url: f.logo_url,
+        pump_url: f.pump_url,
+        agent_name: f.agent_name,
+        created_at: null as string | null,
+      })),
+    ],
+    [dbTokens]
+  );
+
+  const mintAddresses = useMemo(() => rawTokens.map((t) => t.mint_address), [rawTokens]);
+  const { data: dexData } = useDexScreenerTokens(mintAddresses);
+
+  // Merge DexScreener data: real price, marketCap, age when available
+  const allTokens = useMemo(
+    () =>
+      rawTokens.map((t) => {
+        const dex = dexData.get(t.mint_address);
+        const progress = dex != null ? null : Math.floor(Math.random() * 30) + 10;
+        return {
+          id: t.id,
+          name: t.name,
+          ticker: t.ticker,
+          progress,
+          price: dex ? formatPrice(dex.priceUsd) : "—",
+          marketCap: dex?.marketCap != null ? formatMarketCapShort(dex.marketCap) : "—",
+          age: dex?.pairCreatedAt != null ? ageFromTimestamp(dex.pairCreatedAt) : (t.created_at ? formatTimeAgo(t.created_at) : "—"),
+          mint_address: t.mint_address,
+          logo_url: t.logo_url,
+          pump_url: t.pump_url,
+          agent_name: t.agent_name,
+        };
+      }),
+    [rawTokens, dexData]
+  );
 
   return (
     <section id="launched-tokens" className="py-8">
@@ -199,6 +241,7 @@ const LaunchedTokens = () => {
                               </div>
                             </div>
                             <span className="text-[#808080] text-xs block truncate">{token.name}</span>
+                            <span className="text-[10px] text-[#000080] mt-0.5">Agent: {token.agent_name}</span>
                           </div>
                         </div>
                         <div className="mb-2">
@@ -206,12 +249,14 @@ const LaunchedTokens = () => {
                             <motion.div 
                               className="win95-progress-bar-orange" 
                               initial={{ width: 0 }}
-                              whileInView={{ width: `${token.progress}%` }}
+                              whileInView={{ width: `${token.progress ?? 0}%` }}
                               viewport={{ once: true }}
                               transition={{ duration: 1, delay: 0.2 }}
                             />
                           </div>
-                          <div className="text-[10px] text-[#808080] mt-1">{token.progress}% to graduation</div>
+                          <div className="text-[10px] text-[#808080] mt-1">
+                            {token.progress != null ? `${token.progress}% to graduation` : "DEX pair"}
+                          </div>
                         </div>
                         <div className="flex items-center justify-between text-[10px] text-[#808080]">
                           <span>MC: {token.marketCap}</span>
@@ -229,6 +274,7 @@ const LaunchedTokens = () => {
                 <thead className="win95-listview-header">
                   <tr>
                     <th className="text-left p-2 text-black">Token</th>
+                    <th className="text-left p-2 text-black">Agent</th>
                     <th className="text-left p-2 text-black">Type</th>
                     <th className="text-left p-2 text-black">Progress</th>
                     <th className="text-right p-2 text-black">Price</th>
@@ -264,6 +310,9 @@ const LaunchedTokens = () => {
                         </div>
                       </td>
                       <td className="p-2">
+                        <span className="font-mono text-[11px] text-[#000080]">{token.agent_name}</span>
+                      </td>
+                      <td className="p-2">
                         <span className="text-[10px] px-1 bg-orange text-white">LINEAR</span>
                       </td>
                       <td className="p-2">
@@ -272,12 +321,12 @@ const LaunchedTokens = () => {
                             <motion.div 
                               className="win95-progress-bar-orange" 
                               initial={{ width: 0 }}
-                              whileInView={{ width: `${token.progress}%` }}
+                              whileInView={{ width: `${token.progress ?? 0}%` }}
                               viewport={{ once: true }}
                               transition={{ duration: 1, delay: 0.3 + index * 0.1 }}
                             />
                           </div>
-                          <div className="text-[9px] text-[#808080]">{token.progress}%</div>
+                          <div className="text-[9px] text-[#808080]">{token.progress != null ? `${token.progress}%` : "—"}</div>
                         </div>
                       </td>
                       <td className="p-2 text-right text-orange font-bold">{token.price}</td>

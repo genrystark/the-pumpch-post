@@ -12,6 +12,7 @@ interface DeployTokenButtonProps {
     ticker?: string;
     description?: string;
     logo?: string | null;
+    twitter?: string | null;
   };
   devBuyAmountSol?: number;
   onDeployStart?: () => void;
@@ -62,6 +63,7 @@ const DeployTokenButton = ({
         symbol: tokenData.ticker || 'TOKEN',
         description: tokenData.description || 'Token created with declaw',
         imageUrl: tokenData.logo || 'https://pump.fun/img/pump-logo.png',
+        ...(tokenData.twitter && { twitter: tokenData.twitter.startsWith('http') ? tokenData.twitter : `https://x.com/${tokenData.twitter.replace(/^@/, '')}` }),
       };
 
       const result = await createPumpFunToken(connection, wallet, {
