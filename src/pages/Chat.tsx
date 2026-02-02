@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Send, ArrowLeft, Rocket, Search, Image, FileImage, Sliders } from "lucide-react";
+import { Send, ArrowLeft, Rocket, Search, Sliders } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import NewsFeed from "@/components/NewsFeed";
 import TokenPreview, { TokenData } from "@/components/TokenPreview";
@@ -8,6 +8,7 @@ import LaunchModeSelector, { LaunchMode } from "@/components/LaunchModeSelector"
 import TwitterConnect from "@/components/TwitterConnect";
 import PhantomWalletButton from "@/components/PhantomWalletButton";
 import DeployTokenButton from "@/components/DeployTokenButton";
+import GenerateImagesSection from "@/components/GenerateImagesSection";
 import { toast } from "sonner";
 import { DeployTokenResult } from "@/lib/pumpfun";
 
@@ -360,27 +361,11 @@ const Chat = () => {
             </div>
 
             {/* Generation Buttons */}
-            <div className="p-2">
-              <div className="win95-groupbox p-2">
-                <span className="win95-groupbox-title">Generate</span>
-                <div className="space-y-2 mt-2">
-                  <button
-                    className="win95-button w-full flex items-center gap-2 py-1"
-                    onClick={() => setInput("Generate a logo for my token")}
-                  >
-                    <Image className="w-4 h-4 text-black" />
-                    <span className="font-mono text-xs text-black">Logo</span>
-                  </button>
-                  <button
-                    className="win95-button w-full flex items-center gap-2 py-1"
-                    onClick={() => setInput("Generate a banner for my token")}
-                  >
-                    <FileImage className="w-4 h-4 text-black" />
-                    <span className="font-mono text-xs text-black">Banner</span>
-                  </button>
-                </div>
-              </div>
-            </div>
+            <GenerateImagesSection 
+              tokenData={tokenData}
+              onLogoGenerated={(url) => setTokenData(prev => ({ ...prev, logo: url }))}
+              onBannerGenerated={(url) => setTokenData(prev => ({ ...prev, banner: url }))}
+            />
 
             {/* Twitter Connect */}
             <div className="p-2">

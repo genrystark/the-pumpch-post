@@ -64,7 +64,7 @@ const Header = () => {
           <nav className="flex flex-col sm:flex-row items-start sm:items-center">
             <a href="#launched-tokens" onClick={(e) => { e.preventDefault(); document.getElementById('launched-tokens')?.scrollIntoView({ behavior: 'smooth' }); }}>
               <motion.span 
-                className="win95-menu-item text-[11px]"
+                className="px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer text-[11px]"
                 whileHover={{ backgroundColor: "#000080", color: "#fff" }}
               >
                 Declaws
@@ -72,7 +72,7 @@ const Header = () => {
             </a>
             <a href="#how-it-works" onClick={(e) => { e.preventDefault(); document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }); }}>
               <motion.span 
-                className="win95-menu-item text-[11px]"
+                className="px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer text-[11px]"
                 whileHover={{ backgroundColor: "#000080", color: "#fff" }}
               >
                 How It Works
@@ -80,7 +80,7 @@ const Header = () => {
             </a>
             <a href="#features" onClick={(e) => { e.preventDefault(); document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); }}>
               <motion.span 
-                className="win95-menu-item text-[11px]"
+                className="px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer text-[11px]"
                 whileHover={{ backgroundColor: "#000080", color: "#fff" }}
               >
                 Features
@@ -88,7 +88,7 @@ const Header = () => {
             </a>
             <Link to="/chat">
               <motion.span 
-                className="win95-menu-item win95-menu-item-active flex items-center gap-1 text-[11px]"
+                className="px-2 py-0.5 bg-[#ff6b4a] text-white flex items-center gap-1 text-[11px] cursor-pointer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -100,7 +100,7 @@ const Header = () => {
               href="https://x.com" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="win95-menu-item flex items-center gap-1 text-[11px]"
+              className="px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer flex items-center gap-1 text-[11px]"
             >
               <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
