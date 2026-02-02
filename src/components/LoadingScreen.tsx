@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import declawLogo from "@/assets/declaw-logo.png";
 
 interface LoadingScreenProps {
   onComplete: () => void;
@@ -76,21 +75,6 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
           />
 
           <div className="text-center px-8 max-w-2xl w-full">
-            {/* Logo */}
-            <motion.div
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="mb-8"
-            >
-              <img 
-                src={declawLogo} 
-                alt="declaw" 
-                className="w-40 h-40 md:w-56 md:h-56 mx-auto drop-shadow-2xl"
-                style={{ filter: "drop-shadow(0 0 30px rgba(74, 222, 128, 0.5))" }}
-              />
-            </motion.div>
-
             {/* Title */}
             <motion.h1
               initial={{ y: 20, opacity: 0 }}
