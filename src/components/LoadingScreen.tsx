@@ -29,12 +29,12 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
           setTimeout(() => {
             setShowBoot(false);
             setTimeout(onComplete, 500);
-          }, 800);
+          }, 1200);
           return 100;
         }
-        return prev + 2;
+        return prev + 1;
       });
-    }, 50);
+    }, 80);
 
     return () => clearInterval(interval);
   }, [onComplete]);
