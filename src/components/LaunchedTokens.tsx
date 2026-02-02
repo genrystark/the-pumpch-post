@@ -1,11 +1,41 @@
 import { Folder, Plus, Search } from "lucide-react";
 import { Link } from "react-router-dom";
+import hqmLogo from "@/assets/tokens/hqm.png";
+import juffLogo from "@/assets/tokens/juff.png";
+import helenLogo from "@/assets/tokens/helen.png";
 
 const LaunchedTokens = () => {
   const mockTokens = [
-    { name: "PUMPSTER", ticker: "PUMP", progress: 45, price: "0.00000042", marketCap: "$42.5K", age: "2h ago" },
-    { name: "DEGEN CAT", ticker: "DCAT", progress: 78, price: "0.00000089", marketCap: "$89.2K", age: "5h ago" },
-    { name: "MOON FROG", ticker: "MFROG", progress: 23, price: "0.00000015", marketCap: "$15.3K", age: "1d ago" },
+    { 
+      name: "highest quality meme", 
+      ticker: "HQM", 
+      progress: 67, 
+      price: "0.00000089", 
+      marketCap: "$89.5K", 
+      age: "1h ago",
+      ca: "Cp7pMBHYdYfCCosyqCFzg7hhxZQwtesbCpMjUgEVkgQf",
+      logo: hqmLogo
+    },
+    { 
+      name: "Juffrey Epstuin", 
+      ticker: "JUFF", 
+      progress: 45, 
+      price: "0.00000042", 
+      marketCap: "$42.5K", 
+      age: "2h ago",
+      ca: "DVuB8E4r4DbLPSYP2pob14xi6r7cYPVh6Cdx2Az4pump",
+      logo: juffLogo
+    },
+    { 
+      name: "Helen of Troy", 
+      ticker: "HELEN", 
+      progress: 23, 
+      price: "0.00000015", 
+      marketCap: "$15.3K", 
+      age: "5h ago",
+      ca: "B2N5xBkrDHaTPokHNgVx2UfZndbTtPF3B9iNRsNapump",
+      logo: helenLogo
+    },
   ];
 
   return (
@@ -74,17 +104,24 @@ const LaunchedTokens = () => {
               <div className="sm:hidden space-y-2 p-2">
                 {mockTokens.map((token) => (
                   <div key={token.ticker} className="win95-outset p-3 cursor-pointer hover-elevate">
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-bold text-sm text-black">{token.ticker}</span>
-                          <span className="text-[10px] px-1 bg-orange text-white">LINEAR</span>
+                    <div className="flex items-start gap-3 mb-2">
+                      <img 
+                        src={token.logo} 
+                        alt={token.name} 
+                        className="w-10 h-10 object-cover flex-shrink-0"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm text-black">{token.ticker}</span>
+                            <span className="text-[10px] px-1 bg-orange text-white">LINEAR</span>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-orange text-sm font-bold">{token.price}</div>
+                            <div className="text-[#808080] text-[10px]">SOL</div>
+                          </div>
                         </div>
-                        <span className="text-[#808080] text-xs">{token.name}</span>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-orange text-sm font-bold">{token.price}</div>
-                        <div className="text-[#808080] text-[10px]">SOL</div>
+                        <span className="text-[#808080] text-xs block truncate">{token.name}</span>
                       </div>
                     </div>
                     <div className="mb-2">
@@ -96,6 +133,9 @@ const LaunchedTokens = () => {
                     <div className="flex items-center justify-between text-[10px] text-[#808080]">
                       <span>MC: {token.marketCap}</span>
                       <span>{token.age}</span>
+                    </div>
+                    <div className="text-[8px] text-[#808080] mt-1 truncate">
+                      CA: {token.ca}
                     </div>
                   </div>
                 ))}
@@ -118,9 +158,16 @@ const LaunchedTokens = () => {
                   {mockTokens.map((token) => (
                     <tr key={token.ticker} className="win95-listview-row-orange cursor-pointer border-b border-[#c0c0c0]">
                       <td className="p-2">
-                        <div className="flex flex-col">
-                          <span className="font-bold text-black">{token.ticker}</span>
-                          <span className="text-[#808080] text-[10px]">{token.name}</span>
+                        <div className="flex items-center gap-2">
+                          <img 
+                            src={token.logo} 
+                            alt={token.name} 
+                            className="w-8 h-8 object-cover flex-shrink-0"
+                          />
+                          <div className="flex flex-col">
+                            <span className="font-bold text-black">{token.ticker}</span>
+                            <span className="text-[#808080] text-[10px] truncate max-w-[120px]">{token.name}</span>
+                          </div>
                         </div>
                       </td>
                       <td className="p-2">
