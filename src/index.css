@@ -2,122 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=VT323&display=swap');
 
 /* 
-  PUMPCH DESIGN SYSTEM
-  Vintage newspaper / financial editorial / early 1900s press
-  Inspiration: The Economist (old), WSJ print era, vintage trading bulletins
+  PUMPSTER DESIGN SYSTEM
+  Windows 95/98 retro aesthetic with orange/green accent
+  Inspired by moltexe.fun
 */
 
 @layer base {
   :root {
-    /* Paper & Background - Clean white */
-    --background: 0 0% 98%;
-    --foreground: 160 35% 25%;
+    /* Core background - dark theme */
+    --background: 210 20% 10%;
+    --foreground: 0 0% 90%;
     
-    /* Paper variants - White tones */
-    --paper: 0 0% 100%;
-    --paper-aged: 0 0% 97%;
-    --paper-dark: 0 0% 94%;
+    /* Win95 surface colors */
+    --win95-bg: 0 0% 75%;
+    --win95-bg-dark: 0 0% 50%;
+    --win95-bg-light: 0 0% 85%;
+    --win95-surface: 210 15% 12%;
+    --win95-surface-light: 210 12% 18%;
     
-    /* Ink colors - Dark green */
-    --ink: 160 35% 25%;
-    --ink-light: 160 25% 35%;
-    --ink-faded: 160 15% 50%;
+    /* Title bar - orange */
+    --win95-titlebar: 20 85% 55%;
+    --win95-titlebar-active: 20 90% 50%;
     
-    /* Accent - Pumpch green from logo */
-    --accent: 160 45% 40%;
+    /* Accent - green (Pumpster brand) */
+    --accent: 145 70% 45%;
     --accent-foreground: 0 0% 100%;
-    --accent-muted: 160 30% 50%;
+    --accent-muted: 145 50% 35%;
+    
+    /* Orange accent */
+    --orange: 20 85% 55%;
+    --orange-foreground: 0 0% 100%;
     
     /* Semantic */
-    --card: 0 0% 100%;
-    --card-foreground: 160 35% 25%;
+    --card: 210 15% 14%;
+    --card-foreground: 0 0% 90%;
     
-    --popover: 0 0% 100%;
-    --popover-foreground: 160 35% 25%;
+    --popover: 210 15% 14%;
+    --popover-foreground: 0 0% 90%;
     
-    --primary: 160 45% 40%;
+    --primary: 20 85% 55%;
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 0 0% 97%;
-    --secondary-foreground: 160 35% 25%;
+    --secondary: 210 12% 20%;
+    --secondary-foreground: 0 0% 90%;
     
-    --muted: 0 0% 94%;
-    --muted-foreground: 160 15% 50%;
-    
-    --destructive: 0 70% 45%;
-    --destructive-foreground: 0 0% 100%;
-    
-    --border: 160 20% 80%;
-    --input: 160 20% 80%;
-    --ring: 160 45% 40%;
-    
-    --radius: 0;
-    
-    /* Sidebar */
-    --sidebar-background: 0 0% 97%;
-    --sidebar-foreground: 160 35% 25%;
-    --sidebar-primary: 160 45% 40%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 160 45% 95%;
-    --sidebar-accent-foreground: 160 35% 25%;
-    --sidebar-border: 160 20% 85%;
-    --sidebar-ring: 160 45% 40%;
-    
-    /* Typography */
-    --font-headline: 'Playfair Display', Georgia, serif;
-    --font-body: 'Source Serif 4', Georgia, serif;
-    --font-mono: 'IBM Plex Mono', monospace;
-    
-    /* Shadows - subtle print shadows */
-    --shadow-stamp: 2px 2px 0 hsl(0 0% 10% / 0.1);
-    --shadow-card: 0 1px 3px hsl(0 0% 0% / 0.08);
-  }
-
-  .dark {
-    --background: 160 20% 10%;
-    --foreground: 0 0% 95%;
-    
-    --paper: 160 20% 12%;
-    --paper-aged: 160 15% 15%;
-    --paper-dark: 160 10% 18%;
-    
-    --ink: 0 0% 95%;
-    --ink-light: 0 0% 80%;
-    --ink-faded: 0 0% 60%;
-    
-    --accent: 160 50% 45%;
-    --accent-foreground: 160 20% 10%;
-    
-    --card: 160 15% 15%;
-    --card-foreground: 0 0% 95%;
-    
-    --popover: 160 15% 15%;
-    --popover-foreground: 0 0% 95%;
-    
-    --primary: 160 50% 45%;
-    --primary-foreground: 160 20% 10%;
-    
-    --secondary: 160 10% 18%;
-    --secondary-foreground: 0 0% 95%;
-    
-    --muted: 160 10% 18%;
+    --muted: 210 12% 18%;
     --muted-foreground: 0 0% 60%;
     
-    --border: 160 20% 30%;
-    --input: 160 20% 30%;
-    --ring: 160 50% 45%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
     
-    --sidebar-background: 160 15% 15%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 160 50% 45%;
-    --sidebar-primary-foreground: 160 20% 10%;
-    --sidebar-accent: 160 10% 18%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 160 20% 30%;
-    --sidebar-ring: 160 50% 45%;
+    --border: 210 15% 25%;
+    --input: 210 15% 20%;
+    --ring: 20 85% 55%;
+    
+    --radius: 0px;
+    
+    /* Sidebar */
+    --sidebar-background: 210 15% 12%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 20 85% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 12% 18%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 210 15% 25%;
+    --sidebar-ring: 20 85% 55%;
+    
+    /* Typography */
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-pixel: 'VT323', monospace;
+    
+    /* Win95 borders */
+    --win95-border-light: 0 0% 100%;
+    --win95-border-dark: 0 0% 20%;
+    --win95-border-mid: 0 0% 50%;
   }
 }
 
@@ -128,122 +89,243 @@
   
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: var(--font-body);
+    font-family: var(--font-mono);
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-headline);
+    font-family: var(--font-mono);
     font-weight: 700;
     letter-spacing: -0.02em;
   }
 }
 
+/* Scanlines effect */
+.scanlines::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
 @layer components {
-  /* Newspaper dividers */
-  .divider-thin {
-    @apply border-t border-ink/30;
+  /* Win95 Window */
+  .win95-window {
+    @apply bg-[#c0c0c0] border-2;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #dfdfdf;
   }
   
-  .divider-thick {
-    @apply border-t-2 border-ink;
+  /* Win95 Title Bar - Orange */
+  .win95-titlebar {
+    @apply flex items-center justify-between px-2 py-1 text-white font-bold text-sm;
+    background: linear-gradient(90deg, hsl(var(--orange)) 0%, hsl(20 70% 40%) 100%);
   }
   
-  .divider-double {
-    @apply border-t-4 border-double border-ink;
+  /* Win95 Title Bar - Green */
+  .win95-titlebar-green {
+    @apply flex items-center justify-between px-2 py-1 text-white font-bold text-sm;
+    background: linear-gradient(90deg, hsl(var(--accent)) 0%, hsl(145 50% 30%) 100%);
   }
   
-  /* Editorial frames */
-  .editorial-frame {
-    @apply border border-ink/40 p-4 bg-paper;
+  /* Win95 Control Buttons */
+  .win95-control-btn {
+    @apply w-4 h-4 flex items-center justify-center text-black text-xs font-bold;
+    background: #c0c0c0;
+    border: 1px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #dfdfdf;
   }
   
-  .editorial-frame-thick {
-    @apply border-2 border-ink p-6 bg-paper;
+  .win95-control-btn:active {
+    border-color: #808080 #ffffff #ffffff #808080;
+    box-shadow: inset 1px 1px 0 #404040;
   }
   
-  /* Stamp style */
-  .stamp {
-    @apply inline-block border-2 border-ink px-3 py-1 text-xs uppercase tracking-widest font-mono;
-    transform: rotate(-2deg);
+  /* Win95 Menu Bar */
+  .win95-menubar {
+    @apply bg-[#c0c0c0] px-1 py-0.5 border-b border-[#808080];
   }
   
-  /* Label style */
-  .label-editorial {
-    @apply text-xs uppercase tracking-[0.2em] font-mono text-ink-faded;
+  .win95-menu-item {
+    @apply px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer;
   }
   
-  /* Column layout */
-  .newspaper-columns {
-    @apply grid gap-8;
-    column-rule: 1px solid hsl(var(--ink) / 0.2);
+  .win95-menu-item-active {
+    @apply bg-[#ff6b4a] text-white;
   }
   
-  /* Masthead title */
-  .masthead {
-    font-family: var(--font-headline);
-    font-weight: 900;
-    letter-spacing: -0.03em;
-    line-height: 0.9;
+  /* Win95 Button */
+  .win95-button {
+    @apply px-3 py-1 text-black font-bold text-xs cursor-pointer;
+    background: #c0c0c0;
+    border: 2px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #dfdfdf;
   }
   
-  /* Drop cap */
-  .drop-cap::first-letter {
-    @apply float-left text-6xl font-bold leading-none mr-2;
-    font-family: var(--font-headline);
+  .win95-button:active {
+    border-color: #808080 #ffffff #ffffff #808080;
+    box-shadow: inset 1px 1px 0 #404040;
+    padding-left: 0.85rem;
+    padding-top: 0.35rem;
   }
   
-  /* Paper texture overlay */
-  .paper-texture {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  /* Win95 Primary Button */
+  .win95-button-primary {
+    @apply px-3 py-1 font-bold text-xs cursor-pointer text-white;
+    background: hsl(var(--orange));
+    border: 2px solid;
+    border-color: hsl(20 100% 70%) hsl(20 70% 35%) hsl(20 70% 35%) hsl(20 100% 70%);
+  }
+  
+  .win95-button-primary:active {
+    border-color: hsl(20 70% 35%) hsl(20 100% 70%) hsl(20 100% 70%) hsl(20 70% 35%);
+  }
+  
+  /* Win95 Inset (input fields) */
+  .win95-inset {
+    @apply bg-white text-black;
+    border: 2px solid;
+    border-color: #808080 #ffffff #ffffff #808080;
+    box-shadow: inset 1px 1px 0 #404040;
+  }
+  
+  /* Win95 Input */
+  .win95-input {
+    @apply px-2 py-1 bg-white text-black text-xs;
+    border: 2px solid;
+    border-color: #808080 #ffffff #ffffff #808080;
+    box-shadow: inset 1px 1px 0 #404040;
+  }
+  
+  .win95-input:focus {
+    outline: none;
+  }
+  
+  /* Win95 Outset (raised elements) */
+  .win95-outset {
+    background: #c0c0c0;
+    border: 2px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #dfdfdf;
+  }
+  
+  /* Win95 Group Box */
+  .win95-groupbox {
+    @apply relative p-3 text-center;
+    border: 1px solid #808080;
+    background: rgba(0, 0, 0, 0.1);
+  }
+  
+  .win95-groupbox-title {
+    @apply absolute -top-2 left-2 px-1 text-xs uppercase tracking-wider;
+    background: #c0c0c0;
+    color: #404040;
+  }
+  
+  /* Win95 Progress Bar */
+  .win95-progress {
+    @apply h-4 w-full;
+    background: #ffffff;
+    border: 2px solid;
+    border-color: #808080 #ffffff #ffffff #808080;
+    box-shadow: inset 1px 1px 0 #404040;
+  }
+  
+  .win95-progress-bar {
+    @apply h-full;
+    background: hsl(var(--accent));
+  }
+  
+  .win95-progress-bar-orange {
+    @apply h-full;
+    background: hsl(var(--orange));
+  }
+  
+  /* Win95 Status Bar */
+  .win95-statusbar {
+    @apply bg-[#c0c0c0] px-2 py-1 text-xs text-black;
+    border-top: 1px solid #ffffff;
+  }
+  
+  .win95-statusbar-inset {
+    @apply px-2 py-0.5;
+    border: 1px solid;
+    border-color: #808080 #ffffff #ffffff #808080;
+  }
+  
+  /* Win95 Desktop */
+  .win95-desktop {
+    @apply min-h-screen p-4;
+    background: hsl(var(--background));
+  }
+  
+  /* Win95 Icon */
+  .win95-icon {
+    @apply flex flex-col items-center cursor-pointer p-2 hover:bg-[#000080]/30 transition-colors;
+  }
+  
+  .win95-icon-label {
+    @apply text-white text-center mt-1;
+    text-shadow: 1px 1px 0 #000;
+  }
+  
+  /* Win95 List View */
+  .win95-listview {
+    @apply bg-white;
+    border: 2px solid;
+    border-color: #808080 #ffffff #ffffff #808080;
+    box-shadow: inset 1px 1px 0 #404040;
+  }
+  
+  .win95-listview-header {
+    @apply bg-[#c0c0c0] text-black;
+    border-bottom: 1px solid #808080;
+  }
+  
+  .win95-listview-row {
+    @apply hover:bg-[#000080] hover:text-white transition-colors;
+  }
+  
+  .win95-listview-row-orange {
+    @apply hover:bg-[#ff6b4a] hover:text-white transition-colors;
+  }
+  
+  /* Hover effects */
+  .hover-elevate {
+    @apply transition-transform duration-100;
+  }
+  
+  .hover-elevate:hover {
+    transform: translateY(-1px);
+  }
+  
+  .active-elevate-2:active {
+    transform: translateY(1px);
   }
 }
 
 @layer utilities {
-  .text-ink {
-    color: hsl(var(--ink));
+  .text-win95 {
+    color: #000000;
   }
   
-  .text-ink-light {
-    color: hsl(var(--ink-light));
+  .bg-win95 {
+    background-color: #c0c0c0;
   }
   
-  .text-ink-faded {
-    color: hsl(var(--ink-faded));
-  }
-  
-  .bg-paper {
-    background-color: hsl(var(--paper));
-  }
-  
-  .bg-paper-aged {
-    background-color: hsl(var(--paper-aged));
-  }
-  
-  .bg-paper-dark {
-    background-color: hsl(var(--paper-dark));
-  }
-  
-  .bg-accent {
-    background-color: hsl(var(--accent));
-  }
-  
-  .text-accent {
-    color: hsl(var(--accent));
-  }
-  
-  .border-ink {
-    border-color: hsl(var(--ink));
-  }
-  
-  .font-headline {
-    font-family: var(--font-headline);
-  }
-  
-  .font-body {
-    font-family: var(--font-body);
-  }
-  
-  .font-mono {
-    font-family: var(--font-mono);
+  .font-pixel {
+    font-family: var(--font-pixel);
   }
 }

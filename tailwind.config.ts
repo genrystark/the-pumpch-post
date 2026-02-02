@@ -14,9 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        headline: ['Playfair Display', 'Georgia', 'serif'],
-        body: ['Source Serif 4', 'Georgia', 'serif'],
         mono: ['IBM Plex Mono', 'monospace'],
+        pixel: ['VT323', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -24,15 +23,17 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        paper: {
-          DEFAULT: "hsl(var(--paper))",
-          aged: "hsl(var(--paper-aged))",
-          dark: "hsl(var(--paper-dark))",
+        win95: {
+          bg: "#c0c0c0",
+          "bg-dark": "#808080",
+          "bg-light": "#dfdfdf",
+          surface: "hsl(210 15% 12%)",
+          "surface-light": "hsl(210 12% 18%)",
+          titlebar: "hsl(20 85% 55%)",
         },
-        ink: {
-          DEFAULT: "hsl(var(--ink))",
-          light: "hsl(var(--ink-light))",
-          faded: "hsl(var(--ink-faded))",
+        orange: {
+          DEFAULT: "hsl(var(--orange))",
+          foreground: "hsl(var(--orange-foreground))",
         },
         accent: {
           DEFAULT: "hsl(var(--accent))",
@@ -96,21 +97,9 @@ export default {
           from: { opacity: "0", transform: "translateY(20px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
-        "fade-in-left": {
-          from: { opacity: "0", transform: "translateX(-20px)" },
-          to: { opacity: "1", transform: "translateX(0)" },
-        },
-        "fade-in-right": {
-          from: { opacity: "0", transform: "translateX(20px)" },
-          to: { opacity: "1", transform: "translateX(0)" },
-        },
-        "slide-up": {
-          from: { opacity: "0", transform: "translateY(10px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-        "scale-in": {
-          from: { opacity: "0", transform: "scale(0.95)" },
-          to: { opacity: "1", transform: "scale(1)" },
+        "blink": {
+          "0%, 50%": { opacity: "1" },
+          "51%, 100%": { opacity: "0" },
         },
       },
       animation: {
@@ -118,10 +107,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.5s ease-out forwards",
         "fade-in-up": "fade-in-up 0.6s ease-out forwards",
-        "fade-in-left": "fade-in-left 0.6s ease-out forwards",
-        "fade-in-right": "fade-in-right 0.6s ease-out forwards",
-        "slide-up": "slide-up 0.5s ease-out forwards",
-        "scale-in": "scale-in 0.4s ease-out forwards",
+        "blink": "blink 1s step-end infinite",
       },
     },
   },

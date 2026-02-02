@@ -1,65 +1,74 @@
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
-import WhatIsPumpch from "@/components/WhatIsPumpch";
+import AgentCard from "@/components/AgentCard";
+import WhatIsPumpster from "@/components/WhatIsPumpch";
 import HowItWorks from "@/components/HowItWorks";
 import Features from "@/components/Features";
 import ChatCTA from "@/components/ChatCTA";
 import Footer from "@/components/Footer";
 import LaunchedTokens from "@/components/LaunchedTokens";
+import { Plus, FileText, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 import pumpchLogo from "@/assets/pumpch-logo.png";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen bg-background text-foreground scanlines">
       <Header />
-      <main>
-        {/* Hero with Agent */}
-        <section className="py-20 md:py-32 bg-paper min-h-[80vh] flex items-center">
-          <div className="container">
-            <div className="grid lg:grid-cols-3 gap-6">
-              {/* Left: Hero Content */}
-              <div className="lg:col-span-2">
-                <HeroSection />
-              </div>
-              
-              {/* Right: Agent Mascot */}
-              <div className="lg:col-span-1 opacity-0 animate-fade-in-right" style={{ animationDelay: "0.3s" }}>
-                <div className="border border-border p-6 bg-paper h-full flex flex-col items-center justify-center hover:border-accent hover:shadow-md transition-all duration-300">
-                  <img 
-                    src={pumpchLogo} 
-                    alt="Pumpch AI Agent" 
-                    className="w-56 h-56 object-contain mb-4"
-                  />
-                  <p className="font-headline text-lg text-ink italic text-center">
-                    "The Agent That Reads the Pump"
-                  </p>
-                  <div className="mt-4">
-                    <Button asChild variant="editorial" size="lg" className="group">
-                      <Link to="/chat">
-                        Talk to Agent
-                        <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </Link>
-                    </Button>
-                  </div>
+      
+      {/* Desktop Icons */}
+      <div className="win95-desktop">
+        <div className="max-w-7xl mx-auto">
+          {/* Desktop shortcuts */}
+          <div className="hidden sm:flex gap-4 mb-4 flex-wrap">
+            <Link to="/chat">
+              <div className="win95-icon">
+                <div className="w-10 h-10 bg-orange flex items-center justify-center mb-1">
+                  <Plus className="w-6 h-6 text-white" />
                 </div>
+                <span className="win95-icon-label text-[10px]">New Token</span>
               </div>
+            </Link>
+            <Link to="/#how-it-works">
+              <div className="win95-icon">
+                <div className="w-10 h-10 bg-[#000080] flex items-center justify-center mb-1">
+                  <FileText className="w-6 h-6 text-white" />
+                </div>
+                <span className="win95-icon-label text-[10px]">README.txt</span>
+              </div>
+            </Link>
+            <Link to="/chat">
+              <div className="win95-icon">
+                <img src={pumpchLogo} alt="Pumpster" className="w-10 h-10 mb-1 object-contain" />
+                <span className="win95-icon-label text-[10px]">Pumpster</span>
+              </div>
+            </Link>
+          </div>
+
+          {/* Hero Section */}
+          <div className="grid lg:grid-cols-3 gap-4 mb-4">
+            <div className="lg:col-span-2">
+              <HeroSection />
+            </div>
+            <div className="lg:col-span-1">
+              <AgentCard />
             </div>
           </div>
-        </section>
 
-        <LaunchedTokens />
-        <WhatIsPumpch />
-        <HowItWorks />
-        <Features />
-        <ChatCTA />
-      </main>
+          {/* Token Explorer */}
+          <LaunchedTokens />
+          
+          {/* Info Sections */}
+          <WhatIsPumpster />
+          <HowItWorks />
+          <Features />
+          <ChatCTA />
+        </div>
+      </div>
+      
       <Footer />
     </div>
   );
 };
 
 export default Index;
-
