@@ -25,30 +25,37 @@ serve(async (req) => {
       body: JSON.stringify(body),
     });
 
-    const responseText = await response.text();
-    console.log("PumpPortal response status:", response.status);
-    console.log("PumpPortal response:", responseText.substring(0, 500));
-
-    // Try to parse as JSON
-    let responseData;
-    try {
-      responseData = JSON.parse(responseText);
-    } catch {
-      responseData = { raw: responseText };
-    }
-
+    // PumpPortal trade-local returns raw transaction BYTES on success, not JSON
     if (!response.ok) {
+      const responseText = await response.text();
+      console.log("PumpPortal error status:", response.status, responseText.substring(0, 300));
+      let errorData: { error?: string; details?: unknown } = {};
+      try {
+        errorData = JSON.parse(responseText);
+      } catch {
+        errorData = { error: responseText || `PumpPortal API error: ${response.status}` };
+      }
       return new Response(JSON.stringify({
-        error: responseData.error || `PumpPortal API error: ${response.status}`,
+        error: errorData.error || `PumpPortal API error: ${response.status}`,
         status: response.status,
-        details: responseData
+        details: errorData
       }), {
         status: response.status,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    return new Response(JSON.stringify(responseData), {
+    const transactionBytes = new Uint8Array(await response.arrayBuffer());
+    console.log("PumpPortal success, transaction size:", transactionBytes.length);
+
+    // Encode bytes to base64 so client can decode and deserialize
+    let binary = "";
+    for (let i = 0; i < transactionBytes.length; i++) {
+      binary += String.fromCharCode(transactionBytes[i]);
+    }
+    const transactionBase64 = btoa(binary);
+
+    return new Response(JSON.stringify({ transaction: transactionBase64 }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 
