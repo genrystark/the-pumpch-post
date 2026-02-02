@@ -17,7 +17,7 @@ const Index = () => {
       <Header />
       <main>
         {/* Hero with Agent */}
-        <section className="py-12 md:py-16 bg-paper">
+        <section className="py-20 md:py-32 bg-paper min-h-[80vh] flex items-center">
           <div className="container">
             <div className="grid lg:grid-cols-3 gap-6">
               {/* Left: Hero Content */}
