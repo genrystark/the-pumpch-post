@@ -45,16 +45,16 @@ const LaunchModeSelector = ({ mode, onModeChange }: LaunchModeSelectorProps) => 
             disabled={!m.available}
             className={`w-full flex items-center gap-2 p-2 transition-all duration-200 text-left ${
               mode === m.id
-                ? "win95-inset bg-[#000080] text-white"
+                ? "win95-inset bg-[#000080]"
                 : m.available
                 ? "win95-button hover:bg-[#d4d4d4]"
                 : "win95-button opacity-60 cursor-not-allowed"
             }`}
           >
-            <m.icon className={`w-4 h-4 ${mode === m.id ? "text-[#ff6b00]" : "text-[#808080]"}`} />
+            <m.icon className={`w-4 h-4 ${mode === m.id ? "text-[#ff6b00]" : "text-black"}`} />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span className={`font-mono text-xs uppercase ${mode === m.id ? "text-[#ff6b00]" : ""}`}>
+                <span className={`font-mono text-xs uppercase ${mode === m.id ? "text-[#ff6b00]" : "text-black"}`}>
                   {m.label}
                 </span>
                 {!m.available && (

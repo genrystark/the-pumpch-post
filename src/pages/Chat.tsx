@@ -218,15 +218,15 @@ const Chat = () => {
               <div className="win95-groupbox p-2">
                 <span className="win95-groupbox-title">Statistics</span>
                 <div className="grid grid-cols-2 gap-2 mt-2">
-                  <div className="win95-inset p-2 text-center">
-                    <Search className="w-3 h-3 mx-auto mb-1" />
-                    <p className="font-bold text-lg">{stats.analyzed}</p>
-                    <p className="font-mono text-[10px] text-[#808080]">Analyzed</p>
+                  <div className="win95-inset p-2 text-center bg-white">
+                    <Search className="w-3 h-3 mx-auto mb-1 text-black" />
+                    <p className="font-bold text-lg text-black">{stats.analyzed}</p>
+                    <p className="font-mono text-[10px] text-black">Analyzed</p>
                   </div>
-                  <div className="win95-inset p-2 text-center">
+                  <div className="win95-inset p-2 text-center bg-white">
                     <Rocket className="w-3 h-3 mx-auto mb-1 text-[#ff6b00]" />
                     <p className="font-bold text-lg text-[#ff6b00]">{stats.activeLaunches}</p>
-                    <p className="font-mono text-[10px] text-[#808080]">Active</p>
+                    <p className="font-mono text-[10px] text-black">Active</p>
                   </div>
                 </div>
               </div>
@@ -244,9 +244,9 @@ const Chat = () => {
 
             {/* Distribution Button */}
             <div className="p-2">
-              <button className="win95-button w-full flex items-center gap-2 justify-center" disabled>
-                <Sliders className="w-4 h-4" />
-                <span className="font-mono text-xs">Distribution</span>
+              <button className="win95-button w-full flex items-center gap-2 justify-center py-2" disabled>
+                <Sliders className="w-4 h-4 text-black" />
+                <span className="font-mono text-xs text-black">Distribution</span>
                 <span className="ml-2 text-[10px] text-[#808080]">[Soon]</span>
               </button>
             </div>
@@ -257,18 +257,18 @@ const Chat = () => {
                 <span className="win95-groupbox-title">Generate</span>
                 <div className="space-y-2 mt-2">
                   <button
-                    className="win95-button w-full flex items-center gap-2"
+                    className="win95-button w-full flex items-center gap-2 py-1"
                     onClick={() => setInput("Generate a logo for my token")}
                   >
-                    <Image className="w-4 h-4" />
-                    <span className="font-mono text-xs">Logo</span>
+                    <Image className="w-4 h-4 text-black" />
+                    <span className="font-mono text-xs text-black">Logo</span>
                   </button>
                   <button
-                    className="win95-button w-full flex items-center gap-2"
+                    className="win95-button w-full flex items-center gap-2 py-1"
                     onClick={() => setInput("Generate a banner for my token")}
                   >
-                    <FileImage className="w-4 h-4" />
-                    <span className="font-mono text-xs">Banner</span>
+                    <FileImage className="w-4 h-4 text-black" />
+                    <span className="font-mono text-xs text-black">Banner</span>
                   </button>
                 </div>
               </div>
