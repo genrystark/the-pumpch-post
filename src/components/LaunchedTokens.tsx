@@ -103,7 +103,13 @@ const LaunchedTokens = () => {
               {/* Mobile view */}
               <div className="sm:hidden space-y-2 p-2">
                 {mockTokens.map((token) => (
-                  <div key={token.ticker} className="win95-outset p-3 cursor-pointer hover-elevate">
+                  <a 
+                    key={token.ticker} 
+                    href={`https://pump.fun/${token.ca}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="win95-outset p-3 cursor-pointer hover-elevate block"
+                  >
                     <div className="flex items-start gap-3 mb-2">
                       <img 
                         src={token.logo} 
@@ -137,7 +143,7 @@ const LaunchedTokens = () => {
                     <div className="text-[8px] text-[#808080] mt-1 truncate">
                       CA: {token.ca}
                     </div>
-                  </div>
+                  </a>
                 ))}
               </div>
               
@@ -156,7 +162,11 @@ const LaunchedTokens = () => {
                 </thead>
                 <tbody>
                   {mockTokens.map((token) => (
-                    <tr key={token.ticker} className="win95-listview-row-orange cursor-pointer border-b border-[#c0c0c0]">
+                    <tr 
+                      key={token.ticker} 
+                      className="win95-listview-row-orange cursor-pointer border-b border-[#c0c0c0]"
+                      onClick={() => window.open(`https://pump.fun/${token.ca}`, '_blank')}
+                    >
                       <td className="p-2">
                         <div className="flex items-center gap-2">
                           <img 
@@ -186,8 +196,24 @@ const LaunchedTokens = () => {
                       <td className="p-2 text-right text-[#808080]">{token.age}</td>
                       <td className="p-2 text-center">
                         <div className="flex items-center justify-center gap-1">
-                          <button className="win95-button-primary text-[10px] px-2 py-1">BUY</button>
-                          <button className="win95-button text-[10px] px-2 py-1">SELL</button>
+                          <a 
+                            href={`https://pump.fun/${token.ca}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="win95-button-primary text-[10px] px-2 py-1"
+                          >
+                            BUY
+                          </a>
+                          <a 
+                            href={`https://pump.fun/${token.ca}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="win95-button text-[10px] px-2 py-1"
+                          >
+                            SELL
+                          </a>
                         </div>
                       </td>
                     </tr>
