@@ -11,7 +11,7 @@ import DeployTokenButton from "@/components/DeployTokenButton";
 import GenerateImagesSection from "@/components/GenerateImagesSection";
 import { toast } from "sonner";
 import { DeployTokenResult } from "@/lib/pumpfun";
-import { getAgentById, getSelectedAgentId, getEffectiveSystemPrompt } from "@/lib/agents";
+import { useSelectedAgent, useAgents, DEFAULT_AGENT_ID } from "@/hooks/useAgents";
 import declawAgentLogo from "@/assets/declaw-logo.png";
 
 interface Message {
@@ -38,10 +38,11 @@ const Chat = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const selectedAgentId = getSelectedAgentId();
-  const currentAgent = getAgentById(selectedAgentId) ?? { id: "declaw", name: "declaw", avatar: undefined };
-  const agentAvatar = currentAgent.avatar ?? declawAgentLogo;
-  const agentName = currentAgent.name ?? "declaw";
+  const { selectedId: selectedAgentId } = useSelectedAgent();
+  const { data: agents = [] } = useAgents();
+  const currentAgent = agents.find((a) => a.id === selectedAgentId) ?? agents[0];
+  const agentAvatar = currentAgent?.avatar ?? declawAgentLogo;
+  const agentName = currentAgent?.name ?? "declaw";
 
   // Token state
   const [tokenData, setTokenData] = useState<TokenData>({
@@ -157,11 +158,14 @@ const Chat = () => {
     const apiMessages = newMessages.map(m => ({ role: m.role, content: m.content }));
 
     try {
-      const systemPrompt = getEffectiveSystemPrompt();
+      const systemPrompt =
+        selectedAgentId === DEFAULT_AGENT_ID || !currentAgent?.system_prompt
+          ? null
+          : currentAgent.system_prompt;
       const body: { messages: { role: string; content: string }[]; system_prompt?: string } = {
         messages: apiMessages,
       };
-      if (systemPrompt != null) body.system_prompt = systemPrompt;
+      if (systemPrompt != null && systemPrompt !== "") body.system_prompt = systemPrompt;
 
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/pumpster-chat`, {
         method: "POST",
