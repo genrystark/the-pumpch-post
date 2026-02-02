@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import declawLogo from "@/assets/declaw-logo.png";
 import { shortenAddress } from "@/lib/solana";
 
-const CONTRACT_ADDRESS = "DECLAW_CONTRACT_ADDRESS_HERE";
+const CONTRACT_ADDRESS = "8YAbs2L2hsspmZ2FZ2Vz8RPkv9Wbc9FJVnHnUgj5pump";
 const TG_BOT_URL = "https://t.me/declaw_bot";
 
 const Header = () => {
@@ -34,10 +34,10 @@ const Header = () => {
       {/* Title Bar */}
       <div className="win95-titlebar">
         <div className="flex items-center gap-2">
-          <motion.img 
-            src={declawLogo} 
-            alt="declaw" 
-            className="w-5 h-5" 
+          <motion.img
+            src={declawLogo}
+            alt="declaw"
+            className="w-5 h-5"
             whileHover={{ rotate: 20, scale: 1.2 }}
             transition={{ type: "spring", stiffness: 300 }}
           />
@@ -58,10 +58,7 @@ const Header = () => {
           <button className="win95-control-btn hidden sm:flex" title="Close">
             <X className="w-2 h-2" />
           </button>
-          <button 
-            className="win95-control-btn sm:hidden flex"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
+          <button className="win95-control-btn sm:hidden flex" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             <Menu className="w-3 h-3" />
           </button>
         </div>
@@ -69,26 +66,46 @@ const Header = () => {
 
       {/* Menu Bar */}
       <div className="win95-menubar flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div className={`${mobileMenuOpen ? 'flex' : 'hidden'} sm:flex flex-col sm:flex-row items-start sm:items-center`}>
+        <div
+          className={`${mobileMenuOpen ? "flex" : "hidden"} sm:flex flex-col sm:flex-row items-start sm:items-center`}
+        >
           <nav className="flex flex-col sm:flex-row items-start sm:items-center">
-            <a href="#launched-tokens" onClick={(e) => { e.preventDefault(); document.getElementById('launched-tokens')?.scrollIntoView({ behavior: 'smooth' }); }}>
-              <motion.span 
+            <a
+              href="#launched-tokens"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById("launched-tokens")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              <motion.span
                 className="px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer text-[11px]"
                 whileHover={{ backgroundColor: "#000080", color: "#fff" }}
               >
                 Declaws
               </motion.span>
             </a>
-            <a href="#how-it-works" onClick={(e) => { e.preventDefault(); document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }); }}>
-              <motion.span 
+            <a
+              href="#how-it-works"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              <motion.span
                 className="px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer text-[11px]"
                 whileHover={{ backgroundColor: "#000080", color: "#fff" }}
               >
                 How It Works
               </motion.span>
             </a>
-            <a href="#features" onClick={(e) => { e.preventDefault(); document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); }}>
-              <motion.span 
+            <a
+              href="#features"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              <motion.span
                 className="px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer text-[11px]"
                 whileHover={{ backgroundColor: "#000080", color: "#fff" }}
               >
@@ -96,7 +113,7 @@ const Header = () => {
               </motion.span>
             </a>
             <Link to="/chat">
-              <motion.span 
+              <motion.span
                 className="px-2 py-0.5 bg-[#ff6b4a] text-white flex items-center gap-1 text-[11px] cursor-pointer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -105,9 +122,9 @@ const Header = () => {
                 declaw
               </motion.span>
             </Link>
-            <a 
-              href="https://x.com/i/communities/2018414171243573608/" 
-              target="_blank" 
+            <a
+              href="https://x.com/i/communities/2018414171243573608/"
+              target="_blank"
               rel="noopener noreferrer"
               className="px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer flex items-center gap-1 text-[11px]"
             >
@@ -116,7 +133,7 @@ const Header = () => {
               </svg>
               X
             </a>
-            <motion.button 
+            <motion.button
               onClick={handleCopyCA}
               className="px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer flex items-center gap-1 text-[11px]"
               whileHover={{ backgroundColor: "#000080", color: "#fff" }}
@@ -125,9 +142,9 @@ const Header = () => {
               <Copy className="w-3 h-3" />
               CA
             </motion.button>
-            <a 
+            <a
               href={TG_BOT_URL}
-              target="_blank" 
+              target="_blank"
               rel="noopener noreferrer"
               className="px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer flex items-center gap-1 text-[11px]"
             >
@@ -136,22 +153,22 @@ const Header = () => {
             </a>
           </nav>
         </div>
-        <div className={`${mobileMenuOpen ? 'flex' : 'hidden'} sm:flex items-center gap-2 mt-2 sm:mt-0 pb-2 sm:pb-0`}>
-          <motion.button 
+        <div className={`${mobileMenuOpen ? "flex" : "hidden"} sm:flex items-center gap-2 mt-2 sm:mt-0 pb-2 sm:pb-0`}>
+          <motion.button
             onClick={handleWalletClick}
             disabled={connecting}
             className={`font-mono text-xs font-bold flex items-center gap-1 ${
-              connected ? 'win95-button' : 'win95-button-primary'
+              connected ? "win95-button" : "win95-button-primary"
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <Wallet className="w-3 h-3" />
             {connecting ? (
-              'CONNECTING...'
+              "CONNECTING..."
             ) : connected && publicKey ? (
               <>
-                <motion.span 
+                <motion.span
                   className="w-2 h-2 bg-[#00ff00] rounded-full"
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ repeat: Infinity, duration: 2 }}
@@ -159,7 +176,7 @@ const Header = () => {
                 {shortenAddress(publicKey.toString())}
               </>
             ) : (
-              '[CONNECT PHANTOM]'
+              "[CONNECT PHANTOM]"
             )}
           </motion.button>
         </div>
