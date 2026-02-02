@@ -8,7 +8,7 @@ const AgentCard = () => {
       <div className="win95-titlebar-green">
         <div className="flex items-center gap-2">
           <MessageSquare className="w-4 h-4" />
-          <span className="text-xs sm:text-sm">Pumpster Agent</span>
+          <span className="text-xs sm:text-sm">pumpster.claw Agent</span>
         </div>
         <div className="flex gap-1">
           <button className="win95-control-btn text-[8px]">_</button>

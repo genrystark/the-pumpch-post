@@ -9,7 +9,7 @@ const LaunchedTokens = () => {
   ];
 
   return (
-    <section className="py-8">
+    <section id="launched-tokens" className="py-8">
       <div className="container">
         <div className="win95-window">
           <div className="win95-titlebar">

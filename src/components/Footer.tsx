@@ -5,7 +5,7 @@ const Footer = () => {
         <div className="win95-window">
           <div className="win95-statusbar flex flex-col sm:flex-row justify-between items-center gap-2">
             <div className="win95-statusbar-inset text-[10px]">
-              © 2024 Pumpster.exe | Trading involves risk
+              © 2024 pumpster.claw | Built on OpenClaw | Launched in Moltbook
             </div>
             <div className="win95-statusbar-inset text-[10px]">
               Never invest more than you can afford to lose

@@ -8,7 +8,7 @@ const WhatIsPumpster = () => {
           <div className="win95-titlebar">
             <div className="flex items-center gap-2">
               <Bot className="w-4 h-4" />
-              <span className="text-xs sm:text-sm">About Pumpster.exe</span>
+              <span className="text-xs sm:text-sm">About pumpster.claw</span>
             </div>
             <div className="flex gap-1">
               <button className="win95-control-btn text-[8px]">_</button>
@@ -96,7 +96,7 @@ const WhatIsPumpster = () => {
           
           <div className="win95-statusbar">
             <div className="win95-statusbar-inset flex-1 text-[10px]">
-              Ready | AI Agent powered by OpenClaw
+              Built on OpenClaw | Launched in Moltbook
             </div>
           </div>
         </div>
