@@ -75,6 +75,41 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
       publishedAt: new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
       url: "#",
     },
+    {
+      id: "6",
+      title: "Pump.fun hits $1B in lifetime revenue",
+      source: "The Defiant",
+      publishedAt: new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+      url: "#",
+    },
+    {
+      id: "7",
+      title: "Dog coin derivatives see record trading volume",
+      source: "CoinGecko",
+      publishedAt: new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+      url: "#",
+    },
+    {
+      id: "8",
+      title: "Solana DEX volumes surpass Ethereum for first time",
+      source: "DeFi Llama",
+      publishedAt: new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+      url: "#",
+    },
+    {
+      id: "9",
+      title: "Trump-themed meme tokens rally 500%",
+      source: "CryptoBriefing",
+      publishedAt: new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+      url: "#",
+    },
+    {
+      id: "10",
+      title: "New Raydium pools see massive liquidity inflows",
+      source: "DeFi Report",
+      publishedAt: new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+      url: "#",
+    },
   ];
 
   useEffect(() => {
