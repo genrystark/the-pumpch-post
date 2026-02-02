@@ -1,14 +1,14 @@
 import { Bot, TrendingUp, Zap, MessageSquare } from "lucide-react";
 
-const WhatIsPumpster = () => {
+const WhatIsDeclaw = () => {
   return (
-    <section id="what-is-pumpster" className="py-8">
+    <section id="what-is-declaw" className="py-8">
       <div className="container">
         <div className="win95-window">
           <div className="win95-titlebar">
             <div className="flex items-center gap-2">
               <Bot className="w-4 h-4" />
-              <span className="text-xs sm:text-sm">About pumpster.claw</span>
+              <span className="text-xs sm:text-sm">About declaw</span>
             </div>
             <div className="flex gap-1">
               <button className="win95-control-btn text-[8px]">_</button>
@@ -26,7 +26,7 @@ const WhatIsPumpster = () => {
               <h2 className="font-mono text-xl md:text-2xl text-white mt-1">
                 THE AGENT THAT TRADES
                 <br />
-                <span className="text-orange">AND LAUNCHES WITH YOU</span>
+                <span className="text-orange">AND DECLAWS WITH YOU</span>
               </h2>
             </div>
 
@@ -40,8 +40,8 @@ const WhatIsPumpster = () => {
                   <div>
                     <h3 className="font-mono text-sm font-bold text-black mb-1">Not a Signal Bot</h3>
                     <p className="font-mono text-xs text-[#404040]">
-                      Pumpster is not a trading algorithm that blindly follows charts. 
-                      It's an AI agent designed specifically for the Pump.fun economy.
+                      declaw is not a trading algorithm that blindly follows charts. 
+                      It's an AI agent designed for the meme token economy.
                     </p>
                   </div>
                 </div>
@@ -55,7 +55,7 @@ const WhatIsPumpster = () => {
                   <div>
                     <h3 className="font-mono text-sm font-bold text-black mb-1">Narrative Tracker</h3>
                     <p className="font-mono text-xs text-[#404040]">
-                      It watches narratives on X, tracks token launches in real-time, 
+                      It watches narratives on X, tracks token activity in real-time, 
                       and helps users turn ideas into live tokens.
                     </p>
                   </div>
@@ -85,8 +85,8 @@ const WhatIsPumpster = () => {
                   <div>
                     <h3 className="font-mono text-sm font-bold text-black mb-1">One Conversation</h3>
                     <p className="font-mono text-xs text-[#404040]">
-                      One agent. Complete context. Your Pump.fun companion 
-                      from idea to launch to trade.
+                      One agent. Complete context. Your companion 
+                      from idea to declaw to trade.
                     </p>
                   </div>
                 </div>
@@ -105,4 +105,4 @@ const WhatIsPumpster = () => {
   );
 };
 
-export default WhatIsPumpster;
+export default WhatIsDeclaw;

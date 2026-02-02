@@ -45,7 +45,7 @@ const LaunchedTokens = () => {
           <div className="win95-titlebar">
             <div className="flex items-center gap-2">
               <Folder className="w-4 h-4" />
-              <span className="text-xs sm:text-sm">Token Explorer - Recent Launches</span>
+              <span className="text-xs sm:text-sm">Token Explorer - Recent Declaws</span>
             </div>
             <div className="flex gap-1">
               <button className="win95-control-btn text-[8px]">_</button>
@@ -74,7 +74,7 @@ const LaunchedTokens = () => {
                 <Link to="/chat">
                   <button className="win95-button-primary text-xs flex items-center gap-1">
                     <Plus className="w-3 h-3" />
-                    New Token
+                    New Declaw
                   </button>
                 </Link>
               </div>
@@ -84,7 +84,7 @@ const LaunchedTokens = () => {
           {/* Stats */}
           <div className="bg-[#1a1a1a] p-3 flex flex-wrap justify-center gap-2 sm:gap-4 border-b border-[#3a3a3a]">
             <div className="win95-groupbox px-3 sm:px-4 py-2 min-w-[80px]">
-              <span className="win95-groupbox-title text-[8px] sm:text-[9px] whitespace-nowrap">Launched</span>
+              <span className="win95-groupbox-title text-[8px] sm:text-[9px] whitespace-nowrap">Declawed</span>
               <div className="text-lg font-bold text-orange text-center">{mockTokens.length}</div>
             </div>
             <div className="win95-groupbox px-3 sm:px-4 py-2 min-w-[80px]">
@@ -105,7 +105,7 @@ const LaunchedTokens = () => {
                 {mockTokens.map((token) => (
                   <a 
                     key={token.ticker} 
-                    href={`https://pump.fun/${token.ca}`}
+                    href={`https://solscan.io/token/${token.ca}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="win95-outset p-3 cursor-pointer hover-elevate block"
@@ -165,7 +165,7 @@ const LaunchedTokens = () => {
                     <tr 
                       key={token.ticker} 
                       className="win95-listview-row-orange cursor-pointer border-b border-[#c0c0c0]"
-                      onClick={() => window.open(`https://pump.fun/${token.ca}`, '_blank')}
+                      onClick={() => window.open(`https://solscan.io/token/${token.ca}`, '_blank')}
                     >
                       <td className="p-2">
                         <div className="flex items-center gap-2">
@@ -197,22 +197,13 @@ const LaunchedTokens = () => {
                       <td className="p-2 text-center">
                         <div className="flex items-center justify-center gap-1">
                           <a 
-                            href={`https://pump.fun/${token.ca}`}
+                            href={`https://solscan.io/token/${token.ca}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
                             className="win95-button-primary text-[10px] px-2 py-1"
                           >
-                            BUY
-                          </a>
-                          <a 
-                            href={`https://pump.fun/${token.ca}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="win95-button text-[10px] px-2 py-1"
-                          >
-                            SELL
+                            VIEW
                           </a>
                         </div>
                       </td>
@@ -225,7 +216,7 @@ const LaunchedTokens = () => {
           
           <div className="win95-statusbar flex justify-between items-center">
             <div className="win95-statusbar-inset flex-1 text-[10px]">
-              {mockTokens.length} token(s) | Pump.fun Network
+              {mockTokens.length} token(s) | Solana Network
             </div>
             <div className="win95-statusbar-inset text-[10px]">
               Solana Mainnet

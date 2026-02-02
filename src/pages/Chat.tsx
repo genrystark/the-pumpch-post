@@ -20,7 +20,7 @@ const initialMessages: Message[] = [
   {
     id: "1",
     role: "assistant",
-    content: "Good morning, trader. I'm pumpster.claw, your AI agent for the Pump.fun economy. I track narratives, analyze tokens, and help you launch. What brings you to the floor today?",
+    content: "Good morning, trader. I'm declaw, your AI agent for the meme token economy. I track narratives, analyze tokens, and help you declaw. What brings you to the floor today?",
     timestamp: new Date(),
   },
 ];
@@ -224,7 +224,7 @@ const Chat = () => {
 
     } catch (error) {
       console.error("Chat error:", error);
-      toast.error("Failed to get response from pumpster.claw");
+      toast.error("Failed to get response from declaw");
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: "assistant",
@@ -237,7 +237,7 @@ const Chat = () => {
   };
 
   const handleLaunchIdea = (newsTitle: string) => {
-    const prompt = `Based on this news: "${newsTitle}" - suggest a token launch idea for Pump.fun`;
+    const prompt = `Based on this news: "${newsTitle}" - suggest a token declaw idea`;
     setInput(prompt);
   };
 
@@ -256,7 +256,7 @@ const Chat = () => {
           <div className="win95-titlebar">
             <div className="flex items-center gap-2">
               <Rocket className="w-4 h-4" />
-              <span className="text-xs">Launch Desk</span>
+              <span className="text-xs">Declaw Desk</span>
             </div>
             <div className="flex gap-1">
               <button className="win95-control-btn text-[8px]">_</button>
@@ -276,9 +276,9 @@ const Chat = () => {
 
             {/* Masthead */}
             <div className="p-3 border-b-2 border-[#808080] bg-[#000080] text-white">
-              <h1 className="font-['VT323'] text-xl text-[#ff6b00]">pumpster.claw</h1>
+              <h1 className="font-['VT323'] text-xl text-[#ff6b00]">declaw</h1>
               <p className="font-mono text-[10px] text-[#c0c0c0]">
-                LAUNCH DESK v1.0
+                DECLAW DESK v1.0
               </p>
             </div>
 
@@ -350,7 +350,7 @@ const Chat = () => {
                 username={twitterUsername}
                 onConnect={() => {
                   setTwitterConnected(true);
-                  setTwitterUsername("pumpster_user");
+                  setTwitterUsername("declaw_user");
                 }}
                 onDisconnect={() => {
                   setTwitterConnected(false);
@@ -377,7 +377,7 @@ const Chat = () => {
           <div className="win95-titlebar-green">
             <div className="flex items-center gap-2">
               <Send className="w-4 h-4" />
-              <span className="text-xs">pumpster.claw - Agent Chat</span>
+              <span className="text-xs">declaw - Agent Chat</span>
             </div>
             <div className="flex gap-1">
               <button className="win95-control-btn text-[8px]">_</button>
@@ -391,11 +391,11 @@ const Chat = () => {
             <div className="lg:hidden">
               <Link to="/" className="flex items-center gap-2 text-[#000080] hover:underline">
                 <ArrowLeft className="w-4 h-4" />
-                <span className="font-['VT323'] text-lg text-[#ff6b00]">pumpster.claw</span>
+                <span className="font-['VT323'] text-lg text-[#ff6b00]">declaw</span>
               </Link>
             </div>
             <div className="hidden lg:block">
-              <h2 className="font-bold text-sm">Direct line to the launch desk</h2>
+              <h2 className="font-bold text-sm">Direct line to the declaw desk</h2>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 text-xs font-mono">
@@ -424,7 +424,7 @@ const Chat = () => {
                   {/* Message header */}
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-mono text-xs uppercase opacity-70">
-                      {message.role === "user" ? "You" : "pumpster.claw"}
+                      {message.role === "user" ? "You" : "declaw"}
                     </span>
                     <span className="font-mono text-[10px] opacity-50">
                       {formatTime(message.timestamp)}
@@ -443,7 +443,7 @@ const Chat = () => {
               <div className="flex justify-start">
                 <div className="bg-[#2a2a2a] border border-[#3a3a3a] p-3">
                   <span className="font-mono text-xs text-[#00ff00] animate-pulse">
-                    pumpster.claw is analyzing...
+                    declaw is analyzing...
                   </span>
                 </div>
               </div>
@@ -458,7 +458,7 @@ const Chat = () => {
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask pumpster.claw anything..."
+                placeholder="Ask declaw anything..."
                 className="win95-inset flex-1 px-2 py-1 font-mono text-sm bg-white"
               />
               <button 
@@ -471,13 +471,13 @@ const Chat = () => {
               </button>
             </form>
             <p className="font-mono text-[10px] text-[#808080] mt-1 text-center">
-              Press Enter to send • pumpster.claw does not provide financial advice
+              Press Enter to send • declaw does not provide financial advice
             </p>
           </div>
         </div>
       </main>
 
-      {/* Right News Panel */}
+      {/* Right Sidebar - News */}
       <aside className="w-72 hidden xl:flex flex-col shrink-0 ml-2 max-h-full">
         <NewsFeed onLaunchIdea={handleLaunchIdea} />
       </aside>

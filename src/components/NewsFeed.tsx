@@ -56,7 +56,7 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
     },
     {
       id: "3",
-      title: "New Pump.fun tokens see 300% volume increase",
+      title: "New token launches see 300% volume increase",
       source: "Decrypt",
       publishedAt: new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
       url: "#",
@@ -145,7 +145,7 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
                   onClick={() => onLaunchIdea(item.title)}
                 >
                   <Rocket className="w-3 h-3" />
-                  Launch Idea
+                  Declaw Idea
                 </button>
               </div>
             ))}

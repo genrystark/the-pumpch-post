@@ -16,7 +16,7 @@ const ReadmeModal = ({ isOpen, onClose }: ReadmeModalProps) => {
         <div className="win95-titlebar">
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4" />
-            <span className="text-xs sm:text-sm">README.txt - pumpster.claw</span>
+            <span className="text-xs sm:text-sm">README.txt - declaw token</span>
           </div>
           <div className="flex gap-1">
             <button className="win95-control-btn text-[8px]">_</button>
@@ -36,22 +36,22 @@ const ReadmeModal = ({ isOpen, onClose }: ReadmeModalProps) => {
 
         <div className="bg-white p-4 overflow-y-auto flex-1 text-black font-mono text-xs leading-relaxed">
           <div className="flex items-center gap-3 mb-4 pb-3 border-b border-[#808080]">
-            <img src={pumpchLogo} alt="pumpster.claw" className="w-12 h-12 object-contain" />
+            <img src={pumpchLogo} alt="declaw" className="w-12 h-12 object-contain" />
             <div>
-              <h1 className="text-lg font-bold">pumpster.claw</h1>
+              <h1 className="text-lg font-bold">declaw token</h1>
               <p className="text-[10px] text-[#808080]">AI Token Agent v1.0</p>
             </div>
           </div>
 
           <pre className="whitespace-pre-wrap">
 {`========================================
-         PUMPSTER.CLAW README
+         DECLAW TOKEN README
 ========================================
 
 DESCRIPTION
 -----------
-pumpster.claw is an AI agent designed for 
-the Pump.fun ecosystem on Solana.
+declaw is an AI agent designed for 
+the meme token economy on Solana.
 
 Built on OpenClaw infrastructure.
 Launched in Moltbook platform.
@@ -60,15 +60,15 @@ FEATURES
 --------
 • Token Research & Analysis
 • Narrative Tracking on X
-• Token Launch Assistance
+• Token Declaw Assistance
 • Real-time Market Signals
 • AI-powered Trade Suggestions
 
 HOW IT WORKS
 ------------
-1. Tell Pumpster your idea or question
-2. Agent analyzes X, Pump.fun, on-chain data
-3. Get recommendations or launch tokens
+1. Tell declaw your idea or question
+2. Agent analyzes X and on-chain data
+3. Get recommendations or declaw tokens
 4. Track performance in real-time
 
 POWERED BY
@@ -76,7 +76,6 @@ POWERED BY
 - OpenClaw AI Infrastructure
 - Moltbook Launch Platform
 - Solana Blockchain
-- Pump.fun Protocol
 
 DISCLAIMER
 ----------
@@ -85,7 +84,7 @@ than you can afford to lose. This is not
 financial advice.
 
 ========================================
-       © 2024 pumpster.claw
+       © 2024 declaw token
 ========================================`}
           </pre>
         </div>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import AgentCard from "@/components/AgentCard";
-import WhatIsPumpster from "@/components/WhatIsPumpch";
+import WhatIsDeclaw from "@/components/WhatIsPumpch";
 import HowItWorks from "@/components/HowItWorks";
 import Features from "@/components/Features";
 import ChatCTA from "@/components/ChatCTA";
@@ -32,7 +32,7 @@ const Index = () => {
                 <div className="w-10 h-10 bg-orange flex items-center justify-center mb-1">
                   <Plus className="w-6 h-6 text-white" />
                 </div>
-                <span className="win95-icon-label text-[10px]">New Token</span>
+                <span className="win95-icon-label text-[10px]">New Declaw</span>
               </div>
             </Link>
             <button onClick={() => setReadmeOpen(true)}>
@@ -45,8 +45,8 @@ const Index = () => {
             </button>
             <Link to="/chat">
               <div className="win95-icon">
-                <img src={pumpchLogo} alt="pumpster.claw" className="w-10 h-10 mb-1 object-contain" />
-                <span className="win95-icon-label text-[10px]">pumpster.claw</span>
+                <img src={pumpchLogo} alt="declaw" className="w-10 h-10 mb-1 object-contain" />
+                <span className="win95-icon-label text-[10px]">declaw</span>
               </div>
             </Link>
           </div>
@@ -65,7 +65,7 @@ const Index = () => {
           <LaunchedTokens />
           
           {/* Info Sections */}
-          <WhatIsPumpster />
+          <WhatIsDeclaw />
           <HowItWorks />
           <Features />
           <ChatCTA />

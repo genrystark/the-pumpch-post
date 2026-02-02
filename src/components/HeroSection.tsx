@@ -7,7 +7,7 @@ const HeroSection = () => {
       <div className="win95-titlebar">
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-white" />
-          <span className="text-xs sm:text-sm">Welcome to pumpster.claw</span>
+          <span className="text-xs sm:text-sm">Welcome to declaw token</span>
         </div>
         <div className="flex gap-1">
           <button className="win95-control-btn text-[8px]">_</button>
@@ -19,14 +19,14 @@ const HeroSection = () => {
       <div className="bg-[#1a1a1a] p-6">
         {/* Main headline */}
         <h1 className="font-mono text-3xl md:text-4xl lg:text-5xl text-white mb-4 leading-tight">
-          <span className="text-orange">HUNT</span> THE PUMP
+          <span className="text-orange">DECLAW</span> THE PUMP
           <span className="animate-blink">_</span>
         </h1>
 
         {/* Subheadline */}
         <p className="font-mono text-sm md:text-base text-[#b0b0b0] max-w-xl mb-6 leading-relaxed">
-          <span className="text-orange font-bold">pumpster.claw</span> is an AI agent built on <span className="text-green-400">OpenClaw</span>, launched in <span className="text-blue-400">Moltbook</span>. 
-          Talk to Pumpster, and it hunts opportunities down.
+          <span className="text-orange font-bold">declaw</span> is an AI agent built on <span className="text-green-400">OpenClaw</span>, launched in <span className="text-blue-400">Moltbook</span>. 
+          Talk to declaw, and it declaws opportunities for you.
         </p>
 
         {/* CTA */}
@@ -50,12 +50,12 @@ const HeroSection = () => {
             Powered by:
           </span>
           <div className="flex items-center gap-2 flex-wrap">
-            {["Solana", "Pump.fun", "X", "OpenClaw", "Moltbook"].map((item, i) => (
+            {["Solana", "X", "OpenClaw", "Moltbook"].map((item, i) => (
               <span key={item} className="flex items-center gap-2">
                 <span className="font-mono text-[10px] text-[#b0b0b0] uppercase tracking-wider hover:text-orange transition-colors cursor-default whitespace-nowrap">
                   {item}
                 </span>
-                {i < 4 && <span className="text-[#404040]">|</span>}
+                {i < 3 && <span className="text-[#404040]">|</span>}
               </span>
             ))}
           </div>
