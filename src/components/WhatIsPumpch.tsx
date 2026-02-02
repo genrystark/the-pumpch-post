@@ -1,37 +1,102 @@
-const WhatIsPumpch = () => {
+import { Bot, TrendingUp, Zap, MessageSquare } from "lucide-react";
+
+const WhatIsPumpster = () => {
   return (
-    <section id="what-is-pumpch" className="py-10 md:py-14 bg-muted border-y border-border">
+    <section id="what-is-pumpster" className="py-8">
       <div className="container">
-        {/* Section header */}
-        <div className="text-center mb-8 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-          <span className="label-editorial">About the Agent</span>
-          <h2 className="masthead text-2xl md:text-3xl text-ink mt-1">
-            THE AGENT THAT TRADES<br />AND LAUNCHES WITH YOU
-          </h2>
-        </div>
-
-        {/* Two column layout */}
-        <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-          {/* Left column */}
-          <div className="border border-border bg-paper p-4 opacity-0 animate-fade-in-left hover:border-accent hover:shadow-md transition-all duration-300" style={{ animationDelay: "0.2s" }}>
-            <p className="font-body text-sm text-ink leading-relaxed">
-              Pumpch is not a signal bot. It's not a trading algorithm that blindly 
-              follows charts and indicators. Pumpch is something fundamentally different—
-              an AI agent designed specifically for the Pump.fun economy.
-            </p>
+        <div className="win95-window">
+          <div className="win95-titlebar">
+            <div className="flex items-center gap-2">
+              <Bot className="w-4 h-4" />
+              <span className="text-xs sm:text-sm">About Pumpster.exe</span>
+            </div>
+            <div className="flex gap-1">
+              <button className="win95-control-btn text-[8px]">_</button>
+              <button className="win95-control-btn text-[8px]">□</button>
+              <button className="win95-control-btn text-[8px]">×</button>
+            </div>
           </div>
+          
+          <div className="bg-[#1a1a1a] p-6">
+            {/* Section header */}
+            <div className="text-center mb-6">
+              <span className="font-mono text-[10px] text-[#808080] uppercase tracking-widest">
+                About the Agent
+              </span>
+              <h2 className="font-mono text-xl md:text-2xl text-white mt-1">
+                THE AGENT THAT TRADES
+                <br />
+                <span className="text-orange">AND LAUNCHES WITH YOU</span>
+              </h2>
+            </div>
 
-          {/* Right column */}
-          <div className="border border-border bg-paper p-4 opacity-0 animate-fade-in-right hover:border-accent hover:shadow-md transition-all duration-300" style={{ animationDelay: "0.3s" }}>
-            <p className="font-body text-sm text-ink leading-relaxed">
-              It watches narratives on X, tracks token launches in real-time, 
-              analyzes token behavior patterns, and helps users turn ideas into 
-              live tokens—all from a single conversation.
-            </p>
-            <div className="mt-3 pt-3 border-t border-border">
-              <p className="font-mono text-xs text-ink-faded uppercase tracking-widest">
-                One agent. Complete context. Your Pump.fun companion.
-              </p>
+            {/* Features grid */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="win95-outset p-4 bg-[#c0c0c0]">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-orange flex items-center justify-center flex-shrink-0">
+                    <TrendingUp className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-mono text-sm font-bold text-black mb-1">Not a Signal Bot</h3>
+                    <p className="font-mono text-xs text-[#404040]">
+                      Pumpster is not a trading algorithm that blindly follows charts. 
+                      It's an AI agent designed specifically for the Pump.fun economy.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="win95-outset p-4 bg-[#c0c0c0]">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-[#000080] flex items-center justify-center flex-shrink-0">
+                    <MessageSquare className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-mono text-sm font-bold text-black mb-1">Narrative Tracker</h3>
+                    <p className="font-mono text-xs text-[#404040]">
+                      It watches narratives on X, tracks token launches in real-time, 
+                      and helps users turn ideas into live tokens.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="win95-outset p-4 bg-[#c0c0c0]">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-green-600 flex items-center justify-center flex-shrink-0">
+                    <Zap className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-mono text-sm font-bold text-black mb-1">Instant Analysis</h3>
+                    <p className="font-mono text-xs text-[#404040]">
+                      Analyzes token behavior patterns and social signals 
+                      to identify opportunities before they pump.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="win95-outset p-4 bg-[#c0c0c0]">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-purple-600 flex items-center justify-center flex-shrink-0">
+                    <Bot className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-mono text-sm font-bold text-black mb-1">One Conversation</h3>
+                    <p className="font-mono text-xs text-[#404040]">
+                      One agent. Complete context. Your Pump.fun companion 
+                      from idea to launch to trade.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="win95-statusbar">
+            <div className="win95-statusbar-inset flex-1 text-[10px]">
+              Ready | AI Agent powered by OpenClaw
             </div>
           </div>
         </div>
@@ -40,4 +105,4 @@ const WhatIsPumpch = () => {
   );
 };
 
-export default WhatIsPumpch;
+export default WhatIsPumpster;

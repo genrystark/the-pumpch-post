@@ -1,64 +1,94 @@
-import { Radar, LineChart, Rocket, MessageCircle } from "lucide-react";
-
-const features = [
-  {
-    icon: Radar,
-    title: "Market Radar",
-    description: "Tracks narratives, memes, and early attention shifts across X and Pump.fun.",
-  },
-  {
-    icon: LineChart,
-    title: "Token Analysis",
-    description: "Lifecycle detection: early, mid, late. Pattern recognition from past launches.",
-  },
-  {
-    icon: Rocket,
-    title: "Token Launch Assistant",
-    description: "Idea generation, meme validation, timing, and deployment via Pump.fun.",
-  },
-  {
-    icon: MessageCircle,
-    title: "Agent Chat",
-    description: "One conversation. Full context. Pumpch remembers, isolates, and adapts.",
-  },
-];
+import { Sparkles, Wallet, Image, BarChart3, Zap, Shield } from "lucide-react";
 
 const Features = () => {
+  const features = [
+    {
+      icon: Sparkles,
+      title: "AI-Powered Research",
+      description: "Deep narrative analysis from X and on-chain data",
+    },
+    {
+      icon: Wallet,
+      title: "Wallet Integration",
+      description: "Create or import Solana wallets securely",
+    },
+    {
+      icon: Image,
+      title: "Logo Generation",
+      description: "AI-generated logos and banners for your tokens",
+    },
+    {
+      icon: BarChart3,
+      title: "Real-Time Stats",
+      description: "Track launches, volume, and social signals",
+    },
+    {
+      icon: Zap,
+      title: "Fast Launches",
+      description: "Deploy tokens in seconds via Pump.fun",
+    },
+    {
+      icon: Shield,
+      title: "Smart Alerts",
+      description: "Get notified when opportunities arise",
+    },
+  ];
+
   return (
-    <section id="features" className="py-10 md:py-14 bg-muted border-y border-border">
+    <section id="features" className="py-8">
       <div className="container">
-        {/* Section header */}
-        <div className="text-center mb-8 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-          <span className="label-editorial">Capabilities</span>
-          <h2 className="masthead text-2xl md:text-3xl text-ink mt-1">
-            INSIDE PUMPCH
-          </h2>
-        </div>
-
-        {/* Features grid */}
-        <div className="grid md:grid-cols-2 gap-3 max-w-3xl mx-auto">
-          {features.map((feature, index) => (
-            <div 
-              key={feature.title} 
-              className="border border-border bg-paper p-3 flex gap-3 hover:border-accent hover:shadow-md transition-all duration-300 cursor-default opacity-0 animate-fade-in-up"
-              style={{ animationDelay: `${0.2 + index * 0.1}s` }}
-            >
-              {/* Icon box */}
-              <div className="flex-shrink-0 w-10 h-10 border border-border flex items-center justify-center group-hover:border-accent transition-colors">
-                <feature.icon className="w-5 h-5 text-accent" strokeWidth={1.5} />
-              </div>
-
-              {/* Content */}
-              <div>
-                <h3 className="font-headline text-sm text-ink mb-0.5 uppercase tracking-wide">
-                  {feature.title}
-                </h3>
-                <p className="font-body text-xs text-ink-light leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
+        <div className="win95-window">
+          <div className="win95-titlebar-green">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4" />
+              <span className="text-xs sm:text-sm">Features - System Properties</span>
             </div>
-          ))}
+            <div className="flex gap-1">
+              <button className="win95-control-btn text-[8px]">_</button>
+              <button className="win95-control-btn text-[8px]">□</button>
+              <button className="win95-control-btn text-[8px]">×</button>
+            </div>
+          </div>
+          
+          <div className="bg-[#1a1a1a] p-6">
+            <div className="text-center mb-6">
+              <span className="font-mono text-[10px] text-[#808080] uppercase tracking-widest">
+                Agent Capabilities
+              </span>
+              <h2 className="font-mono text-xl md:text-2xl text-white mt-1">
+                WHAT <span className="text-green-400">PUMPSTER</span> CAN DO
+              </h2>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {features.map((feature) => (
+                <div 
+                  key={feature.title} 
+                  className="win95-outset p-3 bg-[#c0c0c0] hover-elevate cursor-default"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-[#1a1a1a] flex items-center justify-center flex-shrink-0">
+                      <feature.icon className="w-4 h-4 text-green-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-mono text-xs font-bold text-black mb-1">
+                        {feature.title}
+                      </h3>
+                      <p className="font-mono text-[10px] text-[#404040]">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="win95-statusbar">
+            <div className="win95-statusbar-inset flex-1 text-[10px]">
+              6 features installed
+            </div>
+          </div>
         </div>
       </div>
     </section>

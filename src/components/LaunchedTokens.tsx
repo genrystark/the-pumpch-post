@@ -1,134 +1,163 @@
-import { Rocket, TrendingUp, Users } from "lucide-react";
-
-interface LaunchedToken {
-  id: string;
-  name: string;
-  ticker: string;
-  marketCap: string;
-  holders: number;
-  launchDate: string;
-  logo: string;
-}
+import { Folder, Plus, Search } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const LaunchedTokens = () => {
-  // Mock data - в будущем будет загружаться из базы данных
-  const tokens: LaunchedToken[] = [
-    {
-      id: "1",
-      name: "PumpCat",
-      ticker: "$PCAT",
-      marketCap: "$125K",
-      holders: 342,
-      launchDate: "2 hours ago",
-      logo: "🐱",
-    },
-    {
-      id: "2",
-      name: "SolanaAI",
-      ticker: "$SOLAI",
-      marketCap: "$89K",
-      holders: 218,
-      launchDate: "5 hours ago",
-      logo: "🤖",
-    },
-    {
-      id: "3",
-      name: "MoonDoge",
-      ticker: "$MDOGE",
-      marketCap: "$256K",
-      holders: 567,
-      launchDate: "1 day ago",
-      logo: "🐕",
-    },
-    {
-      id: "4",
-      name: "CryptoFrog",
-      ticker: "$FROG",
-      marketCap: "$45K",
-      holders: 123,
-      launchDate: "2 days ago",
-      logo: "🐸",
-    },
+  const mockTokens = [
+    { name: "PUMPSTER", ticker: "PUMP", progress: 45, price: "0.00000042", marketCap: "$42.5K", age: "2h ago" },
+    { name: "DEGEN CAT", ticker: "DCAT", progress: 78, price: "0.00000089", marketCap: "$89.2K", age: "5h ago" },
+    { name: "MOON FROG", ticker: "MFROG", progress: 23, price: "0.00000015", marketCap: "$15.3K", age: "1d ago" },
   ];
 
   return (
-    <section className="py-16 bg-paper-aged border-y border-border">
+    <section className="py-8">
       <div className="container">
-        {/* Section Header */}
-        <div className="text-center mb-10 opacity-0 animate-fade-in-up">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-12 h-px bg-accent" />
-            <Rocket className="w-5 h-5 text-accent" />
-            <div className="w-12 h-px bg-accent" />
+        <div className="win95-window">
+          <div className="win95-titlebar">
+            <div className="flex items-center gap-2">
+              <Folder className="w-4 h-4" />
+              <span className="text-xs sm:text-sm">Token Explorer - Recent Launches</span>
+            </div>
+            <div className="flex gap-1">
+              <button className="win95-control-btn text-[8px]">_</button>
+              <button className="win95-control-btn text-[8px]">□</button>
+              <button className="win95-control-btn text-[8px]">×</button>
+            </div>
           </div>
-          <h2 className="masthead text-3xl md:text-4xl text-ink mb-3">
-            LAUNCHED WITH PUMPCH
-          </h2>
-          <p className="font-body text-ink-light max-w-lg mx-auto">
-            Tokens created and launched using our AI agent
-          </p>
-        </div>
-
-        {/* Tokens Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {tokens.map((token, index) => (
-            <div
-              key={token.id}
-              className="border border-border bg-paper p-4 hover:border-accent hover:shadow-md transition-all duration-300 opacity-0 animate-fade-in-up cursor-pointer group"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              {/* Token Header */}
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-muted rounded-none border border-border flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                  {token.logo}
-                </div>
-                <div>
-                  <h3 className="font-headline font-bold text-ink group-hover:text-accent transition-colors">
-                    {token.name}
-                  </h3>
-                  <span className="font-mono text-xs text-accent">
-                    {token.ticker}
-                  </span>
-                </div>
+          
+          {/* Toolbar */}
+          <div className="bg-[#1a1a1a] p-2 border-b border-[#3a3a3a]">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <div className="flex items-center gap-1 flex-1">
+                <Search className="w-4 h-4 text-[#808080] flex-shrink-0" />
+                <input 
+                  type="text" 
+                  placeholder="Search tokens..." 
+                  className="win95-input flex-1 sm:w-40 md:w-60"
+                />
               </div>
-
-              {/* Token Stats */}
-              <div className="space-y-2 border-t border-border pt-3">
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs text-ink-faded flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3" />
-                    Market Cap
-                  </span>
-                  <span className="font-mono text-sm text-ink font-medium">
-                    {token.marketCap}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs text-ink-faded flex items-center gap-1">
-                    <Users className="w-3 h-3" />
-                    Holders
-                  </span>
-                  <span className="font-mono text-sm text-ink">
-                    {token.holders}
-                  </span>
-                </div>
-              </div>
-
-              {/* Launch Date */}
-              <div className="mt-3 pt-2 border-t border-border">
-                <span className="font-mono text-xs text-ink-faded">
-                  Launched {token.launchDate}
-                </span>
+              <div className="flex items-center gap-2">
+                <select className="win95-input text-xs">
+                  <option>All Tokens</option>
+                  <option>Active</option>
+                  <option>Graduated</option>
+                </select>
+                <Link to="/chat">
+                  <button className="win95-button-primary text-xs flex items-center gap-1">
+                    <Plus className="w-3 h-3" />
+                    New Token
+                  </button>
+                </Link>
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Coming Soon Notice */}
-        <div className="text-center mt-8 opacity-0 animate-fade-in" style={{ animationDelay: "0.5s" }}>
-          <p className="font-mono text-xs text-ink-faded uppercase tracking-wider">
-            More tokens launching soon • Be the first to create yours
-          </p>
+          </div>
+          
+          {/* Stats */}
+          <div className="bg-[#1a1a1a] p-3 flex justify-center gap-4 border-b border-[#3a3a3a]">
+            <div className="win95-groupbox px-4 py-2">
+              <span className="win95-groupbox-title text-[9px]">Active</span>
+              <div className="text-lg font-bold text-orange text-center">12</div>
+            </div>
+            <div className="win95-groupbox px-4 py-2">
+              <span className="win95-groupbox-title text-[9px]">Graduated</span>
+              <div className="text-lg font-bold text-yellow-500 text-center">3</div>
+            </div>
+            <div className="win95-groupbox px-4 py-2">
+              <span className="win95-groupbox-title text-[9px]">SOL Raised</span>
+              <div className="text-lg font-bold text-green-500 text-center">145.2</div>
+            </div>
+          </div>
+          
+          {/* Token List */}
+          <div className="bg-[#1a1a1a] p-2">
+            <div className="win95-listview overflow-hidden">
+              {/* Mobile view */}
+              <div className="sm:hidden space-y-2 p-2">
+                {mockTokens.map((token) => (
+                  <div key={token.ticker} className="win95-outset p-3 cursor-pointer hover-elevate">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-bold text-sm text-black">{token.ticker}</span>
+                          <span className="text-[10px] px-1 bg-orange text-white">LINEAR</span>
+                        </div>
+                        <span className="text-[#808080] text-xs">{token.name}</span>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-orange text-sm font-bold">{token.price}</div>
+                        <div className="text-[#808080] text-[10px]">SOL</div>
+                      </div>
+                    </div>
+                    <div className="mb-2">
+                      <div className="win95-progress h-3">
+                        <div className="win95-progress-bar-orange" style={{ width: `${token.progress}%` }} />
+                      </div>
+                      <div className="text-[10px] text-[#808080] mt-1">{token.progress}% to graduation</div>
+                    </div>
+                    <div className="flex items-center justify-between text-[10px] text-[#808080]">
+                      <span>MC: {token.marketCap}</span>
+                      <span>{token.age}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Desktop view */}
+              <table className="hidden sm:table w-full text-xs">
+                <thead className="win95-listview-header">
+                  <tr>
+                    <th className="text-left p-2 text-black">Token</th>
+                    <th className="text-left p-2 text-black">Type</th>
+                    <th className="text-left p-2 text-black">Progress</th>
+                    <th className="text-right p-2 text-black">Price</th>
+                    <th className="text-right p-2 text-black">Market Cap</th>
+                    <th className="text-right p-2 text-black">Age</th>
+                    <th className="text-center p-2 text-black">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {mockTokens.map((token) => (
+                    <tr key={token.ticker} className="win95-listview-row-orange cursor-pointer border-b border-[#c0c0c0]">
+                      <td className="p-2">
+                        <div className="flex flex-col">
+                          <span className="font-bold text-black">{token.ticker}</span>
+                          <span className="text-[#808080] text-[10px]">{token.name}</span>
+                        </div>
+                      </td>
+                      <td className="p-2">
+                        <span className="text-[10px] px-1 bg-orange text-white">LINEAR</span>
+                      </td>
+                      <td className="p-2">
+                        <div className="w-24">
+                          <div className="win95-progress h-3">
+                            <div className="win95-progress-bar-orange" style={{ width: `${token.progress}%` }} />
+                          </div>
+                          <div className="text-[9px] text-[#808080]">{token.progress}%</div>
+                        </div>
+                      </td>
+                      <td className="p-2 text-right text-orange font-bold">{token.price}</td>
+                      <td className="p-2 text-right text-[#000080]">{token.marketCap}</td>
+                      <td className="p-2 text-right text-[#808080]">{token.age}</td>
+                      <td className="p-2 text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <button className="win95-button-primary text-[10px] px-2 py-1">BUY</button>
+                          <button className="win95-button text-[10px] px-2 py-1">SELL</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div className="win95-statusbar flex justify-between items-center">
+            <div className="win95-statusbar-inset flex-1 text-[10px]">
+              {mockTokens.length} token(s) | Pump.fun Network
+            </div>
+            <div className="win95-statusbar-inset text-[10px]">
+              Solana Mainnet
+            </div>
+          </div>
         </div>
       </div>
     </section>
