@@ -7,7 +7,7 @@ const HeroSection = () => {
       <div className="win95-titlebar">
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-white" />
-          <span className="text-xs sm:text-sm">Welcome to Pumpster.exe</span>
+          <span className="text-xs sm:text-sm">Welcome to pumpster.claw</span>
         </div>
         <div className="flex gap-1">
           <button className="win95-control-btn text-[8px]">_</button>
@@ -25,7 +25,7 @@ const HeroSection = () => {
 
         {/* Subheadline */}
         <p className="font-mono text-sm md:text-base text-[#b0b0b0] max-w-xl mb-6 leading-relaxed">
-          <span className="text-orange font-bold">Pumpster</span> is an AI agent for Pump.fun traders and creators. 
+          <span className="text-orange font-bold">pumpster.claw</span> is an AI agent built on <span className="text-green-400">OpenClaw</span>, launched in <span className="text-blue-400">Moltbook</span>. 
           Talk to Pumpster, and it hunts opportunities down.
         </p>
 
@@ -49,13 +49,13 @@ const HeroSection = () => {
           <span className="font-mono text-[10px] text-[#808080] uppercase tracking-wider">
             Powered by:
           </span>
-          <div className="flex items-center gap-2">
-            {["Solana", "Pump.fun", "X", "OpenClaw"].map((item, i) => (
+          <div className="flex items-center gap-2 flex-wrap">
+            {["Solana", "Pump.fun", "X", "OpenClaw", "Moltbook"].map((item, i) => (
               <span key={item} className="flex items-center gap-2">
-                <span className="font-mono text-[10px] text-[#b0b0b0] uppercase tracking-wider hover:text-orange transition-colors cursor-default">
+                <span className="font-mono text-[10px] text-[#b0b0b0] uppercase tracking-wider hover:text-orange transition-colors cursor-default whitespace-nowrap">
                   {item}
                 </span>
-                {i < 3 && <span className="text-[#404040]">|</span>}
+                {i < 4 && <span className="text-[#404040]">|</span>}
               </span>
             ))}
           </div>

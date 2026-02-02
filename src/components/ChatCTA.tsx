@@ -10,7 +10,7 @@ const ChatCTA = () => {
           <div className="win95-titlebar-green">
             <div className="flex items-center gap-2">
               <MessageSquare className="w-4 h-4" />
-              <span className="text-xs sm:text-sm">Start Chat - Pumpster.exe</span>
+              <span className="text-xs sm:text-sm">Start Chat - pumpster.claw</span>
             </div>
             <div className="flex gap-1">
               <button className="win95-control-btn text-[8px]">_</button>
@@ -36,7 +36,7 @@ const ChatCTA = () => {
             
             <Link to="/chat">
               <button className="win95-button-primary text-sm flex items-center gap-2 mx-auto hover-elevate active-elevate-2">
-                OPEN PUMPSTER.EXE
+                OPEN PUMPSTER.CLAW
                 <ArrowRight className="w-4 h-4" />
               </button>
             </Link>
