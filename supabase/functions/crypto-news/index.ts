@@ -13,58 +13,36 @@ interface NewsItem {
   url: string;
 }
 
-// Fetch from multiple free RSS feeds and aggregate
+// Fetch from multiple free RSS feeds and aggregate (real links only)
 async function fetchCryptoNews(): Promise<NewsItem[]> {
   const news: NewsItem[] = [];
-  
-  try {
-    // Try CoinTelegraph RSS
-    const ctResponse = await fetch('https://cointelegraph.com/rss');
-    if (ctResponse.ok) {
-      const ctXml = await ctResponse.text();
-      const ctItems = parseRSS(ctXml, 'CoinTelegraph');
-      news.push(...ctItems.slice(0, 5));
+  const feeds: { url: string; source: string; max: number }[] = [
+    { url: 'https://cointelegraph.com/rss', source: 'CoinTelegraph', max: 8 },
+    { url: 'https://decrypt.co/feed', source: 'Decrypt', max: 8 },
+    { url: 'https://bitcoinmagazine.com/.rss/full/', source: 'Bitcoin Magazine', max: 6 },
+    { url: 'https://www.coindesk.com/arc/outboundfeeds/rss/', source: 'CoinDesk', max: 8 },
+    { url: 'https://cryptonews.com/news/feed/', source: 'CryptoNews', max: 6 },
+    { url: 'https://www.theblock.co/rss.xml', source: 'The Block', max: 6 },
+  ];
+
+  for (const feed of feeds) {
+    try {
+      const res = await fetch(feed.url, { headers: { 'User-Agent': 'DeclawBot/1.0' } });
+      if (res.ok) {
+        const xml = await res.text();
+        const items = parseRSS(xml, feed.source, feed.max);
+        news.push(...items);
+      }
+    } catch (e) {
+      console.error(`${feed.source} fetch failed:`, e);
     }
-  } catch (e) {
-    console.error('CoinTelegraph fetch failed:', e);
   }
 
-  try {
-    // Try Decrypt RSS
-    const decryptResponse = await fetch('https://decrypt.co/feed');
-    if (decryptResponse.ok) {
-      const decryptXml = await decryptResponse.text();
-      const decryptItems = parseRSS(decryptXml, 'Decrypt');
-      news.push(...decryptItems.slice(0, 5));
-    }
-  } catch (e) {
-    console.error('Decrypt fetch failed:', e);
-  }
-
-  try {
-    // Try Bitcoin Magazine RSS
-    const btcResponse = await fetch('https://bitcoinmagazine.com/.rss/full/');
-    if (btcResponse.ok) {
-      const btcXml = await btcResponse.text();
-      const btcItems = parseRSS(btcXml, 'Bitcoin Magazine');
-      news.push(...btcItems.slice(0, 3));
-    }
-  } catch (e) {
-    console.error('Bitcoin Magazine fetch failed:', e);
-  }
-
-  // Sort by newest first (based on publishedAt time) and limit
-  news.sort((a, b) => {
-    // Parse time strings to compare
-    const timeA = a.publishedAt;
-    const timeB = b.publishedAt;
-    return timeB.localeCompare(timeA);
-  });
-  
-  return news.slice(0, 15);
+  news.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  return news.slice(0, 30);
 }
 
-function parseRSS(xml: string, source: string): NewsItem[] {
+function parseRSS(xml: string, source: string, maxItems: number): NewsItem[] {
   const items: NewsItem[] = [];
   const itemRegex = /<item>([\s\S]*?)<\/item>/g;
   const titleRegex = /<title><!\[CDATA\[(.*?)\]\]>|<title>(.*?)<\/title>/;
@@ -73,30 +51,27 @@ function parseRSS(xml: string, source: string): NewsItem[] {
 
   let match;
   let index = 0;
-  while ((match = itemRegex.exec(xml)) !== null && index < 10) {
+  while ((match = itemRegex.exec(xml)) !== null && index < maxItems) {
     const itemContent = match[1];
-    
     const titleMatch = titleRegex.exec(itemContent);
-    const title = titleMatch ? (titleMatch[1] || titleMatch[2]) : '';
-    
+    const title = titleMatch ? (titleMatch[1] || titleMatch[2] || '').trim() : '';
     const linkMatch = linkRegex.exec(itemContent);
-    const link = linkMatch ? (linkMatch[1] || linkMatch[2] || linkMatch[3]) : '';
-    
+    let link = linkMatch ? (linkMatch[1] || linkMatch[2] || linkMatch[3] || '').trim() : '';
+    if (link && !link.startsWith('http')) link = '';
     const pubDateMatch = pubDateRegex.exec(itemContent);
     const pubDate = pubDateMatch ? pubDateMatch[1] : new Date().toISOString();
 
-    if (title && link && link !== '#') {
+    if (title && link && link.startsWith('http')) {
       items.push({
         id: `${source}-${index}-${Date.now()}`,
-        title: title.trim().replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'"),
+        title: title.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/<[^>]+>/g, ''),
         source,
         publishedAt: formatDate(pubDate),
-        url: link.trim(),
+        url: link,
       });
       index++;
     }
   }
-
   return items;
 }
 
@@ -116,50 +91,6 @@ serve(async (req) => {
 
   try {
     const news = await fetchCryptoNews();
-    
-    // If no news from feeds, return mock data
-    if (news.length === 0) {
-      const mockNews: NewsItem[] = [
-        {
-          id: '1',
-          title: 'Solana TVL hits new ATH as meme coins surge on Pump.fun',
-          source: 'CryptoNews',
-          publishedAt: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-          url: '#',
-        },
-        {
-          id: '2',
-          title: 'AI agents gaining traction in DeFi ecosystem',
-          source: 'The Block',
-          publishedAt: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-          url: '#',
-        },
-        {
-          id: '3',
-          title: 'New Pump.fun tokens see 300% volume increase',
-          source: 'Decrypt',
-          publishedAt: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-          url: '#',
-        },
-        {
-          id: '4',
-          title: 'Cat-themed tokens lead today\'s narratives on Solana',
-          source: 'CoinDesk',
-          publishedAt: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-          url: '#',
-        },
-        {
-          id: '5',
-          title: 'Gaming tokens show early momentum signals',
-          source: 'BlockWorks',
-          publishedAt: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-          url: '#',
-        },
-      ];
-      return new Response(JSON.stringify({ news: mockNews }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
 
     return new Response(JSON.stringify({ news }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

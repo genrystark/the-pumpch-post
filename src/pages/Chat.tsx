@@ -74,11 +74,22 @@ const Chat = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Handle URL prompt parameter
+  // Handle URL params: prompt (prefill input) and name/ticker/description (prefill token for Declaw)
   useEffect(() => {
     const promptParam = searchParams.get("prompt");
     if (promptParam) {
       setInput(promptParam);
+    }
+    const nameParam = searchParams.get("name");
+    const tickerParam = searchParams.get("ticker");
+    const descParam = searchParams.get("description");
+    if (nameParam || tickerParam || descParam) {
+      setTokenData((prev) => ({
+        ...prev,
+        ...(nameParam && { name: decodeURIComponent(nameParam) }),
+        ...(tickerParam && { ticker: decodeURIComponent(tickerParam).toUpperCase() }),
+        ...(descParam && { description: decodeURIComponent(descParam) }),
+      }));
     }
   }, [searchParams]);
 

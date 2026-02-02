@@ -86,21 +86,12 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
               declaw token
             </motion.h1>
 
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-              className="font-mono text-sm text-[#00ff00] mb-8"
-            >
-              Windows 95 Edition
-            </motion.p>
-
             {/* Windows-style window */}
             <motion.div
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.5 }}
-              className="win95-window mx-auto max-w-md"
+              className="win95-window mx-auto max-w-md mt-8"
             >
               <div className="win95-titlebar">
                 <span className="text-xs">System Startup</span>
@@ -162,7 +153,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
               transition={{ delay: 1 }}
               className="font-mono text-[10px] text-[#808080] mt-6"
             >
-              © 2024 declaw token • Built on OpenClaw • Powered by Solana
+              © 2026 declaw token • Built on OpenClaw • Powered by Solana
             </motion.p>
           </div>
         </motion.div>

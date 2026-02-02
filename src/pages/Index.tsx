@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import AgentCard from "@/components/AgentCard";
@@ -20,17 +20,8 @@ const Index = () => {
   const [readmeOpen, setReadmeOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if we've already shown loading screen in this session
-  useEffect(() => {
-    const hasLoaded = sessionStorage.getItem("declaw-loaded");
-    if (hasLoaded) {
-      setIsLoading(false);
-    }
-  }, []);
-
   const handleLoadingComplete = () => {
     setIsLoading(false);
-    sessionStorage.setItem("declaw-loaded", "true");
   };
 
   if (isLoading) {
