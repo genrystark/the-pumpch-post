@@ -98,23 +98,18 @@ const WalletManager = ({ wallets, onAddWallet, onRemoveWallet }: WalletManagerPr
   };
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <Wallet className="w-3 h-3 text-accent" />
-          <h3 className="font-mono text-xs uppercase tracking-widest text-ink-faded">
-            Wallets
-          </h3>
-        </div>
+    <div className="win95-groupbox p-2">
+      <div className="flex items-center justify-between">
+        <span className="win95-groupbox-title">Wallets</span>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+            <button className="win95-button text-[10px] px-2 py-0.5">
               <Plus className="w-3 h-3" />
-            </Button>
+            </button>
           </DialogTrigger>
-          <DialogContent className="max-w-sm bg-paper border-border">
+          <DialogContent className="max-w-sm bg-[#c0c0c0] border-2 border-t-white border-l-white border-b-[#808080] border-r-[#808080]">
             <DialogHeader>
-              <DialogTitle className="font-headline text-ink">
+              <DialogTitle className="font-bold text-black">
                 {mode === "choose" && "Add Wallet"}
                 {mode === "create" && "Create New Wallet"}
                 {mode === "import" && "Import Wallet"}
@@ -123,90 +118,89 @@ const WalletManager = ({ wallets, onAddWallet, onRemoveWallet }: WalletManagerPr
 
             {mode === "choose" && (
               <div className="space-y-3">
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-3 h-14"
+                <button
+                  className="win95-button w-full flex items-start gap-3 p-3"
                   onClick={() => setMode("create")}
                 >
-                  <Plus className="w-5 h-5 text-accent" />
+                  <Plus className="w-5 h-5 text-[#ff6b00]" />
                   <div className="text-left">
-                    <p className="font-headline text-sm">Create New</p>
-                    <p className="font-mono text-xs text-ink-faded">Generate a new Solana wallet</p>
+                    <p className="font-bold text-sm text-black">Create New</p>
+                    <p className="font-mono text-xs text-[#808080]">Generate a new Solana wallet</p>
                   </div>
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-3 h-14"
+                </button>
+                <button
+                  className="win95-button w-full flex items-start gap-3 p-3"
                   onClick={() => setMode("import")}
                 >
-                  <Import className="w-5 h-5 text-accent" />
+                  <Import className="w-5 h-5 text-[#ff6b00]" />
                   <div className="text-left">
-                    <p className="font-headline text-sm">Import Existing</p>
-                    <p className="font-mono text-xs text-ink-faded">Use your private key</p>
+                    <p className="font-bold text-sm text-black">Import Existing</p>
+                    <p className="font-mono text-xs text-[#808080]">Use your private key</p>
                   </div>
-                </Button>
+                </button>
               </div>
             )}
 
             {(mode === "create" || mode === "import") && (
               <div className="space-y-4">
                 <div>
-                  <label className="font-mono text-xs text-ink-faded uppercase tracking-wider">
+                  <label className="font-mono text-xs text-black uppercase">
                     Wallet Name
                   </label>
-                  <Input
+                  <input
                     value={walletName}
                     onChange={(e) => setWalletName(e.target.value)}
                     placeholder="My Dev Wallet"
-                    className="mt-1"
+                    className="win95-inset w-full mt-1 px-2 py-1 bg-white text-black font-mono text-sm"
                   />
                 </div>
 
                 {mode === "import" && (
                   <div>
-                    <label className="font-mono text-xs text-ink-faded uppercase tracking-wider">
+                    <label className="font-mono text-xs text-black uppercase">
                       Private Key
                     </label>
-                    <Input
+                    <input
                       type="password"
                       value={privateKey}
                       onChange={(e) => setPrivateKey(e.target.value)}
                       placeholder="Enter your private key"
-                      className="mt-1"
+                      className="win95-inset w-full mt-1 px-2 py-1 bg-white text-black font-mono text-sm"
                     />
                   </div>
                 )}
 
                 <div>
-                  <label className="font-mono text-xs text-ink-faded uppercase tracking-wider">
+                  <label className="font-mono text-xs text-black uppercase">
                     Wallet Type
                   </label>
                   <div className="flex gap-2 mt-1">
                     {(["dev", "bundle", "sniper"] as const).map((type) => (
-                      <Button
+                      <button
                         key={type}
-                        variant={walletType === type ? "editorial" : "outline"}
-                        size="sm"
                         onClick={() => setWalletType(type)}
-                        className="flex-1"
+                        className={`flex-1 py-1 font-mono text-xs ${
+                          walletType === type
+                            ? "win95-inset bg-[#000080] text-white"
+                            : "win95-button text-black"
+                        }`}
                       >
                         {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </Button>
+                      </button>
                     ))}
                   </div>
                 </div>
 
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => setMode("choose")} className="flex-1">
+                  <button className="win95-button flex-1 py-1" onClick={() => setMode("choose")}>
                     Back
-                  </Button>
-                  <Button
-                    variant="editorial"
+                  </button>
+                  <button
+                    className="win95-button-primary flex-1 py-1"
                     onClick={mode === "create" ? handleCreate : handleImport}
-                    className="flex-1"
                   >
                     {mode === "create" ? "Create" : "Import"}
-                  </Button>
+                  </button>
                 </div>
               </div>
             )}
@@ -215,49 +209,47 @@ const WalletManager = ({ wallets, onAddWallet, onRemoveWallet }: WalletManagerPr
       </div>
 
       {/* Wallet list */}
-      <div className="space-y-1">
+      <div className="space-y-1 mt-2">
         {wallets.length === 0 ? (
-          <p className="font-mono text-xs text-ink-faded italic">No wallets added</p>
+          <p className="font-mono text-[10px] text-[#808080] italic">No wallets added</p>
         ) : (
           wallets.map((wallet) => (
             <div
               key={wallet.id}
-              className="flex items-center justify-between p-2 border border-border bg-paper-aged hover:border-accent transition-colors"
+              className="win95-inset p-2 bg-white"
             >
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-ink font-medium truncate">
-                    {wallet.name}
-                  </span>
-                  <span className="font-mono text-xs text-accent uppercase px-1 border border-accent">
-                    {wallet.type}
-                  </span>
+              <div className="flex items-center justify-between">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs text-black font-medium truncate">
+                      {wallet.name}
+                    </span>
+                    <span className="font-mono text-[10px] text-white bg-[#000080] px-1">
+                      {wallet.type}
+                    </span>
+                  </div>
+                  <p className="font-mono text-[10px] text-[#808080]">
+                    {truncateAddress(wallet.address)}
+                  </p>
                 </div>
-                <p className="font-mono text-xs text-ink-faded">
-                  {truncateAddress(wallet.address)}
-                </p>
-              </div>
-              <div className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 w-6 p-0"
-                  onClick={() => copyAddress(wallet.address, wallet.id)}
-                >
-                  {copiedId === wallet.id ? (
-                    <Check className="w-3 h-3 text-accent" />
-                  ) : (
-                    <Copy className="w-3 h-3" />
-                  )}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 w-6 p-0 text-destructive hover:text-destructive"
-                  onClick={() => onRemoveWallet(wallet.id)}
-                >
-                  <Trash2 className="w-3 h-3" />
-                </Button>
+                <div className="flex gap-1">
+                  <button
+                    className="win95-button p-1"
+                    onClick={() => copyAddress(wallet.address, wallet.id)}
+                  >
+                    {copiedId === wallet.id ? (
+                      <Check className="w-3 h-3 text-[#008000]" />
+                    ) : (
+                      <Copy className="w-3 h-3 text-black" />
+                    )}
+                  </button>
+                  <button
+                    className="win95-button p-1"
+                    onClick={() => onRemoveWallet(wallet.id)}
+                  >
+                    <Trash2 className="w-3 h-3 text-red-600" />
+                  </button>
+                </div>
               </div>
             </div>
           ))

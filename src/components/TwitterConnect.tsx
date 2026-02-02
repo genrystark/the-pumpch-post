@@ -23,49 +23,40 @@ const TwitterConnect = ({ connected, username, onConnect, onDisconnect }: Twitte
   };
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center gap-2 mb-2">
-        <Twitter className="w-3 h-3 text-accent" />
-        <h3 className="font-mono text-xs uppercase tracking-widest text-ink-faded">
-          X Integration
-        </h3>
-      </div>
+    <div className="win95-groupbox p-2">
+      <span className="win95-groupbox-title">X Integration</span>
 
       {connected ? (
-        <div className="border border-accent bg-accent/5 p-2">
+        <div className="win95-inset p-2 bg-white mt-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Check className="w-3 h-3 text-accent" />
-              <span className="font-mono text-xs text-ink">
+              <Check className="w-3 h-3 text-[#008000]" />
+              <span className="font-mono text-xs text-black">
                 @{username}
               </span>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-6 text-xs text-destructive hover:text-destructive"
+            <button
+              className="win95-button text-[10px] px-2 py-0.5 text-red-600"
               onClick={onDisconnect}
             >
-              <X className="w-3 h-3 mr-1" />
               Disconnect
-            </Button>
+            </button>
           </div>
-          <p className="font-mono text-xs text-ink-faded mt-1">
+          <p className="font-mono text-[10px] text-[#808080] mt-1">
             Bot can post on your behalf
           </p>
         </div>
       ) : (
-        <Button
-          variant="outline"
-          className="w-full justify-start gap-2 h-10"
+        <button
+          className="win95-button w-full flex items-center gap-2 justify-center mt-2 py-2"
           onClick={handleConnect}
           disabled={isConnecting}
         >
-          <Link className="w-4 h-4" />
-          <span className="font-mono text-xs">
+          <Link className="w-4 h-4 text-black" />
+          <span className="font-mono text-xs text-black">
             {isConnecting ? "Connecting..." : "Connect X Account"}
           </span>
-        </Button>
+        </button>
       )}
     </div>
   );

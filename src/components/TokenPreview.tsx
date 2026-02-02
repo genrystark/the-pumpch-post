@@ -42,7 +42,7 @@ const TokenPreview = ({ tokenData, wallets }: TokenPreviewProps) => {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <Type className="w-3 h-3 text-[#ff6b00]" />
-            <span className="font-bold text-sm truncate">
+            <span className="font-bold text-sm text-black truncate">
               {tokenData.name || "Token Name"}
             </span>
           </div>
@@ -56,10 +56,10 @@ const TokenPreview = ({ tokenData, wallets }: TokenPreviewProps) => {
       <div className="mt-3">
         <div className="flex items-center gap-2 mb-1">
           <FileText className="w-3 h-3 text-[#808080]" />
-          <span className="font-mono text-[10px] text-[#808080] uppercase">Description</span>
+          <span className="font-mono text-[10px] text-black uppercase">Description</span>
         </div>
         <div className="win95-inset p-2 bg-white">
-          <p className="font-mono text-xs leading-relaxed line-clamp-3">
+          <p className="font-mono text-xs text-black leading-relaxed line-clamp-3">
             {tokenData.description || "No description yet..."}
           </p>
         </div>
@@ -68,7 +68,7 @@ const TokenPreview = ({ tokenData, wallets }: TokenPreviewProps) => {
       {/* Banner */}
       {tokenData.banner && (
         <div className="mt-3">
-          <span className="font-mono text-[10px] text-[#808080] uppercase">Banner</span>
+          <span className="font-mono text-[10px] text-black uppercase">Banner</span>
           <div className="mt-1 h-16 win95-inset overflow-hidden">
             <img src={tokenData.banner} alt="Token banner" className="w-full h-full object-cover" />
           </div>
@@ -79,7 +79,7 @@ const TokenPreview = ({ tokenData, wallets }: TokenPreviewProps) => {
       <div className="mt-3">
         <div className="flex items-center gap-2 mb-1">
           <Rocket className="w-3 h-3 text-[#ff6b00]" />
-          <span className="font-mono text-[10px] text-[#808080] uppercase">Launch Mode</span>
+          <span className="font-mono text-[10px] text-black uppercase">Launch Mode</span>
         </div>
         <span className="inline-block bg-[#000080] text-white px-2 py-0.5 font-mono text-xs">
           {launchModeLabels[tokenData.launchMode]}
@@ -90,20 +90,20 @@ const TokenPreview = ({ tokenData, wallets }: TokenPreviewProps) => {
       <div className="mt-3">
         <div className="flex items-center gap-2 mb-1">
           <Wallet className="w-3 h-3 text-[#808080]" />
-          <span className="font-mono text-[10px] text-[#808080] uppercase">Wallets</span>
+          <span className="font-mono text-[10px] text-black uppercase">Wallets</span>
         </div>
         <div className="grid grid-cols-3 gap-1 text-center">
           <div className="win95-inset p-1 bg-white">
-            <p className="font-bold text-lg">{devWallets.length}</p>
-            <p className="font-mono text-[10px] text-[#808080]">Dev</p>
+            <p className="font-bold text-lg text-black">{devWallets.length}</p>
+            <p className="font-mono text-[10px] text-black">Dev</p>
           </div>
           <div className="win95-inset p-1 bg-white">
-            <p className="font-bold text-lg">{bundleWallets.length}</p>
-            <p className="font-mono text-[10px] text-[#808080]">Bundle</p>
+            <p className="font-bold text-lg text-black">{bundleWallets.length}</p>
+            <p className="font-mono text-[10px] text-black">Bundle</p>
           </div>
           <div className="win95-inset p-1 bg-white">
-            <p className="font-bold text-lg">{sniperWallets.length}</p>
-            <p className="font-mono text-[10px] text-[#808080]">Snipe</p>
+            <p className="font-bold text-lg text-black">{sniperWallets.length}</p>
+            <p className="font-mono text-[10px] text-black">Snipe</p>
           </div>
         </div>
       </div>
