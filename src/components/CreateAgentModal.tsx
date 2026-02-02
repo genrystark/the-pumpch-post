@@ -1,21 +1,23 @@
 import { useState, useRef } from "react";
-import { Bot, X, Upload, ImageIcon } from "lucide-react";
+import { Bot, X, Upload, ImageIcon, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { saveCustomAgent } from "@/lib/agents";
+import { useCreateAgent } from "@/hooks/useAgents";
 import { toast } from "sonner";
 
 interface CreateAgentModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSaved?: () => void;
+  onCreated?: (agentId: string) => void;
 }
 
-const CreateAgentModal = ({ isOpen, onClose, onSaved }: CreateAgentModalProps) => {
+const CreateAgentModal = ({ isOpen, onClose, onSaved, onCreated }: CreateAgentModalProps) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [avatar, setAvatar] = useState<string | null>(null);
   const [systemPrompt, setSystemPrompt] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const createAgent = useCreateAgent();
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -25,7 +27,7 @@ const CreateAgentModal = ({ isOpen, onClose, onSaved }: CreateAgentModalProps) =
     reader.readAsDataURL(file);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const trimmedName = name.trim();
     if (!trimmedName) {
       toast.error("Name is required");
@@ -36,7 +38,7 @@ const CreateAgentModal = ({ isOpen, onClose, onSaved }: CreateAgentModalProps) =
       return;
     }
     try {
-      saveCustomAgent({
+      const agent = await createAgent.mutateAsync({
         name: trimmedName,
         description: description.trim() || undefined,
         avatar: avatar ?? undefined,
@@ -49,7 +51,9 @@ const CreateAgentModal = ({ isOpen, onClose, onSaved }: CreateAgentModalProps) =
       setSystemPrompt("");
       onClose();
       onSaved?.();
+      onCreated?.(agent.id);
     } catch (e) {
+      console.error("Failed to save agent:", e);
       toast.error("Failed to save agent");
     }
   };
@@ -167,8 +171,19 @@ const CreateAgentModal = ({ isOpen, onClose, onSaved }: CreateAgentModalProps) =
             </div>
 
             <div className="win95-statusbar flex gap-2 p-2 border-t-2 border-[#808080] bg-[#c0c0c0]">
-              <button onClick={handleSave} className="win95-button-primary px-3 py-1 text-xs">
-                Save agent
+              <button 
+                onClick={handleSave} 
+                disabled={createAgent.isPending}
+                className="win95-button-primary px-3 py-1 text-xs flex items-center gap-1"
+              >
+                {createAgent.isPending ? (
+                  <>
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  "Save agent"
+                )}
               </button>
               <button onClick={handleClose} className="win95-button px-3 py-1 text-xs">
                 Cancel

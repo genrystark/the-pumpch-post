@@ -23,7 +23,6 @@ const Index = () => {
   const [readmeOpen, setReadmeOpen] = useState(false);
   const [createAgentOpen, setCreateAgentOpen] = useState(false);
   const [deployAgentGitHubOpen, setDeployAgentGitHubOpen] = useState(false);
-  const [agentExplorerKey, setAgentExplorerKey] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   const handleLoadingComplete = () => {
@@ -47,7 +46,7 @@ const Index = () => {
       <CreateAgentModal
         isOpen={createAgentOpen}
         onClose={() => setCreateAgentOpen(false)}
-        onSaved={() => setAgentExplorerKey((k) => k + 1)}
+        onSaved={() => {}}
       />
       <DeployAgentGitHubModal
         isOpen={deployAgentGitHubOpen}
@@ -133,7 +132,7 @@ const Index = () => {
             </div>
             <div className="lg:col-span-1 min-w-0 flex">
               <DraggableWindow className="w-full flex-1 min-h-0">
-                <AgentExplorer refreshKey={agentExplorerKey} />
+                <AgentExplorer />
               </DraggableWindow>
             </div>
           </div>

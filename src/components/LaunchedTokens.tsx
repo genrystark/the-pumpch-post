@@ -1,10 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Folder, Plus, Search, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useDeployedTokens, DeployedToken } from "@/hooks/useDeployedTokens";
 import { useDexScreenerTokens } from "@/hooks/useDexScreenerTokens";
 import { formatPrice, formatMarketCapShort, ageFromTimestamp } from "@/lib/dexscreener";
+import { useAgents, DEFAULT_AGENT_ID } from "@/hooks/useAgents";
 import hqmLogo from "@/assets/tokens/hqm.png";
 import juffLogo from "@/assets/tokens/juff.png";
 import helenLogo from "@/assets/tokens/helen.png";
@@ -22,6 +23,7 @@ const fallbackTokens = [
     mint_address: "Cp7pMBHYdYfCCosyqCFzg7hhxZQwtesbCpMjUgEVkgQf",
     logo_url: hqmLogo,
     pump_url: "https://pump.fun/Cp7pMBHYdYfCCosyqCFzg7hhxZQwtesbCpMjUgEVkgQf",
+    agent_id: DEFAULT_AGENT_ID,
     agent_name: "declaw",
   },
   { 
@@ -35,6 +37,7 @@ const fallbackTokens = [
     mint_address: "DVuB8E4r4DbLPSYP2pob14xi6r7cYPVh6Cdx2Az4pump",
     logo_url: juffLogo,
     pump_url: "https://pump.fun/DVuB8E4r4DbLPSYP2pob14xi6r7cYPVh6Cdx2Az4pump",
+    agent_id: DEFAULT_AGENT_ID,
     agent_name: "declaw",
   },
   { 
@@ -48,6 +51,7 @@ const fallbackTokens = [
     mint_address: "B2N5xBkrDHaTPokHNgVx2UfZndbTtPF3B9iNRsNapump",
     logo_url: helenLogo,
     pump_url: "https://pump.fun/B2N5xBkrDHaTPokHNgVx2UfZndbTtPF3B9iNRsNapump",
+    agent_id: DEFAULT_AGENT_ID,
     agent_name: "declaw",
   },
 ];
@@ -67,7 +71,16 @@ const formatTimeAgo = (dateString: string) => {
 };
 
 const LaunchedTokens = () => {
-  const { data: dbTokens, isLoading } = useDeployedTokens();
+  const { data: agents = [] } = useAgents();
+  const [filterAgentId, setFilterAgentId] = useState<string | null>(null);
+  const { data: dbTokens, isLoading } = useDeployedTokens(filterAgentId);
+
+  // Helper to get agent name by id
+  const getAgentName = (agentId: string | null): string => {
+    if (!agentId) return "declaw";
+    const agent = agents.find(a => a.id === agentId);
+    return agent?.name ?? "declaw";
+  };
 
   // Raw list: DB tokens + fallback (for mint addresses and base fields)
   const rawTokens = useMemo(
@@ -79,7 +92,7 @@ const LaunchedTokens = () => {
         mint_address: t.mint_address,
         logo_url: t.logo_url || "https://pump.fun/img/pump-logo.png",
         pump_url: t.pump_url,
-        agent_name: (t as DeployedToken & { agent_name?: string }).agent_name ?? "declaw",
+        agent_name: getAgentName(t.agent_id),
         created_at: t.created_at,
       })),
       ...fallbackTokens.map((f) => ({
@@ -93,7 +106,7 @@ const LaunchedTokens = () => {
         created_at: null as string | null,
       })),
     ],
-    [dbTokens]
+    [dbTokens, agents]
   );
 
   const mintAddresses = useMemo(() => rawTokens.map((t) => t.mint_address), [rawTokens]);
@@ -156,10 +169,15 @@ const LaunchedTokens = () => {
                 />
               </div>
               <div className="flex items-center gap-2">
-                <select className="win95-input text-xs">
-                  <option>All Tokens</option>
-                  <option>Active</option>
-                  <option>Graduated</option>
+                <select 
+                  className="win95-input text-xs"
+                  value={filterAgentId || ""}
+                  onChange={(e) => setFilterAgentId(e.target.value || null)}
+                >
+                  <option value="">All Agents</option>
+                  {agents.map(agent => (
+                    <option key={agent.id} value={agent.id}>{agent.name}</option>
+                  ))}
                 </select>
                 <Link to="/chat">
                   <motion.button 

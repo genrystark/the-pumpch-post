@@ -14,16 +14,24 @@ export interface DeployedToken {
   dev_buy_amount_sol: number | null;
   transaction_signature: string | null;
   created_at: string;
+  agent_id: string | null;
 }
 
-export const useDeployedTokens = () => {
+export const useDeployedTokens = (agentId?: string | null) => {
   const query = useQuery({
-    queryKey: ["deployed-tokens"],
+    queryKey: ["deployed-tokens", agentId],
     queryFn: async (): Promise<DeployedToken[]> => {
-      const { data, error } = await supabase
+      let queryBuilder = supabase
         .from("deployed_tokens")
         .select("*")
         .order("created_at", { ascending: false });
+
+      // Filter by agent_id if provided
+      if (agentId) {
+        queryBuilder = queryBuilder.eq("agent_id", agentId);
+      }
+
+      const { data, error } = await queryBuilder;
 
       if (error) {
         console.error("Error fetching deployed tokens:", error);
@@ -69,6 +77,7 @@ export const saveDeployedToken = async (token: {
   creatorWallet: string;
   devBuyAmountSol?: number;
   transactionSignature?: string;
+  agentId?: string;
 }) => {
   const { error } = await supabase.from("deployed_tokens").insert({
     name: token.name,
@@ -80,6 +89,7 @@ export const saveDeployedToken = async (token: {
     creator_wallet: token.creatorWallet,
     dev_buy_amount_sol: token.devBuyAmountSol || null,
     transaction_signature: token.transactionSignature || null,
+    agent_id: token.agentId || null,
   });
 
   if (error) {

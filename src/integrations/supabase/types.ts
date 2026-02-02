@@ -14,8 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      agents: {
+        Row: {
+          avatar: string | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          system_prompt: string
+        }
+        Insert: {
+          avatar?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          system_prompt: string
+        }
+        Update: {
+          avatar?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          system_prompt?: string
+        }
+        Relationships: []
+      }
       deployed_tokens: {
         Row: {
+          agent_id: string | null
           created_at: string
           creator_wallet: string
           description: string | null
@@ -29,6 +57,7 @@ export type Database = {
           transaction_signature: string | null
         }
         Insert: {
+          agent_id?: string | null
           created_at?: string
           creator_wallet: string
           description?: string | null
@@ -42,6 +71,7 @@ export type Database = {
           transaction_signature?: string | null
         }
         Update: {
+          agent_id?: string | null
           created_at?: string
           creator_wallet?: string
           description?: string | null
@@ -54,7 +84,15 @@ export type Database = {
           ticker?: string
           transaction_signature?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "deployed_tokens_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
