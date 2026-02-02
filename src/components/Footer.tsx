@@ -47,7 +47,7 @@ const Footer = () => {
               rel="noopener noreferrer" 
               className="font-mono text-xs text-ink hover:text-accent transition-colors"
             >
-              X (Twitter)
+              X
             </a>
           </div>
         </div>

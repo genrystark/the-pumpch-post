@@ -28,7 +28,7 @@ const Features = () => {
     <section id="features" className="py-10 md:py-14 bg-muted border-y border-border">
       <div className="container">
         {/* Section header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
           <span className="label-editorial">Capabilities</span>
           <h2 className="masthead text-2xl md:text-3xl text-ink mt-1">
             INSIDE PUMPCH
@@ -37,13 +37,14 @@ const Features = () => {
 
         {/* Features grid */}
         <div className="grid md:grid-cols-2 gap-3 max-w-3xl mx-auto">
-          {features.map((feature) => (
+          {features.map((feature, index) => (
             <div 
               key={feature.title} 
-              className="border border-border bg-paper p-3 flex gap-3 hover:border-accent transition-colors"
+              className="border border-border bg-paper p-3 flex gap-3 hover:border-accent hover:shadow-md transition-all duration-300 cursor-default opacity-0 animate-fade-in-up"
+              style={{ animationDelay: `${0.2 + index * 0.1}s` }}
             >
               {/* Icon box */}
-              <div className="flex-shrink-0 w-10 h-10 border border-border flex items-center justify-center">
+              <div className="flex-shrink-0 w-10 h-10 border border-border flex items-center justify-center group-hover:border-accent transition-colors">
                 <feature.icon className="w-5 h-5 text-accent" strokeWidth={1.5} />
               </div>
 
