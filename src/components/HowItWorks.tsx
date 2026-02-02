@@ -4,26 +4,26 @@ const HowItWorks = () => {
   const steps = [
     {
       icon: FileText,
-      title: "Tell Pumpster Your Idea",
+      title: "Tell declaw Your Idea",
       description: "Describe the token you want to create or the narrative you want to explore.",
       color: "bg-orange",
     },
     {
       icon: Search,
       title: "Agent Analyzes",
-      description: "Pumpster scans X, Pump.fun, and on-chain data for relevant signals.",
+      description: "declaw scans X and on-chain data for relevant signals.",
       color: "bg-[#000080]",
     },
     {
       icon: Rocket,
-      title: "Launch or Trade",
-      description: "Generate logos, deploy tokens, or get trade recommendations.",
+      title: "Declaw or Trade",
+      description: "Generate logos, declaw tokens, or get trade recommendations.",
       color: "bg-green-600",
     },
     {
       icon: TrendingUp,
       title: "Track & Iterate",
-      description: "Monitor your launches and get real-time insights on performance.",
+      description: "Monitor your declaws and get real-time insights on performance.",
       color: "bg-purple-600",
     },
   ];
@@ -50,7 +50,7 @@ const HowItWorks = () => {
                 Getting Started
               </span>
               <h2 className="font-mono text-xl md:text-2xl text-white mt-1">
-                HOW <span className="text-orange">PUMPSTER</span> WORKS
+                HOW <span className="text-orange">DECLAW</span> WORKS
               </h2>
             </div>
 

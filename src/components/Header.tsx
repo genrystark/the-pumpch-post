@@ -13,14 +13,14 @@ const Header = () => {
         <div className="flex items-center gap-2">
           <img 
             src={pumpchLogo} 
-            alt="Pumpster" 
+            alt="declaw" 
             className="w-4 h-4" 
             style={{ imageRendering: 'pixelated' }}
           />
           <Link to="/">
             <span className="cursor-pointer text-white font-bold text-xs sm:text-sm">
-              <span className="hidden sm:inline">pumpster.claw - AI Token Agent</span>
-              <span className="sm:hidden">pumpster.claw</span>
+              <span className="hidden sm:inline">declaw token - AI Token Agent</span>
+              <span className="sm:hidden">declaw</span>
             </span>
           </Link>
         </div>
@@ -48,7 +48,7 @@ const Header = () => {
         <div className={`${mobileMenuOpen ? 'flex' : 'hidden'} sm:flex flex-col sm:flex-row items-start sm:items-center`}>
           <nav className="flex flex-col sm:flex-row items-start sm:items-center">
             <a href="#launched-tokens" onClick={(e) => { e.preventDefault(); document.getElementById('launched-tokens')?.scrollIntoView({ behavior: 'smooth' }); }}>
-              <span className="win95-menu-item text-[11px]">Launches</span>
+              <span className="win95-menu-item text-[11px]">Declaws</span>
             </a>
             <a href="#how-it-works" onClick={(e) => { e.preventDefault(); document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }); }}>
               <span className="win95-menu-item text-[11px]">How It Works</span>
@@ -59,17 +59,9 @@ const Header = () => {
             <Link to="/chat">
               <span className="win95-menu-item win95-menu-item-active flex items-center gap-1 text-[11px]">
                 <MessageSquare className="w-3 h-3" />
-                Pumpster
+                declaw
               </span>
             </Link>
-            <a 
-              href="https://pump.fun" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="win95-menu-item text-[11px]"
-            >
-              Pump.fun
-            </a>
             <a 
               href="https://x.com" 
               target="_blank" 

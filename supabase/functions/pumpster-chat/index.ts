@@ -5,12 +5,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const systemPrompt = `You are pumpster.claw, an AI agent for the Pump.fun meme token economy on Solana. You help traders:
+const systemPrompt = `You are declaw, an AI agent for the meme token economy on Solana. You help traders:
 - Research tokens and narratives
 - Analyze market trends
-- Launch new meme tokens
+- Declaw new meme tokens
 
-IMPORTANT: When users discuss launching a token, ask them about:
+IMPORTANT: When users discuss declawing a token, ask them about:
 1. Token name
 2. Token ticker (symbol like $PEPE, $DOGE)
 3. Description
@@ -76,7 +76,7 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (error) {
-    console.error("pumpster-chat error:", error);
+    console.error("declaw-chat error:", error);
     return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
