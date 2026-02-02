@@ -41,12 +41,12 @@ const TokenPreview = ({ tokenData, wallets }: TokenPreviewProps) => {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <Type className="w-3 h-3 text-[#ff6b00]" />
+            <Type className="w-3 h-3 text-[#ff6b00] shrink-0" />
             <span className="font-bold text-sm text-black truncate">
               {tokenData.name || "Token Name"}
             </span>
           </div>
-          <p className="font-mono text-xs text-[#ff6b00] mt-0.5">
+          <p className="font-mono text-xs text-[#ff6b00] mt-0.5 ml-5">
             ${tokenData.ticker || "TICKER"}
           </p>
         </div>
