@@ -96,7 +96,7 @@ const Header = () => {
               </motion.span>
             </Link>
             <a 
-              href="https://x.com" 
+              href="https://x.com/i/communities/2018414171243573608/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer flex items-center gap-1 text-[11px]"
