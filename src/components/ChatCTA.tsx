@@ -1,12 +1,19 @@
 import { Link } from "react-router-dom";
 import { MessageSquare, ArrowRight } from "lucide-react";
-import pumpchLogo from "@/assets/pumpch-logo.png";
+import { motion } from "framer-motion";
+import declawLogo from "@/assets/declaw-logo.png";
 
 const ChatCTA = () => {
   return (
     <section className="py-8">
       <div className="container">
-        <div className="win95-window max-w-2xl mx-auto">
+        <motion.div 
+          className="win95-window max-w-2xl mx-auto"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="win95-titlebar-green">
             <div className="flex items-center gap-2">
               <MessageSquare className="w-4 h-4" />
@@ -20,10 +27,15 @@ const ChatCTA = () => {
           </div>
           
           <div className="bg-[#1a1a1a] p-8 text-center">
-            <img 
-              src={pumpchLogo} 
+            <motion.img 
+              src={declawLogo} 
               alt="declaw" 
               className="w-24 h-24 mx-auto mb-4 object-contain"
+              whileHover={{ scale: 1.1, rotate: [0, -10, 10, 0] }}
+              transition={{ duration: 0.5 }}
+              animate={{ 
+                y: [0, -5, 0],
+              }}
             />
             
             <h2 className="font-mono text-xl md:text-2xl text-white mb-2">
@@ -35,10 +47,14 @@ const ChatCTA = () => {
             </p>
             
             <Link to="/chat">
-              <button className="win95-button-primary text-sm flex items-center gap-2 mx-auto hover-elevate active-elevate-2">
+              <motion.button 
+                className="win95-button-primary text-sm flex items-center gap-2 mx-auto"
+                whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(255, 107, 74, 0.5)" }}
+                whileTap={{ scale: 0.95 }}
+              >
                 OPEN DECLAW
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </motion.button>
             </Link>
           </div>
           
@@ -47,7 +63,7 @@ const ChatCTA = () => {
               Free to use | No registration required
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

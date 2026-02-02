@@ -1,10 +1,45 @@
 import { Bot, TrendingUp, Zap, MessageSquare } from "lucide-react";
+import { motion } from "framer-motion";
+import { StaggerContainer, StaggerItem } from "./AnimatedSection";
 
 const WhatIsDeclaw = () => {
+  const features = [
+    {
+      icon: TrendingUp,
+      bg: "bg-orange",
+      title: "Not a Signal Bot",
+      description: "declaw is not a trading algorithm that blindly follows charts. It's an AI agent designed for the meme token economy.",
+    },
+    {
+      icon: MessageSquare,
+      bg: "bg-[#000080]",
+      title: "Narrative Tracker",
+      description: "It watches narratives on X, tracks token activity in real-time, and helps users turn ideas into live tokens.",
+    },
+    {
+      icon: Zap,
+      bg: "bg-green-600",
+      title: "Instant Analysis",
+      description: "Analyzes token behavior patterns and social signals to identify opportunities before they pump.",
+    },
+    {
+      icon: Bot,
+      bg: "bg-purple-600",
+      title: "One Conversation",
+      description: "One agent. Complete context. Your companion from idea to declaw to trade.",
+    },
+  ];
+
   return (
     <section id="what-is-declaw" className="py-8">
       <div className="container">
-        <div className="win95-window">
+        <motion.div 
+          className="win95-window"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="win95-titlebar">
             <div className="flex items-center gap-2">
               <Bot className="w-4 h-4" />
@@ -31,67 +66,29 @@ const WhatIsDeclaw = () => {
             </div>
 
             {/* Features grid */}
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="win95-outset p-4 bg-[#c0c0c0]">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-orange flex items-center justify-center flex-shrink-0">
-                    <TrendingUp className="w-5 h-5 text-white" />
+            <StaggerContainer className="grid md:grid-cols-2 gap-4">
+              {features.map((feature, index) => (
+                <StaggerItem key={feature.title}>
+                  <div className="win95-outset p-4 bg-[#c0c0c0] h-full">
+                    <div className="flex items-start gap-3">
+                      <motion.div 
+                        className={`w-8 h-8 ${feature.bg} flex items-center justify-center flex-shrink-0`}
+                        whileHover={{ scale: 1.2, rotate: 10 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <feature.icon className="w-5 h-5 text-white" />
+                      </motion.div>
+                      <div>
+                        <h3 className="font-mono text-sm font-bold text-black mb-1">{feature.title}</h3>
+                        <p className="font-mono text-xs text-[#404040]">
+                          {feature.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-mono text-sm font-bold text-black mb-1">Not a Signal Bot</h3>
-                    <p className="font-mono text-xs text-[#404040]">
-                      declaw is not a trading algorithm that blindly follows charts. 
-                      It's an AI agent designed for the meme token economy.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="win95-outset p-4 bg-[#c0c0c0]">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-[#000080] flex items-center justify-center flex-shrink-0">
-                    <MessageSquare className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-mono text-sm font-bold text-black mb-1">Narrative Tracker</h3>
-                    <p className="font-mono text-xs text-[#404040]">
-                      It watches narratives on X, tracks token activity in real-time, 
-                      and helps users turn ideas into live tokens.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="win95-outset p-4 bg-[#c0c0c0]">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-green-600 flex items-center justify-center flex-shrink-0">
-                    <Zap className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-mono text-sm font-bold text-black mb-1">Instant Analysis</h3>
-                    <p className="font-mono text-xs text-[#404040]">
-                      Analyzes token behavior patterns and social signals 
-                      to identify opportunities before they pump.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="win95-outset p-4 bg-[#c0c0c0]">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-purple-600 flex items-center justify-center flex-shrink-0">
-                    <Bot className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-mono text-sm font-bold text-black mb-1">One Conversation</h3>
-                    <p className="font-mono text-xs text-[#404040]">
-                      One agent. Complete context. Your companion 
-                      from idea to declaw to trade.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
           </div>
           
           <div className="win95-statusbar">
@@ -99,7 +96,7 @@ const WhatIsDeclaw = () => {
               Built on OpenClaw | Launched in Moltbook
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

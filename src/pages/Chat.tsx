@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Send, ArrowLeft, Rocket, Search, Image, FileImage, Sliders } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import NewsFeed from "@/components/NewsFeed";
 import TokenPreview, { TokenData } from "@/components/TokenPreview";
 import LaunchModeSelector, { LaunchMode } from "@/components/LaunchModeSelector";
@@ -438,45 +439,63 @@ const Chat = () => {
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-[#1a1a1a]">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-xl ${
-                    message.role === "user"
-                      ? "bg-[#000080] text-white border-2 border-t-[#0000ff] border-l-[#0000ff] border-b-[#000040] border-r-[#000040]"
-                      : "bg-[#2a2a2a] text-[#00ff00] border border-[#3a3a3a]"
-                  } p-3`}
+            <AnimatePresence>
+              {messages.map((message, index) => (
+                <motion.div
+                  key={message.id}
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3, delay: index === messages.length - 1 ? 0 : 0 }}
+                  className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  {/* Message header */}
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-mono text-xs uppercase opacity-70">
-                      {message.role === "user" ? "You" : "declaw"}
-                    </span>
-                    <span className="font-mono text-[10px] opacity-50">
-                      {formatTime(message.timestamp)}
-                    </span>
-                  </div>
-                  {/* Message content */}
-                  <div className="font-mono text-sm leading-relaxed whitespace-pre-line">
-                    {cleanMessageContent(message.content)}
-                  </div>
-                </div>
-              </div>
-            ))}
+                  <motion.div
+                    className={`max-w-xl ${
+                      message.role === "user"
+                        ? "bg-[#000080] text-white border-2 border-t-[#0000ff] border-l-[#0000ff] border-b-[#000040] border-r-[#000040]"
+                        : "bg-[#2a2a2a] text-[#00ff00] border border-[#3a3a3a]"
+                    } p-3`}
+                    whileHover={{ scale: 1.01 }}
+                  >
+                    {/* Message header */}
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-mono text-xs uppercase opacity-70">
+                        {message.role === "user" ? "You" : "declaw"}
+                      </span>
+                      <span className="font-mono text-[10px] opacity-50">
+                        {formatTime(message.timestamp)}
+                      </span>
+                    </div>
+                    {/* Message content */}
+                    <div className="font-mono text-sm leading-relaxed whitespace-pre-line">
+                      {cleanMessageContent(message.content)}
+                    </div>
+                  </motion.div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
 
             {/* Typing indicator */}
-            {isTyping && (
-              <div className="flex justify-start">
-                <div className="bg-[#2a2a2a] border border-[#3a3a3a] p-3">
-                  <span className="font-mono text-xs text-[#00ff00] animate-pulse">
-                    declaw is analyzing...
-                  </span>
-                </div>
-              </div>
-            )}
+            <AnimatePresence>
+              {isTyping && (
+                <motion.div 
+                  className="flex justify-start"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <div className="bg-[#2a2a2a] border border-[#3a3a3a] p-3">
+                    <motion.span 
+                      className="font-mono text-xs text-[#00ff00]"
+                      animate={{ opacity: [1, 0.5, 1] }}
+                      transition={{ repeat: Infinity, duration: 1.5 }}
+                    >
+                      declaw is analyzing...
+                    </motion.span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <div ref={messagesEndRef} />
           </div>
