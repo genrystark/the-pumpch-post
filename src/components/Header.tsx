@@ -3,24 +3,12 @@ import { Button } from "@/components/ui/button";
 
 const Header = () => {
   return (
-    <header className="w-full border-b-2 border-ink bg-paper">
-      {/* Top date line */}
-      <div className="border-b border-ink/20 py-1">
-        <div className="container flex justify-between items-center">
-          <span className="font-mono text-xs text-ink-faded uppercase tracking-widest">
-            The Pump.fun Chronicle
-          </span>
-          <span className="font-mono text-xs text-ink-faded">
-            Est. 2024 • Solana Network
-          </span>
-        </div>
-      </div>
-
+    <header className="w-full border-b border-border bg-paper">
       {/* Main navigation */}
-      <div className="container py-4">
+      <div className="container py-3">
         <div className="flex items-center justify-between">
           {/* Left nav */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-4">
             <Link 
               to="/#how-it-works" 
               className="font-mono text-xs uppercase tracking-widest text-ink hover:text-accent transition-colors"
@@ -51,7 +39,7 @@ const Header = () => {
 
           {/* Center masthead */}
           <Link to="/" className="absolute left-1/2 -translate-x-1/2">
-            <h1 className="masthead text-4xl md:text-5xl text-ink tracking-tight">
+            <h1 className="masthead text-2xl md:text-3xl text-accent tracking-tight">
               PUMPCH
             </h1>
           </Link>
@@ -64,9 +52,6 @@ const Header = () => {
           </div>
         </div>
       </div>
-
-      {/* Bottom decorative line */}
-      <div className="border-t-4 border-double border-ink" />
     </header>
   );
 };

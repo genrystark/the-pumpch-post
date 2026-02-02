@@ -1,40 +1,33 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import pumpchMascot from "@/assets/pumpch-mascot.png";
+import pumpchLogo from "@/assets/pumpch-logo.png";
 
 const HeroSection = () => {
   return (
-    <section className="py-16 md:py-24 bg-paper paper-texture">
+    <section className="py-12 md:py-16 bg-paper">
       <div className="container">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Decorative stamp */}
-          <div className="inline-block mb-8">
-            <span className="stamp bg-accent text-accent-foreground">
-              Breaking News
-            </span>
-          </div>
-
+        <div className="max-w-3xl mx-auto text-center">
           {/* Main headline */}
-          <h1 className="masthead text-6xl md:text-8xl lg:text-9xl text-ink mb-6 leading-[0.85]">
+          <h1 className="masthead text-4xl md:text-6xl lg:text-7xl text-ink mb-4 leading-[0.9]">
             HUNT THE<br />PUMP
           </h1>
 
           {/* Decorative divider */}
-          <div className="flex items-center justify-center gap-4 my-8">
-            <div className="w-24 h-px bg-ink" />
-            <div className="w-2 h-2 bg-ink rotate-45" />
-            <div className="w-24 h-px bg-ink" />
+          <div className="flex items-center justify-center gap-3 my-6">
+            <div className="w-16 h-px bg-accent" />
+            <div className="w-1.5 h-1.5 bg-accent rotate-45" />
+            <div className="w-16 h-px bg-accent" />
           </div>
 
           {/* Subheadline */}
-          <p className="font-body text-xl md:text-2xl text-ink-light max-w-2xl mx-auto mb-10 leading-relaxed">
-            <span className="font-headline font-semibold text-ink">Pumpch</span> is an AI agent for Pump.fun traders and creators. 
+          <p className="font-body text-base md:text-lg text-ink-light max-w-xl mx-auto mb-8 leading-relaxed">
+            <span className="font-headline font-semibold text-accent">Pumpch</span> is an AI agent for Pump.fun traders and creators. 
             Talk to Pumpch, and it hunts opportunities down.
           </p>
 
           {/* CTA */}
-          <Button asChild variant="editorial" size="xl" className="group">
+          <Button asChild variant="editorial" size="lg" className="group">
             <Link to="/chat">
               Start Chatting
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
@@ -42,13 +35,13 @@ const HeroSection = () => {
           </Button>
 
           {/* Powered by */}
-          <div className="mt-12 flex items-center justify-center gap-2 flex-wrap">
+          <div className="mt-8 flex items-center justify-center gap-2 flex-wrap">
             <span className="font-mono text-xs text-ink-faded uppercase tracking-wider">
               Powered by
             </span>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {["Solana", "Pump.fun", "X", "OpenClaw"].map((item, i) => (
-                <span key={item} className="flex items-center gap-3">
+                <span key={item} className="flex items-center gap-2">
                   <span className="font-mono text-xs text-ink uppercase tracking-wider">
                     {item}
                   </span>
@@ -60,19 +53,16 @@ const HeroSection = () => {
         </div>
 
         {/* Mascot illustration */}
-        <div className="mt-16 flex justify-center">
-          <div className="editorial-frame-thick p-6 max-w-xs">
+        <div className="mt-10 flex justify-center">
+          <div className="border border-border p-4 bg-paper max-w-[180px]">
             <div className="text-center">
               <img 
-                src={pumpchMascot} 
-                alt="Pumpch AI Agent Mascot" 
-                className="w-48 h-48 mx-auto object-contain mb-4"
+                src={pumpchLogo} 
+                alt="Pumpch AI Agent" 
+                className="w-32 h-32 mx-auto object-contain mb-3"
               />
-              <p className="font-headline text-lg text-ink italic">
+              <p className="font-headline text-sm text-ink italic">
                 "The Agent That Reads the Pump"
-              </p>
-              <p className="font-mono text-xs text-ink-faded mt-2 uppercase tracking-widest">
-                — Financial Times of Pump.fun
               </p>
             </div>
           </div>

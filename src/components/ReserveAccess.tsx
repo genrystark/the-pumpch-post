@@ -26,43 +26,45 @@ const ReserveAccess = () => {
   };
 
   return (
-    <section className="py-16 md:py-24 bg-paper-dark border-y-2 border-ink">
+    <section className="py-10 md:py-14 bg-muted border-y border-border">
       <div className="container">
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="max-w-lg mx-auto text-center">
           {/* Decorative header */}
-          <div className="inline-block mb-6">
-            <span className="stamp">Early Access</span>
+          <div className="inline-block mb-4">
+            <span className="inline-block border border-accent text-accent px-2 py-1 text-xs uppercase tracking-widest font-mono">
+              Early Access
+            </span>
           </div>
 
-          <h2 className="masthead text-4xl md:text-5xl text-ink mb-4">
+          <h2 className="masthead text-2xl md:text-3xl text-ink mb-3">
             RESERVE YOUR<br />PUMPCH ACCESS
           </h2>
 
-          <p className="font-body text-lg text-ink-light mb-8">
+          <p className="font-body text-sm text-ink-light mb-6">
             Be one of the first to chat with Pumpch, track Pump.fun launches, 
             and turn ideas into tokens.
           </p>
 
           {/* Email form */}
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 max-w-sm mx-auto">
             <Input
               type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 bg-paper border-2 border-ink text-ink placeholder:text-ink-faded font-mono text-sm h-12"
+              className="flex-1 bg-paper border border-border text-ink placeholder:text-ink-faded font-mono text-xs h-10"
             />
             <Button 
               type="submit" 
               variant="editorial"
-              size="lg"
+              size="default"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Joining..." : "Join"}
             </Button>
           </form>
 
-          <p className="font-mono text-xs text-ink-faded mt-4">
+          <p className="font-mono text-xs text-ink-faded mt-3">
             We only email with launch milestones.
           </p>
         </div>

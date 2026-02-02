@@ -25,56 +25,55 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section id="how-it-works" className="py-16 md:py-24 bg-paper paper-texture">
+    <section id="how-it-works" className="py-10 md:py-14 bg-paper">
       <div className="container">
         {/* Section header */}
-        <div className="text-center mb-4">
+        <div className="text-center mb-3">
           <span className="label-editorial">The Process</span>
-          <h2 className="masthead text-4xl md:text-5xl text-ink mt-2 mb-4">
+          <h2 className="masthead text-2xl md:text-3xl text-ink mt-1 mb-2">
             HOW IT WORKS
           </h2>
-          <p className="font-body text-lg text-ink-light max-w-2xl mx-auto">
-            Pumpch is bespokely designed for the Pump.fun ecosystem. 
-            Agentic trading and launching.
+          <p className="font-body text-sm text-ink-light max-w-xl mx-auto">
+            Pumpch is designed for the Pump.fun ecosystem. Agentic trading and launching.
           </p>
         </div>
 
         {/* Divider */}
-        <div className="divider-double my-8" />
+        <div className="border-t border-border my-6" />
 
         {/* Steps grid */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-4">
           {steps.map((step, index) => (
-            <div key={step.title} className="editorial-frame-thick relative">
+            <div key={step.title} className="border border-border bg-paper p-4 relative">
               {/* Step number */}
-              <div className="absolute -top-4 -left-4 w-8 h-8 bg-ink text-paper flex items-center justify-center font-headline text-lg">
+              <div className="absolute -top-3 -left-3 w-6 h-6 bg-accent text-accent-foreground flex items-center justify-center font-headline text-sm">
                 {index + 1}
               </div>
 
               {/* Icon */}
-              <div className="mb-4">
-                <step.icon className="w-8 h-8 text-accent" strokeWidth={1.5} />
+              <div className="mb-3">
+                <step.icon className="w-6 h-6 text-accent" strokeWidth={1.5} />
               </div>
 
               {/* Title */}
-              <h3 className="font-headline text-xl text-ink mb-3">
+              <h3 className="font-headline text-base text-ink mb-2">
                 {step.title}
               </h3>
 
               {/* Description */}
-              <p className="font-body text-ink-light leading-relaxed mb-4">
+              <p className="font-body text-xs text-ink-light leading-relaxed mb-3">
                 {step.description}
               </p>
 
               {/* Examples if any */}
               {step.examples && (
-                <div className="border-t border-ink/20 pt-4">
-                  <p className="font-mono text-xs text-ink-faded uppercase tracking-widest mb-2">
+                <div className="border-t border-border pt-3">
+                  <p className="font-mono text-xs text-ink-faded uppercase tracking-widest mb-1">
                     Examples:
                   </p>
-                  <ul className="space-y-1">
+                  <ul className="space-y-0.5">
                     {step.examples.map((example) => (
-                      <li key={example} className="font-mono text-sm text-ink">
+                      <li key={example} className="font-mono text-xs text-ink">
                         {example}
                       </li>
                     ))}

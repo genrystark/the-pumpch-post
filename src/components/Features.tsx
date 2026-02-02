@@ -25,50 +25,39 @@ const features = [
 
 const Features = () => {
   return (
-    <section id="features" className="py-16 md:py-24 bg-paper-aged border-y-2 border-ink">
+    <section id="features" className="py-10 md:py-14 bg-muted border-y border-border">
       <div className="container">
         {/* Section header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <span className="label-editorial">Capabilities</span>
-          <h2 className="masthead text-4xl md:text-5xl text-ink mt-2">
+          <h2 className="masthead text-2xl md:text-3xl text-ink mt-1">
             INSIDE PUMPCH
           </h2>
         </div>
 
         {/* Features grid */}
-        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-3 max-w-3xl mx-auto">
           {features.map((feature) => (
             <div 
               key={feature.title} 
-              className="editorial-frame flex gap-4 hover:bg-paper-dark transition-colors"
+              className="border border-border bg-paper p-3 flex gap-3 hover:border-accent transition-colors"
             >
               {/* Icon box */}
-              <div className="flex-shrink-0 w-12 h-12 border-2 border-ink flex items-center justify-center">
-                <feature.icon className="w-6 h-6 text-ink" strokeWidth={1.5} />
+              <div className="flex-shrink-0 w-10 h-10 border border-border flex items-center justify-center">
+                <feature.icon className="w-5 h-5 text-accent" strokeWidth={1.5} />
               </div>
 
               {/* Content */}
               <div>
-                <h3 className="font-headline text-lg text-ink mb-1 uppercase tracking-wide">
+                <h3 className="font-headline text-sm text-ink mb-0.5 uppercase tracking-wide">
                   {feature.title}
                 </h3>
-                <p className="font-body text-ink-light leading-relaxed">
+                <p className="font-body text-xs text-ink-light leading-relaxed">
                   {feature.description}
                 </p>
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Decorative footer */}
-        <div className="mt-12 text-center">
-          <div className="inline-flex items-center gap-4">
-            <div className="w-16 h-px bg-ink/30" />
-            <span className="font-mono text-xs text-ink-faded uppercase tracking-widest">
-              Built for Pump.fun
-            </span>
-            <div className="w-16 h-px bg-ink/30" />
-          </div>
         </div>
       </div>
     </section>
