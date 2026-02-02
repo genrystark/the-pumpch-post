@@ -22,7 +22,7 @@ const initialMessages: Message[] = [
   {
     id: "1",
     role: "assistant",
-    content: "Good morning, trader. I'm Pumpch, your AI agent for the Pump.fun economy. I track narratives, analyze tokens, and help you launch. What brings you to the floor today?",
+    content: "Good morning, trader. I'm pumpster.claw, your AI agent for the Pump.fun economy. I track narratives, analyze tokens, and help you launch. What brings you to the floor today?",
     timestamp: new Date(),
   },
 ];
@@ -180,216 +180,236 @@ const Chat = () => {
   };
 
   return (
-    <div className="h-screen bg-paper flex overflow-hidden">
+    <div className="min-h-screen bg-[#008080] flex overflow-hidden p-2 sm:p-4">
       {/* Left Sidebar - Token Setup */}
-      <aside className="w-64 bg-paper border-r border-border hidden lg:flex flex-col shrink-0 overflow-y-auto">
-        {/* Sidebar header */}
-        <div className="p-3 border-b border-border">
-          <Link to="/" className="flex items-center gap-2 text-ink hover:text-accent transition-colors">
-            <ArrowLeft className="w-3 h-3" />
-            <span className="font-mono text-xs uppercase tracking-widest">Back</span>
-          </Link>
-        </div>
-
-        {/* Masthead */}
-        <div className="p-3 border-b border-border">
-          <h1 className="masthead text-xl text-accent">PUMPCH</h1>
-          <p className="font-mono text-xs text-ink-faded uppercase tracking-wider">
-            Launch Desk
-          </p>
-        </div>
-
-        {/* Real Stats */}
-        <div className="p-3 border-b border-border">
-          <div className="grid grid-cols-2 gap-2">
-            <div className="border border-border p-2 text-center">
-              <div className="flex items-center justify-center gap-1 mb-1">
-                <Search className="w-3 h-3 text-accent" />
-              </div>
-              <p className="font-headline text-lg text-ink">{stats.analyzed}</p>
-              <p className="font-mono text-xs text-ink-faded">Analyzed</p>
+      <aside className="w-72 hidden lg:flex flex-col shrink-0 mr-2">
+        <div className="win95-window h-full flex flex-col">
+          <div className="win95-titlebar">
+            <div className="flex items-center gap-2">
+              <Rocket className="w-4 h-4" />
+              <span className="text-xs">Launch Desk</span>
             </div>
-            <div className="border border-border p-2 text-center">
-              <div className="flex items-center justify-center gap-1 mb-1">
-                <Rocket className="w-3 h-3 text-accent" />
-              </div>
-              <p className="font-headline text-lg text-ink">{stats.activeLaunches}</p>
-              <p className="font-mono text-xs text-ink-faded">Active</p>
+            <div className="flex gap-1">
+              <button className="win95-control-btn text-[8px]">_</button>
+              <button className="win95-control-btn text-[8px]">□</button>
+              <button className="win95-control-btn text-[8px]">×</button>
             </div>
           </div>
-        </div>
+          
+          <div className="bg-[#c0c0c0] flex-1 overflow-y-auto">
+            {/* Header */}
+            <div className="p-2 border-b-2 border-[#808080]">
+              <Link to="/" className="flex items-center gap-2 text-[#000080] hover:underline">
+                <ArrowLeft className="w-3 h-3" />
+                <span className="font-mono text-xs">← Back to Desktop</span>
+              </Link>
+            </div>
 
-        {/* Token Preview */}
-        <div className="p-3 border-b border-border">
-          <TokenPreview tokenData={tokenData} wallets={wallets} />
-        </div>
+            {/* Masthead */}
+            <div className="p-3 border-b-2 border-[#808080] bg-[#000080] text-white">
+              <h1 className="font-['VT323'] text-xl text-[#ff6b00]">pumpster.claw</h1>
+              <p className="font-mono text-[10px] text-[#c0c0c0]">
+                LAUNCH DESK v1.0
+              </p>
+            </div>
 
-        {/* Launch Mode Selector */}
-        <div className="p-3 border-b border-border">
-          <LaunchModeSelector mode={tokenData.launchMode} onModeChange={handleLaunchModeChange} />
-        </div>
+            {/* Real Stats */}
+            <div className="p-2">
+              <div className="win95-groupbox p-2">
+                <span className="win95-groupbox-title">Statistics</span>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  <div className="win95-inset p-2 text-center">
+                    <Search className="w-3 h-3 mx-auto mb-1" />
+                    <p className="font-bold text-lg">{stats.analyzed}</p>
+                    <p className="font-mono text-[10px] text-[#808080]">Analyzed</p>
+                  </div>
+                  <div className="win95-inset p-2 text-center">
+                    <Rocket className="w-3 h-3 mx-auto mb-1 text-[#ff6b00]" />
+                    <p className="font-bold text-lg text-[#ff6b00]">{stats.activeLaunches}</p>
+                    <p className="font-mono text-[10px] text-[#808080]">Active</p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-        {/* Distribution Button */}
-        <div className="p-3 border-b border-border">
-          <Button variant="outline" className="w-full justify-start gap-2" disabled>
-            <Sliders className="w-4 h-4" />
-            <span className="font-mono text-xs">Distribution</span>
-            <span className="ml-auto font-mono text-xs text-ink-faded">Soon</span>
-          </Button>
-        </div>
+            {/* Token Preview */}
+            <div className="p-2">
+              <TokenPreview tokenData={tokenData} wallets={wallets} />
+            </div>
 
-        {/* Generation Buttons */}
-        <div className="p-3 border-b border-border space-y-2">
-          <div className="flex items-center gap-2 mb-2">
-            <Image className="w-3 h-3 text-accent" />
-            <h3 className="font-mono text-xs uppercase tracking-widest text-ink-faded">
-              Generate
-            </h3>
+            {/* Launch Mode Selector */}
+            <div className="p-2">
+              <LaunchModeSelector mode={tokenData.launchMode} onModeChange={handleLaunchModeChange} />
+            </div>
+
+            {/* Distribution Button */}
+            <div className="p-2">
+              <button className="win95-button w-full flex items-center gap-2 justify-center" disabled>
+                <Sliders className="w-4 h-4" />
+                <span className="font-mono text-xs">Distribution</span>
+                <span className="ml-2 text-[10px] text-[#808080]">[Soon]</span>
+              </button>
+            </div>
+
+            {/* Generation Buttons */}
+            <div className="p-2">
+              <div className="win95-groupbox p-2">
+                <span className="win95-groupbox-title">Generate</span>
+                <div className="space-y-2 mt-2">
+                  <button
+                    className="win95-button w-full flex items-center gap-2"
+                    onClick={() => setInput("Generate a logo for my token")}
+                  >
+                    <Image className="w-4 h-4" />
+                    <span className="font-mono text-xs">Logo</span>
+                  </button>
+                  <button
+                    className="win95-button w-full flex items-center gap-2"
+                    onClick={() => setInput("Generate a banner for my token")}
+                  >
+                    <FileImage className="w-4 h-4" />
+                    <span className="font-mono text-xs">Banner</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Twitter Connect */}
+            <div className="p-2">
+              <TwitterConnect
+                connected={twitterConnected}
+                username={twitterUsername}
+                onConnect={() => {
+                  setTwitterConnected(true);
+                  setTwitterUsername("pumpster_user");
+                }}
+                onDisconnect={() => {
+                  setTwitterConnected(false);
+                  setTwitterUsername(null);
+                }}
+              />
+            </div>
+
+            {/* Wallet Manager */}
+            <div className="p-2 flex-1">
+              <WalletManager
+                wallets={wallets}
+                onAddWallet={handleWalletAdd}
+                onRemoveWallet={handleWalletRemove}
+              />
+            </div>
           </div>
-          <Button
-            variant="outline"
-            className="w-full justify-start gap-2 h-9"
-            onClick={() => setInput("Generate a logo for my token")}
-          >
-            <Image className="w-4 h-4" />
-            <span className="font-mono text-xs">Logo</span>
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full justify-start gap-2 h-9"
-            onClick={() => setInput("Generate a banner for my token")}
-          >
-            <FileImage className="w-4 h-4" />
-            <span className="font-mono text-xs">Banner</span>
-          </Button>
-        </div>
-
-        {/* Twitter Connect */}
-        <div className="p-3 border-b border-border">
-          <TwitterConnect
-            connected={twitterConnected}
-            username={twitterUsername}
-            onConnect={() => {
-              setTwitterConnected(true);
-              setTwitterUsername("pumpch_user");
-            }}
-            onDisconnect={() => {
-              setTwitterConnected(false);
-              setTwitterUsername(null);
-            }}
-          />
-        </div>
-
-        {/* Wallet Manager */}
-        <div className="p-3 flex-1">
-          <WalletManager
-            wallets={wallets}
-            onAddWallet={handleWalletAdd}
-            onRemoveWallet={handleWalletRemove}
-          />
         </div>
       </aside>
 
       {/* Main chat area */}
-      <main className="flex-1 flex flex-col min-w-0">
-        {/* Chat header */}
-        <header className="p-3 border-b border-border bg-paper shrink-0">
-          <div className="flex items-center justify-between">
+      <main className="flex-1 flex flex-col min-w-0 mx-2">
+        <div className="win95-window h-full flex flex-col">
+          <div className="win95-titlebar-green">
+            <div className="flex items-center gap-2">
+              <Send className="w-4 h-4" />
+              <span className="text-xs">pumpster.claw - Agent Chat</span>
+            </div>
+            <div className="flex gap-1">
+              <button className="win95-control-btn text-[8px]">_</button>
+              <button className="win95-control-btn text-[8px]">□</button>
+              <button className="win95-control-btn text-[8px]">×</button>
+            </div>
+          </div>
+          
+          {/* Chat header */}
+          <div className="bg-[#c0c0c0] p-2 border-b-2 border-[#808080] flex items-center justify-between">
             <div className="lg:hidden">
-              <Link to="/" className="flex items-center gap-2 text-ink hover:text-accent transition-colors">
+              <Link to="/" className="flex items-center gap-2 text-[#000080] hover:underline">
                 <ArrowLeft className="w-4 h-4" />
-                <span className="masthead text-lg text-accent">PUMPCH</span>
+                <span className="font-['VT323'] text-lg text-[#ff6b00]">pumpster.claw</span>
               </Link>
             </div>
             <div className="hidden lg:block">
-              <h2 className="font-headline text-base text-ink">Agent Chat</h2>
-              <p className="font-mono text-xs text-ink-faded uppercase tracking-wider">
-                Direct line to the launch desk
-              </p>
+              <h2 className="font-bold text-sm">Direct line to the launch desk</h2>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-xs text-ink-faded">
-                  {stats.analyzed} analyzed
-                </span>
-                <span className="text-ink-faded">•</span>
-                <span className="font-mono text-xs text-accent">
-                  {stats.activeLaunches} active
-                </span>
+              <div className="flex items-center gap-2 text-xs font-mono">
+                <span>{stats.analyzed} analyzed</span>
+                <span>•</span>
+                <span className="text-[#008000] font-bold">{stats.activeLaunches} active</span>
               </div>
-              <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-[#00ff00] animate-pulse" />
             </div>
           </div>
-        </header>
 
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-4">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} opacity-0 animate-fade-in-up`}
-              style={{ animationDelay: "0.1s" }}
-            >
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-[#1a1a1a]">
+            {messages.map((message) => (
               <div
-                className={`max-w-xl ${
-                  message.role === "user"
-                    ? "bg-accent text-accent-foreground"
-                    : "bg-muted border border-border"
-                } p-3 rounded-sm`}
+                key={message.id}
+                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
               >
-                {/* Message header */}
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-mono text-xs uppercase tracking-widest opacity-70">
-                    {message.role === "user" ? "You" : "Pumpch"}
-                  </span>
-                  <span className="font-mono text-xs opacity-50">
-                    {formatTime(message.timestamp)}
-                  </span>
-                </div>
-                {/* Message content */}
-                <div className="font-body text-sm leading-relaxed whitespace-pre-line">
-                  {message.content}
+                <div
+                  className={`max-w-xl ${
+                    message.role === "user"
+                      ? "bg-[#000080] text-white border-2 border-t-[#0000ff] border-l-[#0000ff] border-b-[#000040] border-r-[#000040]"
+                      : "bg-[#2a2a2a] text-[#00ff00] border border-[#3a3a3a]"
+                  } p-3`}
+                >
+                  {/* Message header */}
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-mono text-xs uppercase opacity-70">
+                      {message.role === "user" ? "You" : "pumpster.claw"}
+                    </span>
+                    <span className="font-mono text-[10px] opacity-50">
+                      {formatTime(message.timestamp)}
+                    </span>
+                  </div>
+                  {/* Message content */}
+                  <div className="font-mono text-sm leading-relaxed whitespace-pre-line">
+                    {message.content}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
 
-          {/* Typing indicator */}
-          {isTyping && (
-            <div className="flex justify-start">
-              <div className="bg-muted border border-border p-3 rounded-sm">
-                <span className="font-mono text-xs uppercase tracking-widest text-ink-faded">
-                  Pumpch is analyzing...
-                </span>
+            {/* Typing indicator */}
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="bg-[#2a2a2a] border border-[#3a3a3a] p-3">
+                  <span className="font-mono text-xs text-[#00ff00] animate-pulse">
+                    pumpster.claw is analyzing...
+                  </span>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <div ref={messagesEndRef} />
-        </div>
+            <div ref={messagesEndRef} />
+          </div>
 
-        {/* Input area */}
-        <div className="p-3 border-t border-border bg-paper shrink-0">
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask Pumpch anything..."
-              className="flex-1 bg-paper border border-border text-ink placeholder:text-ink-faded font-body h-10 text-sm"
-            />
-            <Button type="submit" variant="editorial" size="default" disabled={!input.trim() || isTyping}>
-              <Send className="w-4 h-4" />
-              <span className="hidden sm:inline ml-1">Send</span>
-            </Button>
-          </form>
-          <p className="font-mono text-xs text-ink-faded mt-1.5 text-center">
-            Press Enter to send • Pumpch does not provide financial advice
-          </p>
+          {/* Input area */}
+          <div className="bg-[#c0c0c0] p-2 border-t-2 border-[#dfdfdf]">
+            <form onSubmit={handleSubmit} className="flex gap-2">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask pumpster.claw anything..."
+                className="win95-inset flex-1 px-2 py-1 font-mono text-sm bg-white"
+              />
+              <button 
+                type="submit" 
+                className="win95-button-primary px-4 flex items-center gap-1"
+                disabled={!input.trim() || isTyping}
+              >
+                <Send className="w-4 h-4" />
+                <span className="hidden sm:inline">Send</span>
+              </button>
+            </form>
+            <p className="font-mono text-[10px] text-[#808080] mt-1 text-center">
+              Press Enter to send • pumpster.claw does not provide financial advice
+            </p>
+          </div>
         </div>
       </main>
 
       {/* Right News Panel */}
-      <aside className="w-72 hidden xl:block shrink-0">
+      <aside className="w-80 hidden xl:flex flex-col shrink-0 ml-2">
         <NewsFeed onLaunchIdea={handleLaunchIdea} />
       </aside>
     </div>
