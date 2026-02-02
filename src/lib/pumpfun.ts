@@ -139,12 +139,16 @@ export async function createPumpFunToken(
     const tradeData = await response.json();
 
     if (!tradeData?.transaction) {
-      console.error('❌ No transaction returned:', tradeData);
-      return { 
-        success: false, 
+      console.error('❌ No transaction returned. Response keys:', Object.keys(tradeData || {}), tradeData);
+      const hasRaw = tradeData && typeof tradeData === 'object' && 'raw' in tradeData;
+      const hint = hasRaw
+        ? ' Задеплой обновлённую Edge Function pumpfun-proxy в Supabase (Dashboard → Edge Functions).'
+        : '';
+      return {
+        success: false,
         mintAddress,
         pumpUrl: `https://pump.fun/${mintAddress}`,
-        error: tradeData?.error || 'No transaction returned from PumpPortal' 
+        error: (tradeData?.error || 'No transaction returned from PumpPortal') + hint,
       };
     }
 
