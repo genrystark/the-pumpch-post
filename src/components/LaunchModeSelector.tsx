@@ -34,44 +34,39 @@ const LaunchModeSelector = ({ mode, onModeChange }: LaunchModeSelectorProps) => 
   ];
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center gap-2 mb-2">
-        <Rocket className="w-3 h-3 text-accent" />
-        <h3 className="font-mono text-xs uppercase tracking-widest text-ink-faded">
-          Launch Mode
-        </h3>
-      </div>
+    <div className="win95-groupbox p-2">
+      <span className="win95-groupbox-title">Launch Mode</span>
 
-      <div className="space-y-1">
+      <div className="space-y-1 mt-2">
         {modes.map((m) => (
           <button
             key={m.id}
             onClick={() => m.available && onModeChange(m.id)}
             disabled={!m.available}
-            className={`w-full flex items-center gap-2 p-2 border transition-all duration-200 text-left ${
+            className={`w-full flex items-center gap-2 p-2 transition-all duration-200 text-left ${
               mode === m.id
-                ? "border-accent bg-accent/5"
+                ? "win95-inset bg-[#000080] text-white"
                 : m.available
-                ? "border-border bg-paper hover:border-accent"
-                : "border-border bg-muted opacity-60 cursor-not-allowed"
+                ? "win95-button hover:bg-[#d4d4d4]"
+                : "win95-button opacity-60 cursor-not-allowed"
             }`}
           >
-            <m.icon className={`w-4 h-4 ${mode === m.id ? "text-accent" : "text-ink-faded"}`} />
+            <m.icon className={`w-4 h-4 ${mode === m.id ? "text-[#ff6b00]" : "text-[#808080]"}`} />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span className={`font-mono text-xs uppercase ${mode === m.id ? "text-accent" : "text-ink"}`}>
+                <span className={`font-mono text-xs uppercase ${mode === m.id ? "text-[#ff6b00]" : ""}`}>
                   {m.label}
                 </span>
                 {!m.available && (
-                  <Lock className="w-3 h-3 text-ink-faded" />
+                  <Lock className="w-3 h-3 text-[#808080]" />
                 )}
               </div>
-              <p className="font-body text-xs text-ink-faded truncate">
+              <p className={`font-mono text-[10px] truncate ${mode === m.id ? "text-[#c0c0c0]" : "text-[#808080]"}`}>
                 {m.description}
               </p>
             </div>
             {mode === m.id && (
-              <div className="w-2 h-2 bg-accent rounded-full" />
+              <div className="w-2 h-2 bg-[#00ff00] rounded-full" />
             )}
           </button>
         ))}

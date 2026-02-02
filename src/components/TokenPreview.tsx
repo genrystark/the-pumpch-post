@@ -27,83 +27,83 @@ const TokenPreview = ({ tokenData, wallets }: TokenPreviewProps) => {
   const sniperWallets = wallets.filter((w) => w.type === "sniper");
 
   return (
-    <div className="border border-border bg-paper p-3 space-y-3">
-      <h3 className="font-mono text-xs uppercase tracking-widest text-ink-faded border-b border-border pb-2">
-        Token Preview
-      </h3>
+    <div className="win95-groupbox p-2">
+      <span className="win95-groupbox-title">Token Preview</span>
 
       {/* Logo & Name */}
-      <div className="flex items-start gap-3">
-        <div className="w-12 h-12 border border-border bg-muted flex items-center justify-center shrink-0">
+      <div className="flex items-start gap-3 mt-2">
+        <div className="w-12 h-12 win95-inset flex items-center justify-center shrink-0 bg-white">
           {tokenData.logo ? (
             <img src={tokenData.logo} alt="Token logo" className="w-full h-full object-cover" />
           ) : (
-            <Image className="w-5 h-5 text-ink-faded" />
+            <Image className="w-5 h-5 text-[#808080]" />
           )}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <Type className="w-3 h-3 text-accent" />
-            <span className="font-headline text-sm text-ink truncate">
+            <Type className="w-3 h-3 text-[#ff6b00]" />
+            <span className="font-bold text-sm truncate">
               {tokenData.name || "Token Name"}
             </span>
           </div>
-          <p className="font-mono text-xs text-accent mt-0.5">
+          <p className="font-mono text-xs text-[#ff6b00] mt-0.5">
             ${tokenData.ticker || "TICKER"}
           </p>
         </div>
       </div>
 
       {/* Description */}
-      <div>
+      <div className="mt-3">
         <div className="flex items-center gap-2 mb-1">
-          <FileText className="w-3 h-3 text-ink-faded" />
-          <span className="font-mono text-xs text-ink-faded uppercase">Description</span>
+          <FileText className="w-3 h-3 text-[#808080]" />
+          <span className="font-mono text-[10px] text-[#808080] uppercase">Description</span>
         </div>
-        <p className="font-body text-xs text-ink leading-relaxed line-clamp-3">
-          {tokenData.description || "No description yet..."}
-        </p>
+        <div className="win95-inset p-2 bg-white">
+          <p className="font-mono text-xs leading-relaxed line-clamp-3">
+            {tokenData.description || "No description yet..."}
+          </p>
+        </div>
       </div>
 
       {/* Banner */}
       {tokenData.banner && (
-        <div>
-          <span className="font-mono text-xs text-ink-faded uppercase">Banner</span>
-          <div className="mt-1 h-16 border border-border overflow-hidden">
+        <div className="mt-3">
+          <span className="font-mono text-[10px] text-[#808080] uppercase">Banner</span>
+          <div className="mt-1 h-16 win95-inset overflow-hidden">
             <img src={tokenData.banner} alt="Token banner" className="w-full h-full object-cover" />
           </div>
         </div>
       )}
 
       {/* Launch Mode */}
-      <div>
+      <div className="mt-3">
         <div className="flex items-center gap-2 mb-1">
-          <Rocket className="w-3 h-3 text-accent" />
-          <span className="font-mono text-xs text-ink-faded uppercase">Launch Mode</span>
+          <Rocket className="w-3 h-3 text-[#ff6b00]" />
+          <span className="font-mono text-[10px] text-[#808080] uppercase">Launch Mode</span>
         </div>
-        <span className="inline-block border border-accent text-accent px-2 py-0.5 font-mono text-xs uppercase">
+        <span className="inline-block bg-[#000080] text-white px-2 py-0.5 font-mono text-xs">
           {launchModeLabels[tokenData.launchMode]}
         </span>
       </div>
 
       {/* Wallets Summary */}
-      <div>
+      <div className="mt-3">
         <div className="flex items-center gap-2 mb-1">
-          <Wallet className="w-3 h-3 text-ink-faded" />
-          <span className="font-mono text-xs text-ink-faded uppercase">Wallets</span>
+          <Wallet className="w-3 h-3 text-[#808080]" />
+          <span className="font-mono text-[10px] text-[#808080] uppercase">Wallets</span>
         </div>
         <div className="grid grid-cols-3 gap-1 text-center">
-          <div className="border border-border p-1">
-            <p className="font-headline text-lg text-ink">{devWallets.length}</p>
-            <p className="font-mono text-xs text-ink-faded">Dev</p>
+          <div className="win95-inset p-1 bg-white">
+            <p className="font-bold text-lg">{devWallets.length}</p>
+            <p className="font-mono text-[10px] text-[#808080]">Dev</p>
           </div>
-          <div className="border border-border p-1">
-            <p className="font-headline text-lg text-ink">{bundleWallets.length}</p>
-            <p className="font-mono text-xs text-ink-faded">Bundle</p>
+          <div className="win95-inset p-1 bg-white">
+            <p className="font-bold text-lg">{bundleWallets.length}</p>
+            <p className="font-mono text-[10px] text-[#808080]">Bundle</p>
           </div>
-          <div className="border border-border p-1">
-            <p className="font-headline text-lg text-ink">{sniperWallets.length}</p>
-            <p className="font-mono text-xs text-ink-faded">Snipe</p>
+          <div className="win95-inset p-1 bg-white">
+            <p className="font-bold text-lg">{sniperWallets.length}</p>
+            <p className="font-mono text-[10px] text-[#808080]">Snipe</p>
           </div>
         </div>
       </div>
