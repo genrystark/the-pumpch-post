@@ -85,74 +85,78 @@ const NewsFeed = ({ onLaunchIdea }: NewsFeedProps) => {
   }, [fetchNews]);
 
   return (
-    <div className="h-full flex flex-col bg-paper border-l border-border">
-      {/* Header */}
-      <div className="p-3 border-b border-border flex items-center justify-between">
+    <div className="win95-window h-full flex flex-col">
+      <div className="win95-titlebar">
         <div className="flex items-center gap-2">
-          <Newspaper className="w-4 h-4 text-accent" />
-          <h3 className="font-mono text-xs uppercase tracking-widest text-ink">
-            Live News
-          </h3>
+          <Newspaper className="w-4 h-4" />
+          <span className="text-xs">Live News</span>
         </div>
-        <button 
-          onClick={fetchNews}
-          className="text-ink-faded hover:text-accent transition-colors"
-          disabled={loading}
-        >
-          <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
-        </button>
+        <div className="flex gap-1">
+          <button 
+            onClick={fetchNews}
+            className="win95-control-btn text-[8px]"
+            disabled={loading}
+          >
+            <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
+          </button>
+          <button className="win95-control-btn text-[8px]">_</button>
+          <button className="win95-control-btn text-[8px]">×</button>
+        </div>
       </div>
 
       {/* News list */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto bg-[#1a1a1a]">
         {loading ? (
-          <div className="p-3 space-y-3">
+          <div className="p-2 space-y-2">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="animate-pulse">
-                <div className="h-3 bg-muted rounded w-3/4 mb-2" />
-                <div className="h-2 bg-muted rounded w-1/2" />
+              <div key={i} className="animate-pulse p-2 bg-[#2a2a2a]">
+                <div className="h-3 bg-[#3a3a3a] w-3/4 mb-2" />
+                <div className="h-2 bg-[#3a3a3a] w-1/2" />
               </div>
             ))}
           </div>
         ) : (
-          <div className="divide-y divide-border">
-            {news.map((item, index) => (
+          <div className="p-1 space-y-1">
+            {news.map((item) => (
               <div 
                 key={item.id} 
-                className="p-3 hover:bg-muted/50 transition-all duration-200 opacity-0 animate-fade-in-up"
-                style={{ animationDelay: `${index * 0.05}s` }}
+                className="p-2 bg-[#2a2a2a] border border-[#3a3a3a] hover:bg-[#3a3a3a] transition-colors"
               >
                 <a 
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block hover:text-accent transition-colors"
+                  className="block"
                 >
-                  <p className="font-body text-sm text-ink leading-snug mb-1 line-clamp-2">
+                  <p className="font-mono text-xs text-[#00ff00] leading-snug mb-1 line-clamp-2">
                     {item.title}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs text-ink-faded">
+                    <span className="font-mono text-[10px] text-[#808080]">
                       {item.source}
                     </span>
-                    <span className="font-mono text-xs text-ink-faded">
+                    <span className="font-mono text-[10px] text-[#808080]">
                       {item.publishedAt}
                     </span>
                   </div>
                 </a>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="mt-2 w-full h-7 text-xs font-mono uppercase tracking-wider text-accent hover:text-accent-foreground hover:bg-accent hover:scale-[1.02] transition-all duration-200"
+                <button
+                  className="win95-button-primary w-full mt-2 text-[10px] py-1 flex items-center justify-center gap-1"
                   onClick={() => onLaunchIdea(item.title)}
                 >
-                  <Rocket className="w-3 h-3 mr-1" />
+                  <Rocket className="w-3 h-3" />
                   Launch Idea
-                </Button>
+                </button>
               </div>
             ))}
           </div>
         )}
+      </div>
+      
+      <div className="win95-statusbar text-[10px]">
+        <div className="win95-statusbar-inset flex-1">
+          {news.length} items • Auto-refresh 30s
+        </div>
       </div>
     </div>
   );

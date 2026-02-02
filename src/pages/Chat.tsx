@@ -180,10 +180,10 @@ const Chat = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#008080] flex overflow-hidden p-2 sm:p-4">
+    <div className="h-screen bg-[#008080] flex overflow-hidden p-2 sm:p-4">
       {/* Left Sidebar - Token Setup */}
-      <aside className="w-72 hidden lg:flex flex-col shrink-0 mr-2">
-        <div className="win95-window h-full flex flex-col">
+      <aside className="w-72 hidden lg:flex flex-col shrink-0 mr-2 max-h-full">
+        <div className="win95-window h-full flex flex-col overflow-hidden">
           <div className="win95-titlebar">
             <div className="flex items-center gap-2">
               <Rocket className="w-4 h-4" />
@@ -303,8 +303,8 @@ const Chat = () => {
       </aside>
 
       {/* Main chat area */}
-      <main className="flex-1 flex flex-col min-w-0 mx-2">
-        <div className="win95-window h-full flex flex-col">
+      <main className="flex-1 flex flex-col min-w-0 mx-2 max-h-full overflow-hidden">
+        <div className="win95-window h-full flex flex-col overflow-hidden">
           <div className="win95-titlebar-green">
             <div className="flex items-center gap-2">
               <Send className="w-4 h-4" />
@@ -409,7 +409,7 @@ const Chat = () => {
       </main>
 
       {/* Right News Panel */}
-      <aside className="w-80 hidden xl:flex flex-col shrink-0 ml-2">
+      <aside className="w-72 hidden xl:flex flex-col shrink-0 ml-2 max-h-full">
         <NewsFeed onLaunchIdea={handleLaunchIdea} />
       </aside>
     </div>
