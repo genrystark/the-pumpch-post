@@ -1,11 +1,16 @@
 import { Link } from "react-router-dom";
-import { Minus, Square, X, Menu, MessageSquare, Wallet } from "lucide-react";
+import { Minus, Square, X, Menu, MessageSquare, Wallet, Copy, Send } from "lucide-react";
 import { useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import declawLogo from "@/assets/declaw-logo.png";
 import { shortenAddress } from "@/lib/solana";
+
+const CONTRACT_ADDRESS = "DECLAW_CONTRACT_ADDRESS_HERE";
+const TG_BOT_URL = "https://t.me/declaw_bot";
+
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { publicKey, connected, disconnect, connecting } = useWallet();
@@ -17,6 +22,11 @@ const Header = () => {
     } else {
       setVisible(true);
     }
+  };
+
+  const handleCopyCA = () => {
+    navigator.clipboard.writeText(CONTRACT_ADDRESS);
+    toast.success("CA copied to clipboard!");
   };
 
   return (
@@ -105,6 +115,24 @@ const Header = () => {
                 <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
               </svg>
               X
+            </a>
+            <motion.button 
+              onClick={handleCopyCA}
+              className="px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer flex items-center gap-1 text-[11px]"
+              whileHover={{ backgroundColor: "#000080", color: "#fff" }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Copy className="w-3 h-3" />
+              CA
+            </motion.button>
+            <a 
+              href={TG_BOT_URL}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="px-2 py-0.5 text-black hover:bg-[#000080] hover:text-white cursor-pointer flex items-center gap-1 text-[11px]"
+            >
+              <Send className="w-3 h-3" />
+              TG
             </a>
           </nav>
         </div>
