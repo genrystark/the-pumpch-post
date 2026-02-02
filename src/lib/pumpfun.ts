@@ -62,20 +62,20 @@ export async function createPumpFunToken(
       // For now, we'll use the data URL directly (may not work with all services)
     }
 
-    // Step 2: Get transaction from PumpPortal API
-    console.log('📝 Requesting transaction from PumpPortal...');
+    // Step 2: Get transaction from PumpPortal API via Edge Function proxy
+    console.log('📝 Requesting transaction from PumpPortal via proxy...');
     
     const devBuyAmount = Number(devBuyAmountSol) || 0;
     console.log('💰 Dev buy amount:', devBuyAmount, 'SOL');
 
-    // PumpPortal API endpoint
-    // Note: You may need to use a proxy server to avoid CORS issues
-    const pumpPortalUrl = 'https://pumpportal.fun/api/trade-local';
+    // Use Edge Function proxy to avoid CORS issues
+    const proxyUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/pumpfun-proxy`;
     
-    const response = await fetch(pumpPortalUrl, {
+    const response = await fetch(proxyUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
       body: JSON.stringify({
         publicKey: wallet.publicKey.toString(),
