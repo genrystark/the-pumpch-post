@@ -1,17 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Bot, ArrowRight, Check, Trash2, Loader2, Plus } from "lucide-react";
+import { Bot, ArrowRight, Check, Loader2, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import declawLogo from "@/assets/declaw-logo.png";
-import {
-  useAgents,
-  useDeleteAgent,
-  useSelectedAgent,
-  DEFAULT_AGENT_ID,
-  type Agent,
-} from "@/hooks/useAgents";
+import { useAgents, useSelectedAgent } from "@/hooks/useAgents";
 import CreateAgentModal from "./CreateAgentModal";
-import { toast } from "sonner";
 
 interface AgentExplorerProps {
   onAgentChange?: (agentId: string) => void;
@@ -20,29 +13,11 @@ interface AgentExplorerProps {
 const AgentExplorer = ({ onAgentChange }: AgentExplorerProps) => {
   const { data: agents = [], isLoading } = useAgents();
   const { selectedId, setSelectedId } = useSelectedAgent();
-  const deleteAgent = useDeleteAgent();
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
   const handleSelect = (id: string) => {
     setSelectedId(id);
     onAgentChange?.(id);
-  };
-
-  const handleDelete = async (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!confirm("Delete this agent?")) return;
-    
-    try {
-      await deleteAgent.mutateAsync(id);
-      toast.success("Agent deleted");
-      if (selectedId === id) {
-        setSelectedId(DEFAULT_AGENT_ID);
-        onAgentChange?.(DEFAULT_AGENT_ID);
-      }
-    } catch (error) {
-      toast.error("Failed to delete agent");
-    }
   };
 
   const handleAgentCreated = (agentId: string) => {
@@ -100,7 +75,6 @@ const AgentExplorer = ({ onAgentChange }: AgentExplorerProps) => {
             <div className="grid gap-2 grid-cols-1">
               {agents.map((agent, index) => {
                 const isSelected = selectedId === agent.id;
-                const isDefault = agent.id === DEFAULT_AGENT_ID;
                 return (
                   <motion.div
                     key={agent.id}
@@ -154,16 +128,6 @@ const AgentExplorer = ({ onAgentChange }: AgentExplorerProps) => {
                       )}
                       {isSelected && (
                         <span className="font-mono text-[10px] text-orange">Selected</span>
-                      )}
-                      {!isDefault && (
-                        <button
-                          onClick={(e) => handleDelete(e, agent.id)}
-                          disabled={deleteAgent.isPending}
-                          className="win95-button p-1 text-red-500 hover:bg-red-500/20"
-                          title="Delete agent"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
                       )}
                     </div>
                   </motion.div>

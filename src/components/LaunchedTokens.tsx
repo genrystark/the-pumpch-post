@@ -112,12 +112,20 @@ const LaunchedTokens = () => {
   const mintAddresses = useMemo(() => rawTokens.map((t) => t.mint_address), [rawTokens]);
   const { data: dexData } = useDexScreenerTokens(mintAddresses);
 
+  // Progress: 100% when market cap >= $50K, else (marketCap / 50000) * 100
+  const GRADUATE_CAP_USD = 50000;
+  const progressFromMarketCap = (marketCap: number | null): number => {
+    if (marketCap == null || marketCap <= 0) return 0;
+    if (marketCap >= GRADUATE_CAP_USD) return 100;
+    return Math.min(99, Math.round((marketCap / GRADUATE_CAP_USD) * 100));
+  };
+
   // Merge DexScreener data: real price, marketCap, age when available
   const allTokens = useMemo(
     () =>
       rawTokens.map((t) => {
         const dex = dexData.get(t.mint_address);
-        const progress = dex != null ? null : Math.floor(Math.random() * 30) + 10;
+        const progress = dex?.marketCap != null ? progressFromMarketCap(dex.marketCap) : 0;
         return {
           id: t.id,
           name: t.name,
@@ -273,7 +281,7 @@ const LaunchedTokens = () => {
                             />
                           </div>
                           <div className="text-[10px] text-[#808080] mt-1">
-                            {token.progress != null ? `${token.progress}% to graduation` : "DEX pair"}
+                            {token.progress >= 100 ? "Graduated ($50K+)" : `${token.progress}% to $50K`}
                           </div>
                         </div>
                         <div className="flex items-center justify-between text-[10px] text-[#808080]">
@@ -344,7 +352,7 @@ const LaunchedTokens = () => {
                               transition={{ duration: 1, delay: 0.3 + index * 0.1 }}
                             />
                           </div>
-                          <div className="text-[9px] text-[#808080]">{token.progress != null ? `${token.progress}%` : "—"}</div>
+                          <div className="text-[9px] text-[#808080]">{token.progress >= 100 ? "100%" : `${token.progress}%`}</div>
                         </div>
                       </td>
                       <td className="p-2 text-right text-orange font-bold">{token.price}</td>
